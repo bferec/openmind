@@ -1,3 +1,4 @@
+
 all: openmind
 
 openmind.tab.h: openmind.y openmindlib.h

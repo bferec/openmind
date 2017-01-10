@@ -1,0 +1,18 @@
+/* test string	*/
+
+"coucou";
+
+"bruno\n";
+
+"quote : \t-";
+
+"aaaa" < "bbbb";
+"aaaa" > "bbbb";
+
+"aaaa" == "bbbb";
+"aaaa" == "aaaa";
+"aaaa" != "bbbb";
+
+
+
+quit;

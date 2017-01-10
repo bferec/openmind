@@ -4,12 +4,14 @@
 
 Create Entity
 {
-	Identity {48724c00-43dc-339c-ea7f-24eb81c9}
+	Identity {48724c00-43dc-339c-ea7f-24eb81c9};
+	Name {"Hits"};
 };
 
 Create Property
 {
-	Identity {Auto}
+	Identity {Auto};
+	Name {"Type"} Unique ;
 };
 
 

@@ -25,7 +25,7 @@ guid			{hexanumber}\-{hexanumber}\-{hexanumber}\-{hexanumber}\-{hexanumber}
 integer			{digit}+
 float			{digit}+\.{digit}+|\.{digit}+
 ident			[a-zA-Z_][0-9a-zA-Z_]*	
-
+string			\"[^"]*\"
 
 %%
 
@@ -74,6 +74,7 @@ ident			[a-zA-Z_][0-9a-zA-Z_]*
 {integer}		{ yylval.number_value.integer_value = atoi( yytext ) ; return T_INT ; }
 {float}			{ yylval.number_value.float_value = atof( yytext )   ; return T_FLOAT ; }
 {guid}			{ strcpy( yylval.string_value , yytext ) ; return T_GUID;}
+{string}		{ strcpy( yylval.string_value , yytext ) ; return T_CSTE_STRING;}
 
 "True"			{yylval.boolean_value = True ;  return T_TRUE ; }
 "False"			{yylval.boolean_value = False ; return T_FALSE ; }
@@ -83,6 +84,8 @@ ident			[a-zA-Z_][0-9a-zA-Z_]*
 (?i:"property")		{return T_PROPERTY;}
 (?i:"identity")		{return T_IDENTITY;}
 (?i:"auto")		{return T_AUTO;}
+(?i:"name")		{return T_NAME;}
+(?i:"unique")		{return T_UNIQUE;}
 			
 
 (?i:"exit")		{return T_QUIT;}

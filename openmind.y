@@ -1,3 +1,6 @@
+/* -------------------- */
+/* openmind.y		*/
+/* -------------------- */
 
 /* -------------------- */
 /* prologue		*/
@@ -96,7 +99,11 @@ void yyerror(const char* s);
 %token T_PROPERTY
 %token T_IDENTITY
 %token T_AUTO
+%token T_NAME
+%token T_UNIQUE
+
 %token<guid_value> T_GUID
+%token<string_value> T_CSTE_STRING
 
 %token T_UNKNOWN
 %token T_QUIT
@@ -137,7 +144,7 @@ create_entity_stmt:
 ;
 
 entity_defs:
-	T_IDENTITY T_LEFT_BRACE guid_expr T_RIGHT_BRACE
+	obj_defs
 ;
 
 
@@ -146,7 +153,21 @@ create_property_stmt:
 ;
 
 property_defs:
+	obj_defs
+;
+
+obj_defs:
+	 guid_defs T_SEMICOLON name_defs T_SEMICOLON
+	| guid_defs T_SEMICOLON name_defs T_UNIQUE T_SEMICOLON	{fprintf( stderr , "[Unique]\n"  );}
+;
+
+
+guid_defs:
 	T_IDENTITY T_LEFT_BRACE guid_expr T_RIGHT_BRACE
+;
+
+name_defs:
+	T_NAME T_LEFT_BRACE string_expr T_RIGHT_BRACE 
 ;
 
 
@@ -154,7 +175,9 @@ expr:
 	string_expr					
 	| numeric_expr
 	| boolean_expr
+	| guid_expr
 ;
+
 
 guid_expr:
 	T_AUTO		{ char guid[33]; NewGuid( guid ); strcpy( $$ , guid ); fprintf( stderr , "Auto: %s\n" , $$ ); }
@@ -165,6 +188,7 @@ numeric_expr:
 	T_INT						{ $$ = (float) $1 ; }	
 	| T_FLOAT					{}				
 	| T_LEFT_BRACKET numeric_expr T_RIGHT_BRACKET	{ $$ = $2; }
+	| T_MINUS_SIGN numeric_expr 			{ $$ = -$2; fprintf( stderr , "%f\n" , $$ ); }
 	| numeric_expr T_PLUS_SIGN numeric_expr		{ $$ = $1 + $3; fprintf( stderr , "%f\n" , $$ ); }
 	| numeric_expr T_MINUS_SIGN numeric_expr	{ $$ = $1 - $3; fprintf( stderr , "%f\n" , $$ ); }
 	| numeric_expr T_ASTERISK numeric_expr		{ $$ = $1 * $3; fprintf( stderr , "%f\n" , $$ ); }
@@ -188,7 +212,13 @@ boolean_expr:
 	| boolean_expr T_OR boolean_expr			{ $$ = ($1 || $3) ; fprintf( stderr , "%d OU %d => %d\n" ,$1, $3, $$ );}
 	| boolean_expr T_AND boolean_expr			{ $$ = ($1 && $3) ; fprintf( stderr , "%d ET %d => %d\n" ,$1, $3, $$ );}
 	| T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET		{ $$ = $2; fprintf( stderr , "(%d) => %d\n" ,$2, $$ );}
+
+	| string_expr T_DIFFERENT  string_expr			{ $$ = strcmp( $1 , $3 ) != 0 ; fprintf( stderr , "%s != %s => %d\n" ,$1,$3, $$ );}
+	| string_expr T_EQUAL  string_expr			{ $$ = strcmp( $1 , $3 ) == 0 ; fprintf( stderr , "%s == %s => %d\n" ,$1,$3, $$ );}	
+	| string_expr T_LESS_THAN  string_expr			{ $$ = strcmp( $1 , $3 ) < 0 ; fprintf( stderr , "%s < %s => %d\n" , $1,$3,$$ );}
+	| string_expr T_MORE_THAN  string_expr			{ $$ = strcmp( $1 , $3 ) > 0  ; fprintf( stderr , "%s > %s => %d\n" , $1,$3,$$ );}
 	
+
 	| guid_expr T_DIFFERENT  guid_expr			{ $$ = ! strcmp( $1 , $3 ) ; fprintf( stderr , "%s != %s => %d\n" ,$1,$3, $$ );}
 	| guid_expr T_EQUAL  guid_expr				{ $$ = strcmp( $1 , $3 ) ; fprintf( stderr , "%s == %s => %d\n" ,$1,$3, $$ );}	
 
@@ -202,7 +232,7 @@ boolean_expr:
 ;
 
 string_expr:
-	T_IDENT		{strcpy( $$ , $1); printf( "[identificateur %s]\n" , $1 ); }
+	T_CSTE_STRING		{strcpy( $$ , $1); printf( "[constante texte :%s]\n" , $1 ); }
 ;
 
 %%
