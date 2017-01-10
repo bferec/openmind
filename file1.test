@@ -1,0 +1,18 @@
+
+
+
+
+Create Entity
+{
+	Identity {48724c00-43dc-339c-ea7f-24eb81c9}
+};
+
+Create Property
+{
+	Identity {Auto}
+};
+
+
+quit;
+
+
