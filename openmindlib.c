@@ -40,24 +40,8 @@ int n[5] ;
 }
 
 
-/* -----------------------------------------------------*/
-/* -----------------------------------------------------*/
-typedef struct _entity
-{
-	char guid[GUID_LENGTH];
-	char name[ MAXLENGTH_STRING  + 1 ];
-	BOOL unique_name;
-	
-}entity;
 
-/* -----------------------------------------------------*/
-/* -----------------------------------------------------*/
-typedef struct _property
-{
-	char guid[GUID_LENGTH];
-	char name[ MAXLENGTH_STRING  + 1 ];
-	BOOL unique_name;
-}property;
+
 
 
 

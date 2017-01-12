@@ -51,6 +51,7 @@ void yyerror(const char* s);
 	enum { False, True } boolean_value;		/* booleanvalue					*/
 	char guid_value[ GUID_LENGTH ];			/* guid value identifier of entity or property	*/
 	char string_value[ MAXLENGTH_STRING + 1 ] ;	/* string constant and vars.			*/
+	variable var;
 } 
 
 
