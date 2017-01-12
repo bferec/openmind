@@ -1,0 +1,18 @@
+/* test assignation et creation */
+
+mavar = 2;
+
+
+Create Entity
+{
+	Identity {48724c00-43dc-339c-ea7f-24eb81c9};
+	Name {"Hits"};
+};
+
+Create Property
+{
+	Identity {Auto};
+	Name {"Type"} Unique ;
+};
+
+quit;
