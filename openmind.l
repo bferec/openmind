@@ -14,7 +14,7 @@
 extern int lineNumber;
 
 extern void yyerror(const char * msg);
-
+char msgerror[ 256 ];
 
 %}
 
@@ -72,8 +72,7 @@ spacetab		[ \t\r]+
 ">="			{return T_MORE_OR_EQUAL_THAN;}
 "!="			{return T_DIFFERENT;}		
 "=="			{return T_EQUAL;}
-	
-”=” 			{return T_ASSIGN;}
+"=" 			{return T_ASSIGN;}
 
 {integer}		{ yylval.number_value.integer_value = atoi( yytext ) ; return T_INT ; }
 {float}			{ yylval.number_value.float_value = atof( yytext )   ; return T_FLOAT ; }
@@ -96,6 +95,8 @@ spacetab		[ \t\r]+
 (?i:"quit")		{return T_QUIT;}
 
 {ident}			{strcpy( yylval.string_value , yytext ) ; return T_IDENTIFIER;}
+
+.			{ sprintf( msgerror, "caractere inconnu : [%s] ", yytext  ); yyerror(msgerror) ; return T_UNKNOWN;}
 
 %%
 

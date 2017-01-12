@@ -120,10 +120,13 @@ void yyerror(const char* s);
 %token<guid_value> T_GUID
 %token<string_value> T_CSTE_STRING
 
+%token T_UNKNOWN
+
 %type <guid_value> guid_expr
 %type <number_value.float_value>  numeric_expr
 %type <boolean_value>  boolean_expr
 %type <string_value>  string_expr
+
 
 /* -------------------- */
 /* -------------------- */
