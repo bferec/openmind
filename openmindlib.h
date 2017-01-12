@@ -1,6 +1,10 @@
-/* parserlib.h	*/
+/* openmindlib.h	*/
 
-extern void NewGuid( char * result );
+#define GUID_LENGTH 33
+#define MAXLENGTH_STRING 255
+#define BOOL int
+
+void NewGuid( char * result );
 
 
 

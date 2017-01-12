@@ -1,15 +1,21 @@
+YACC = bison -d
+LEX = flex
+CC = gcc
 
 all: openmind
 
-openmind.tab.h: openmind.y openmindlib.h
-	bison -d openmind.y
 
-lex.yy.c: openmind.l openmind.tab.h
-	flex openmind.l
+openmind: openmind.tab.o lex.yy.o
+		$(CC) -o openmind  openmind.tab.o lex.yy.o -ll -lm
 
+lex.yy.o: lex.yy.c openmind.tab.h
+lex.yy.o openmind.tab.o: openmind.h
 
-openmind: lex.yy.c openmind.tab.c  openmind.c openmind.tab.h openmindlib.c openmindlib.h
-	gcc -o openmind openmind.tab.c  lex.yy.c openmind.c openmindlib.c 
+openmind.tab.c openmind.tab.h: openmind.y
+		$(YACC) -v openmind.y
+
+lex.yy.c: openmind.l
+		$(LEX) openmind.l
 
 clean:
 	rm openmind openmind.tab.c lex.yy.c openmind.tab.h

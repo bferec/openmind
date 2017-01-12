@@ -15,6 +15,8 @@ int main(int argc , char * * argv)
 {
 char guid[33];
 
+/*	yydebug = 1;	*/
+
 	if(argc>1)
 	{ 
 		yyin=fopen(argv[1],"r");

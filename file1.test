@@ -1,5 +1,6 @@
+/* test assignation et creation */
 
-
+mavar = 2;
 
 
 Create Entity
@@ -14,7 +15,4 @@ Create Property
 	Name {"Type"} Unique ;
 };
 
-
 quit;
-
-
