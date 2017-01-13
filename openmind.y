@@ -21,11 +21,13 @@
 #define TRACE
 #endif
 
+
 extern int yylex( void );
 extern int yyparse();
 
 extern int main( int argc, char ** argv );
 
+extern char *  msgerror;
 extern FILE * yyin;
 extern char * yytext;
 
@@ -102,7 +104,7 @@ void yyerror(const char* s);
 %nonassoc T_DIFFERENT T_EQUAL 
 
 
-%token<string_value> T_IDENTIFIER
+%token<var> T_IDENTIFIER
 %token<boolean_value> T_TRUE
 %token<boolean_value> T_FALSE
 
@@ -128,6 +130,7 @@ void yyerror(const char* s);
 %type <boolean_value>  boolean_expr
 %type <string_value>  string_expr
 
+%type <var>  lvalue
 
 /* -------------------- */
 /* -------------------- */
@@ -165,7 +168,12 @@ stmt:
 /* affectation		*/
 /* -------------------- */
 assign_stmt:
-	 lvalue T_ASSIGN rvalue
+	 lvalue T_ASSIGN rvalue		{if(check_ident( $1.ident ) ) 
+					 {
+						sprintf(msgerror, "utilisation d'un mot reservé comme variable : [%s]\n\r",$1.ident );
+						yyerror(msgerror);
+					 }
+					}
 ;
 
 rvalue:
@@ -179,8 +187,8 @@ rvalue:
 /* gauche de =		*/
 /* -------------------- */
 lvalue:
-	T_IDENTIFIER								{ fprintf( stderr , "lvalue : [%s]\n" , $1 ); }
-	| T_IDENTIFIER T_LEFT_SQUARE_BRACKET expr T_RIGHT_SQUARE_BRACKET	{ fprintf( stderr , "lvalue: indicee [%s]\n" , $1 ); }
+	T_IDENTIFIER								{ fprintf( stderr , "lvalue : [%s]\n" , $1.ident ); }
+	| T_IDENTIFIER T_LEFT_SQUARE_BRACKET expr T_RIGHT_SQUARE_BRACKET	{ fprintf( stderr , "lvalue: indicee [%s]\n" , $1.ident ); }
 ;
 /* -------------------- */
 /* Create		*/
@@ -205,7 +213,7 @@ entity_defs:
 /* Create Property	*/
 /* -------------------- */
 create_property_stmt:
-	T_CREATE T_PROPERTY T_LEFT_BRACE property_defs T_RIGHT_BRACE
+	T_CREATE T_PROPERTY T_LEFT_BRACE property_defs T_RIGHT_BRACE	{}
 ;
 /* -------------------- */
 /* corps property	*/
@@ -218,7 +226,7 @@ property_defs:
 /* -------------------- */
 obj_defs:
 	 guid_defs T_SEMICOLON name_defs T_SEMICOLON
-	| guid_defs T_SEMICOLON name_defs T_UNIQUE T_SEMICOLON	{fprintf( stderr , "[Unique]\n"  );}
+	| guid_defs T_SEMICOLON name_defs T_UNIQUE T_SEMICOLON	{}
 ;
 /* -------------------- */
 /* identity		*/

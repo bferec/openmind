@@ -10,6 +10,9 @@
 #include "openmindlib.h"
 
 #define KEYWORDS_COUNT 12
+
+char msgerror[ 256 ];
+
 /* -------------------------------------------------------------*/
 /* mots cles ne pouvant être utilises en tant que variable	*/
 /* -------------------------------------------------------------*/
@@ -163,6 +166,7 @@ variable_node * node ;
 }
 
 /* -----------------------------------------------------*/
+/* return 1 if identifier = fdl keyword 		*/
 /* -----------------------------------------------------*/
 BOOL  check_ident( char * oneident )
 {
@@ -171,18 +175,51 @@ BOOL invalid_result;
 	fprintf( stderr , "checkIdent(%ss)\n" , oneident );
 	invalid_result =  findkeyword( oneident ) != NULL ;
 
-
 return invalid_result;
 }
 
-
 /* -----------------------------------------------------*/
+/* ajout nouveau noeud 					*/
+/* dans l'arbre	des identifiers				*/
+/* ident inférieur à gauche				*/
+/* ident superieur à droite				*/
 /* -----------------------------------------------------*/
-variable_node * addvar(variable * onevar )
+void addVarNode( variable_node * oneNode , variable_node * tree )
 {
-variable_node * result;
-	result = (variable_node *) NULL;
+	if( tree == NULL )
+	{
+		tree = 	oneNode;
+	}
+	else if( strcmp(oneNode ->v -> ident , tree -> v -> ident ) < 0 )
+	{
+		tree -> left  = oneNode;
+	}
+	else
+		tree -> right = oneNode;
+}
 
+/* -----------------------------------------------------*/
+/* ajout nouvel identificateur sans valeur/type		*/
+/* dans l'arbre						*/
+/* -----------------------------------------------------*/
+variable * createVar( char * oneIdent )
+{
+variable * result ;
+variable_node * v;
+
+	newvarnode = find_variable_node( oneIdent ,  var_list);
+	if( newvarnode ==  (variable_node *) NULL )
+	{
+		newvarnode  = (variable_node *) malloc( sizeof( variable_node ) );
+		newvarnode -> v = (variable *) malloc( sizeof( variable ) );
+		newvarnode -> v -> ident = malloc( strlen( oneIdent ) + 1 );
+		strcpy( newvarnode -> v -> ident  , oneIdent );	
+		newvarnode -> v -> type =  UNKNOWN;
+		newvarnode -> left = newvarnode -> right = (variable_node *) NULL;
+		addVarNode( newvarnode , var_list );
+	}
+	result  = newvarnode -> v;
+	
 return result;		
 }
 

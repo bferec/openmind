@@ -12,7 +12,8 @@
 /* -------------------------------------*/
 /* type de variable possible dans fdl	*/
 /* -------------------------------------*/
-enum var_type {INTEGER, FLOAT, STRING, BOOLEAN , GUID, ENTITY , PROPERTY};
+typedef enum var_type { UNKNOWN , INTEGER, FLOAT, STRING, BOOLEAN , GUID, ENTITY , PROPERTY } VarType;
+
 
 /* -------------------------------------*/
 /* test de validite d'un identificateur */
@@ -46,7 +47,7 @@ typedef struct property
 /* -----------------------------------------------------*/
 typedef struct variable
 {
-	enum	var_type type;
+	VarType type;
 	char * ident;
 	union
 	{
@@ -70,9 +71,10 @@ typedef struct variable_node
 
 
 
+
 void NewGuid( char * result );
 BOOL  check_ident( char * oneident );
-variable_node * init_varlist();
+variable * find_variable( char * oneIdent );
 char * strlwr( char * );
 char * strupr( char * );
 

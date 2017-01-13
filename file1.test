@@ -3,8 +3,8 @@
 mavar = 2;
 monautrevar = "tagada";
 
-Entity = "tt";
-CREATE = 2;
+CREATE = "tt";
+y = 2;
 
 Create Entity
 {
