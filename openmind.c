@@ -2,6 +2,7 @@
 
 #include "openmindlib.h"
 
+#define DEBUG 1
 
 extern int yydebug;
 extern int yyparse();
@@ -13,11 +14,15 @@ extern FILE * yyin;
 
 int main(int argc , char * * argv) 
 {
-char guid[33];
+
+	#ifdef DEBUG
+	#endif
+
+	
 
 /*	yydebug = 1;	*/
 
-	if(argc>1)
+	if(argc > 1 )
 	{ 
 		yyin=fopen(argv[1],"r");
 	}

@@ -16,6 +16,8 @@ extern int lineNumber;
 extern void yyerror(const char * msg);
 char msgerror[ 256 ];
 
+BOOL err_check_ident;
+
 %}
 
 %option noyywrap
@@ -79,7 +81,6 @@ spacetab		[ \t\r]+
 {guid}			{ strcpy( yylval.string_value , yytext ) ; return T_GUID;}
 {string}		{ strcpy( yylval.string_value , yytext ) ; return T_CSTE_STRING;}
 
-
 "True"			{yylval.boolean_value = True ;  return T_TRUE ; }
 "False"			{yylval.boolean_value = False ; return T_FALSE ; }
 
@@ -94,7 +95,22 @@ spacetab		[ \t\r]+
 (?i:"exit")		{return T_QUIT;}
 (?i:"quit")		{return T_QUIT;}
 
-{ident}			{strcpy( yylval.string_value , yytext ) ; return T_IDENTIFIER;}
+
+{ident}			{err_check_ident = check_ident( strdup(yytext)  );
+			 if( ! err_check_ident  )  
+			{
+				strcpy( yylval.string_value , yytext ); 
+			}
+			else 
+			{
+				sprintf( msgerror, "Mot cle interdit comme identificateur : [%s] ", yytext  );
+				yyerror(msgerror);
+			}
+			
+			return T_IDENTIFIER;
+			}
+
+
 
 .			{ sprintf( msgerror, "caractere inconnu : [%s] ", yytext  ); yyerror(msgerror) ; return T_UNKNOWN;}
 

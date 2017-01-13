@@ -1,17 +1,26 @@
-/* openmindlib.h	*/
+/* -------------------------------------*/
+/* -------------------------------------*/
+/* openmindlib.h			*/
+/* -------------------------------------*/
+/* -------------------------------------*/
 
 #define GUID_LENGTH 33
 #define MAXLENGTH_STRING 255
 #define BOOL int
 
 
-void NewGuid( char * result );
-
+/* -------------------------------------*/
+/* type de variable possible dans fdl	*/
+/* -------------------------------------*/
 enum var_type {INTEGER, FLOAT, STRING, BOOLEAN , GUID, ENTITY , PROPERTY};
 
+/* -------------------------------------*/
+/* test de validite d'un identificateur */
+/* -------------------------------------*/
 
 
 /* -----------------------------------------------------*/
+/* definition entite					*/
 /* -----------------------------------------------------*/
 typedef struct entity
 {
@@ -22,6 +31,7 @@ typedef struct entity
 }entity;
 
 /* -----------------------------------------------------*/
+/* definition propriete					*/
 /* -----------------------------------------------------*/
 typedef struct property
 {
@@ -32,11 +42,12 @@ typedef struct property
 
 
 /* -----------------------------------------------------*/
-/* unec variable du programme				*/
+/* une variable du programme				*/
 /* -----------------------------------------------------*/
 typedef struct variable
 {
 	enum	var_type type;
+	char * ident;
 	union
 	{
 		int integer_value;
@@ -45,6 +56,25 @@ typedef struct variable
 		int boolean_value;
 		entity  * entity_value;
 		property * property_value;
-	}u;
+	}val;
 }variable;
+
+/* -----------------------------------------------------*/
+/* -----------------------------------------------------*/
+typedef struct variable_node
+{
+	variable * v;
+	struct variable_node * left;
+	struct variable_node * right;	
+}variable_node;
+
+
+
+void NewGuid( char * result );
+BOOL  check_ident( char * oneident );
+variable_node * init_varlist();
+char * strlwr( char * );
+char * strupr( char * );
+
+
 
