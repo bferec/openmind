@@ -174,22 +174,29 @@ stmt:
 /* affectation		*/
 /* -------------------- */
 assign_stmt:
-	 lvalue T_ASSIGN rvalue		{ 
-						fprintf(stderr, "assign_stmt2, yytext: [%s] yychar : [%d]\n" , yytext , yychar );
-					 
-					}
-
-;
-
-rvalue:
-	rvalue_var
-	| rvalue_number
-	| rvalue_boolean
-	| rvalue_string	
+	  lvalue T_ASSIGN rvalue_var		{	
+							char destIdent[256];
+							strcpy( destIdent , $1 -> ident );	/* sauvegarder identifier variable	*/
+							memcpy( (void *) $1 , (void *) $3 , sizeof(struct variable)  );		/* copier dest dans src	*/
+							strcpy( $1 -> ident , destIdent );	/* restaurer identifier	*/
+						}	
+	| lvalue T_ASSIGN rvalue_number		{
+							$1 -> type = FLOAT;
+							$1 -> val.float_value  = $3;
+						}
+	| lvalue T_ASSIGN rvalue_boolean	{
+							$1 -> type = BOOLEAN;
+							$1 -> val.boolean_value  = $3;
+						}
+	| lvalue T_ASSIGN rvalue_string		
+						{
+							$1 -> type = STRING;
+							strcpy( $1 -> val.string_value ,  $3 );
+						}
 ;
 
 rvalue_var:
-	T_IDENTIFIER 	{ }	
+	T_IDENTIFIER 	{$$ = yylval.var; }	
 ;
 rvalue_number:
 	numeric_expr 	{ $$ = $1; }
