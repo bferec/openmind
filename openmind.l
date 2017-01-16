@@ -10,7 +10,6 @@
 
 #include "openmind.tab.h"
 
-
 extern int lineNumber;
 char *  msgerror;
 
@@ -97,8 +96,9 @@ spacetab		[ \t\r]+
 (?i:"quit")		{return T_QUIT;}
 
 
-{ident}			{yylval.var = createVar( yytext );
-			return T_IDENTIFIER;
+{ident}			{
+				yylval.var = createVar( yytext );
+				return T_IDENTIFIER;
 			}
 
 .			{ sprintf( msgerror, "caractere inconnu : [%s] ", yytext  ); yyerror(msgerror) ; return T_UNKNOWN;}

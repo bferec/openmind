@@ -8,6 +8,8 @@ all: openmind
 openmind: openmind.tab.o lex.yy.o
 	$(CC) -o openmind openmind.c openmindlib.c  openmind.tab.o lex.yy.o -lm
 
+openmindlib.o: openmindlib.c openmindlib.h
+	
 lex.yy.o: lex.yy.c openmind.tab.h
 
 openmind.tab.c openmind.tab.h: openmind.y

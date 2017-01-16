@@ -53,7 +53,7 @@ void yyerror(const char* s);
 	enum { False, True } boolean_value;		/* booleanvalue					*/
 	char guid_value[ GUID_LENGTH ];			/* guid value identifier of entity or property	*/
 	char string_value[ MAXLENGTH_STRING + 1 ] ;	/* string constant and vars.			*/
-	variable var;
+	variable * var;
 } 
 
 
@@ -132,6 +132,11 @@ void yyerror(const char* s);
 
 %type <var>  lvalue
 
+%type <var>  rvalue_var
+%type <number_value.float_value> rvalue_number
+%type <boolean_value> rvalue_boolean
+%type <string_value> rvalue_string
+
 /* -------------------- */
 /* -------------------- */
 /* Axiome		*/
@@ -159,49 +164,65 @@ instList:
 /* -------------------- */
 stmt:
 	expr 
-	| assign_stmt
-	| create_stmt
-	| error T_SEMICOLON	{yyerrok;}
+	| create_stmt		{}
+	| assign_stmt		{}
+	| error T_SEMICOLON	{fprintf( stderr , "Textz [%s]\n" , yytext); yyerrok;}
 	| T_QUIT		{exit (0);}
 ;
 /* -------------------- */
 /* affectation		*/
 /* -------------------- */
 assign_stmt:
-	 lvalue T_ASSIGN rvalue		{if(check_ident( $1.ident ) ) 
+	 lvalue T_ASSIGN rvalue		{ 
+					 if(check_ident( $1 -> ident ) ) 
 					 {
-						sprintf(msgerror, "utilisation d'un mot reservé comme variable : [%s]\n\r",$1.ident );
+						sprintf(msgerror, "utilisation d'un mot reservé comme variable : [%s]\n\r",$1 -> ident );
 						yyerror(msgerror);
 					 }
+					 
 					}
 ;
 
 rvalue:
-	T_IDENTIFIER 	{ fprintf( stderr , "[assignation Variable]\n" ); }	
-	| numeric_expr 	{ fprintf( stderr , "[assignation numerique]\n" ); }
-	| boolean_expr 	{ fprintf( stderr , "[assignation boolenne]\n" ); }
-	| string_expr 	{ fprintf( stderr , "[assignation string]\n" ); }
+	rvalue_var
+	| rvalue_number
+	| rvalue_boolean
+	| rvalue_string	
+;
+rvalue_var:
+	T_IDENTIFIER 	{ 
+			}	
+;
+rvalue_number:
+	numeric_expr 	{ $$ = $1; }
+;
+rvalue_boolean:
+	boolean_expr 	{ $$ = $1; }
+;
+rvalue_string:
+	string_expr 	{ strcpy( $$ , $1 );}
 ;
 /* -------------------- */
 /* ce qui peut être à	*/
 /* gauche de =		*/
 /* -------------------- */
 lvalue:
-	T_IDENTIFIER								{ fprintf( stderr , "lvalue : [%s]\n" , $1.ident ); }
-	| T_IDENTIFIER T_LEFT_SQUARE_BRACKET expr T_RIGHT_SQUARE_BRACKET	{ fprintf( stderr , "lvalue: indicee [%s]\n" , $1.ident ); }
+	T_IDENTIFIER								{ fprintf( stderr , "lvalue : [%s]\n" , $1 -> ident ); }
+	| T_IDENTIFIER T_LEFT_SQUARE_BRACKET expr T_RIGHT_SQUARE_BRACKET	{ fprintf( stderr , "lvalue: indicee [%s]\n" , $1 -> ident ); }
+
 ;
 /* -------------------- */
 /* Create		*/
 /* -------------------- */
 create_stmt:
-	create_entity_stmt
-	| create_property_stmt
+	create_entity_stmt	
+	| create_property_stmt	
 ;
 /* -------------------- */
 /* Create ENTITY	*/
 /* -------------------- */
 create_entity_stmt:
-	T_CREATE T_ENTITY T_LEFT_BRACE entity_defs T_RIGHT_BRACE	{}
+	T_CREATE T_ENTITY T_LEFT_BRACE entity_defs T_RIGHT_BRACE	{ fprintf( stderr , "create_entity_stmt \n" ); }
 ;
 /* -------------------- */
 /* corps ENTITY		*/
@@ -213,7 +234,7 @@ entity_defs:
 /* Create Property	*/
 /* -------------------- */
 create_property_stmt:
-	T_CREATE T_PROPERTY T_LEFT_BRACE property_defs T_RIGHT_BRACE	{}
+	T_CREATE T_PROPERTY T_LEFT_BRACE property_defs T_RIGHT_BRACE	{ fprintf( stderr , "create_property_stmt \n" ); }
 ;
 /* -------------------- */
 /* corps property	*/
@@ -311,7 +332,7 @@ boolean_expr:
 /* Expression chaine	*/
 /* -------------------- */
 string_expr:
-	T_CSTE_STRING		{strcpy( $$ , $1); fprintf( stderr , "[constante texte :%s]\n" , $1 ); }
+	T_CSTE_STRING		{strcpy( $$ , $1); }
 ;
 
 %%
@@ -320,6 +341,6 @@ string_expr:
 /* -------------------- */
 void yyerror(const char* msg) 
 {
-	fprintf( stderr, "ligne %d [%s]\n", lineNumber , msg  );
+	fprintf( stderr, "Erreur en ligne %3.3d : [%s]\n", lineNumber , msg  );
 }
 

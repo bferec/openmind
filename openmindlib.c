@@ -20,11 +20,9 @@ char keywords[KEYWORDS_COUNT] [256] = {"true","false","create","entity", "proper
 
 
 /* -----------------------------------------------------*/
-/* liste des va
+/* liste des variables					*/
 /* -----------------------------------------------------*/
 variable_node * var_list ;
-
-
 
 /* -----------------------------------------------------*/
 /* generation d'un nombre aletoire entre deux bornes	*/
@@ -172,7 +170,6 @@ BOOL  check_ident( char * oneident )
 {
 BOOL invalid_result;
 
-	fprintf( stderr , "checkIdent(%ss)\n" , oneident );
 	invalid_result =  findkeyword( oneident ) != NULL ;
 
 return invalid_result;
@@ -205,7 +202,7 @@ void addVarNode( variable_node * oneNode , variable_node * tree )
 variable * createVar( char * oneIdent )
 {
 variable * result ;
-variable_node * v;
+variable_node * newvarnode;
 
 	newvarnode = find_variable_node( oneIdent ,  var_list);
 	if( newvarnode ==  (variable_node *) NULL )

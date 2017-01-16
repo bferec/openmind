@@ -75,6 +75,7 @@ typedef struct variable_node
 void NewGuid( char * result );
 BOOL  check_ident( char * oneident );
 variable * find_variable( char * oneIdent );
+variable * createVar( char * oneIdent );
 char * strlwr( char * );
 char * strupr( char * );
 
