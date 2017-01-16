@@ -11,7 +11,9 @@
 #include "openmind.tab.h"
 
 extern int lineNumber;
-char *  msgerror;
+extern int yychar;
+
+extern char *  msgerror;
 
 extern void yyerror(const char * msg);
 
@@ -31,6 +33,9 @@ float			{digit}+\.{digit}+|\.{digit}+
 ident			[a-zA-Z_][0-9a-zA-Z_]*	
 string			\"[^"]*\"
 spacetab		[ \t\r]+
+
+entity			(?i:"entity")
+property		(?i:"property")
 
 %%
 
@@ -84,9 +89,12 @@ spacetab		[ \t\r]+
 "True"			{yylval.boolean_value = True ;  return T_TRUE ; }
 "False"			{yylval.boolean_value = False ; return T_FALSE ; }
 
+
+{entity}		{return T_ENTITY;}
+{property}		{return T_PROPERTY;}
+
 (?i:"create")		{return T_CREATE;}
-(?i:"entity")		{return T_ENTITY;}
-(?i:"property")		{return T_PROPERTY;}
+
 (?i:"identity")		{return T_IDENTITY;}
 (?i:"auto")		{return T_AUTO;}
 (?i:"name")		{return T_NAME;}
@@ -97,8 +105,16 @@ spacetab		[ \t\r]+
 
 
 {ident}			{
-				yylval.var = createVar( yytext );
-				return T_IDENTIFIER;
+				if( check_ident( yytext ) ) 
+				 {
+					sprintf(msgerror, "utilisation d'un mot reservé comme variable : [%s]\n",yytext);
+					yyerror(msgerror);
+				 }				
+				else
+				{
+					yylval.var = createVar( yytext );
+					return T_IDENTIFIER;
+				}
 			}
 
 .			{ sprintf( msgerror, "caractere inconnu : [%s] ", yytext  ); yyerror(msgerror) ; return T_UNKNOWN;}

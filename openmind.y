@@ -30,6 +30,7 @@ extern int main( int argc, char ** argv );
 extern char *  msgerror;
 extern FILE * yyin;
 extern char * yytext;
+extern int yychar;
 
 
 int lineNumber;	/* current line number */
@@ -42,6 +43,7 @@ void yyerror(const char* s);
 /* bison declarations	*/
 /* -------------------- */
 %define parse.trace
+%define parse.error verbose
 
 %union 
 {
@@ -163,10 +165,9 @@ instList:
 /* instruction		*/
 /* -------------------- */
 stmt:
-	expr 
-	| create_stmt		{}
-	| assign_stmt		{}
-	| error T_SEMICOLON	{fprintf( stderr , "Textz [%s]\n" , yytext); yyerrok;}
+	expr 			{fprintf( stderr , "expr, yytext [%s] yychar [%d]\n" , yytext, yychar );}
+	| create_stmt		{fprintf( stderr , "create stmt, yytext [%s] yychar [%d]\n" , yytext, yychar );}
+	| assign_stmt		{fprintf(stderr, "assign_stmt, yytext: [%s] yychar : [%d]\n" , yytext , yychar );}
 	| T_QUIT		{exit (0);}
 ;
 /* -------------------- */
@@ -174,13 +175,10 @@ stmt:
 /* -------------------- */
 assign_stmt:
 	 lvalue T_ASSIGN rvalue		{ 
-					 if(check_ident( $1 -> ident ) ) 
-					 {
-						sprintf(msgerror, "utilisation d'un mot reservé comme variable : [%s]\n\r",$1 -> ident );
-						yyerror(msgerror);
-					 }
+						fprintf(stderr, "assign_stmt2, yytext: [%s] yychar : [%d]\n" , yytext , yychar );
 					 
 					}
+
 ;
 
 rvalue:
@@ -189,9 +187,9 @@ rvalue:
 	| rvalue_boolean
 	| rvalue_string	
 ;
+
 rvalue_var:
-	T_IDENTIFIER 	{ 
-			}	
+	T_IDENTIFIER 	{ }	
 ;
 rvalue_number:
 	numeric_expr 	{ $$ = $1; }
@@ -207,22 +205,24 @@ rvalue_string:
 /* gauche de =		*/
 /* -------------------- */
 lvalue:
-	T_IDENTIFIER								{ fprintf( stderr , "lvalue : [%s]\n" , $1 -> ident ); }
-	| T_IDENTIFIER T_LEFT_SQUARE_BRACKET expr T_RIGHT_SQUARE_BRACKET	{ fprintf( stderr , "lvalue: indicee [%s]\n" , $1 -> ident ); }
+	T_IDENTIFIER								{fprintf( stderr , "lvalue : [%s]\n" , $1 -> ident ); }
+	| T_IDENTIFIER T_LEFT_SQUARE_BRACKET expr T_RIGHT_SQUARE_BRACKET	{fprintf( stderr , "lvalue: indicee [%s]\n" , $1 -> ident ); }
+	| error T_SEMICOLON 		{YYABORT;}
+
 
 ;
 /* -------------------- */
 /* Create		*/
 /* -------------------- */
 create_stmt:
-	create_entity_stmt	
-	| create_property_stmt	
+	create_entity_stmt		{fprintf(stderr, "create entity stmt, yytext: [%s] yychar : [%d]\n" , yytext , yychar );}
+	| create_property_stmt		{fprintf(stderr, "create property stmt,yytext: [%s] yychar : [%d]\n" , yytext , yychar );}
 ;
 /* -------------------- */
 /* Create ENTITY	*/
 /* -------------------- */
 create_entity_stmt:
-	T_CREATE T_ENTITY T_LEFT_BRACE entity_defs T_RIGHT_BRACE	{ fprintf( stderr , "create_entity_stmt \n" ); }
+	T_CREATE T_ENTITY T_LEFT_BRACE entity_defs T_RIGHT_BRACE	{ }
 ;
 /* -------------------- */
 /* corps ENTITY		*/
@@ -234,7 +234,7 @@ entity_defs:
 /* Create Property	*/
 /* -------------------- */
 create_property_stmt:
-	T_CREATE T_PROPERTY T_LEFT_BRACE property_defs T_RIGHT_BRACE	{ fprintf( stderr , "create_property_stmt \n" ); }
+	T_CREATE T_PROPERTY T_LEFT_BRACE property_defs T_RIGHT_BRACE	{ }
 ;
 /* -------------------- */
 /* corps property	*/
@@ -283,7 +283,7 @@ guid_expr:
 /* -------------------- */
 numeric_expr:
 	T_INT						{ $$ = (float) $1 ; }	
-	| T_FLOAT					{}				
+	| T_FLOAT					{ $$ = $1; }				
 	| T_LEFT_BRACKET numeric_expr T_RIGHT_BRACKET	{ $$ = $2; }
 	| T_MINUS_SIGN numeric_expr 			{ $$ = -$2; fprintf( stderr , "%f\n" , $$ ); }
 	| numeric_expr T_PLUS_SIGN numeric_expr		{ $$ = $1 + $3; fprintf( stderr , "%f\n" , $$ ); }

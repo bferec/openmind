@@ -2,7 +2,7 @@
 
 #include "openmindlib.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 extern int yydebug;
 extern int yyparse();
@@ -15,8 +15,11 @@ extern FILE * yyin;
 int main(int argc , char * * argv) 
 {
 
-	#ifdef DEBUG
-	#endif
+	if( DEBUG == 0 )
+	{	
+		fclose( stderr );
+		stderr = fopen("/dev/null", "w" );
+	}
 
 	
 
@@ -33,7 +36,6 @@ int main(int argc , char * * argv)
 
 	lineNumber=1;
 
-	/* yydebug = 1; */
 
 	do 
 	{ 
