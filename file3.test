@@ -13,6 +13,4 @@
 "aaaa" == "aaaa";
 "aaaa" != "bbbb";
 
-
-
 quit;

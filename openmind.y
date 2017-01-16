@@ -120,6 +120,7 @@ void yyerror(const char* s);
 %token T_AUTO
 %token T_NAME
 %token T_UNIQUE
+%token T_ECHO
 %token T_QUIT
 
 %token<guid_value> T_GUID
@@ -165,11 +166,19 @@ instList:
 /* instruction		*/
 /* -------------------- */
 stmt:
-	expr 			{fprintf( stderr , "expr, yytext [%s] yychar [%d]\n" , yytext, yychar );}
-	| create_stmt		{fprintf( stderr , "create stmt, yytext [%s] yychar [%d]\n" , yytext, yychar );}
-	| assign_stmt		{fprintf(stderr, "assign_stmt, yytext: [%s] yychar : [%d]\n" , yytext , yychar );}
+	expr 			{}
+	| create_stmt		{}
+	| echo_stmt		{}
+	| assign_stmt		{}
 	| T_QUIT		{exit (0);}
 ;
+
+echo_stmt:
+	T_ECHO numeric_expr		{fprintf(stdout, "%f" , $2); }
+	| T_ECHO string_expr		{fprintf(stdout, "%s" , $2); }
+	| T_ECHO boolean_expr		{fprintf(stdout, "%s" , $2 ? "True" : "False" ); }
+;
+
 /* -------------------- */
 /* affectation		*/
 /* -------------------- */
@@ -292,10 +301,10 @@ numeric_expr:
 	T_INT						{ $$ = (float) $1 ; }	
 	| T_FLOAT					{ $$ = $1; }				
 	| T_LEFT_BRACKET numeric_expr T_RIGHT_BRACKET	{ $$ = $2; }
-	| T_MINUS_SIGN numeric_expr 			{ $$ = -$2; fprintf( stderr , "%f\n" , $$ ); }
-	| numeric_expr T_PLUS_SIGN numeric_expr		{ $$ = $1 + $3; fprintf( stderr , "%f\n" , $$ ); }
-	| numeric_expr T_MINUS_SIGN numeric_expr	{ $$ = $1 - $3; fprintf( stderr , "%f\n" , $$ ); }
-	| numeric_expr T_ASTERISK numeric_expr		{ $$ = $1 * $3; fprintf( stderr , "%f\n" , $$ ); }
+	| T_MINUS_SIGN numeric_expr 			{ $$ = -$2; }
+	| numeric_expr T_PLUS_SIGN numeric_expr		{ $$ = $1 + $3; }
+	| numeric_expr T_MINUS_SIGN numeric_expr	{ $$ = $1 - $3; }
+	| numeric_expr T_ASTERISK numeric_expr		{ $$ = $1 * $3; }
 	| numeric_expr T_SLASH numeric_expr		{ if($3 == 0) 
 							  {
 								yyerror("division par zero"); 
@@ -321,8 +330,7 @@ boolean_expr:
 	| string_expr T_DIFFERENT  string_expr			{ $$ = strcmp( $1 , $3 ) != 0 ; fprintf( stderr , "%s != %s => %d\n" ,$1,$3, $$ );}
 	| string_expr T_EQUAL  string_expr			{ $$ = strcmp( $1 , $3 ) == 0 ; fprintf( stderr , "%s == %s => %d\n" ,$1,$3, $$ );}	
 	| string_expr T_LESS_THAN  string_expr			{ $$ = strcmp( $1 , $3 ) < 0 ; fprintf( stderr , "%s < %s => %d\n" , $1,$3,$$ );}
-	| string_expr T_MORE_THAN  string_expr			{ $$ = strcmp( $1 , $3 ) > 0  ; fprintf( stderr , "%s > %s => %d\n" , $1,$3,$$ );}
-	
+	| string_expr T_MORE_THAN  string_expr			{ $$ = strcmp( $1 , $3 ) > 0  ; fprintf( stderr , "%s > %s => %d\n" , $1,$3,$$ );}	
 
 	| guid_expr T_DIFFERENT  guid_expr			{ $$ = ! strcmp( $1 , $3 ) ; fprintf( stderr , "%s != %s => %d\n" ,$1,$3, $$ );}
 	| guid_expr T_EQUAL  guid_expr				{ $$ = strcmp( $1 , $3 ) ; fprintf( stderr , "%s == %s => %d\n" ,$1,$3, $$ );}	
