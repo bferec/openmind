@@ -2,7 +2,7 @@
 
 #include "openmindlib.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 extern int yydebug;
 extern int yyparse();

@@ -35,8 +35,8 @@ guid			{hexanumber}\-{hexanumber}\-{hexanumber}\-{hexanumber}\-{hexanumber}
 integer			{digit}+
 float			{digit}+\.{digit}+|\.{digit}+
 ident			[a-zA-Z_][0-9a-zA-Z_]*	
-
-spacetab		[ \t\r]+
+escape			\n|\r|\f|\b\|\t
+spacetab		[ \t]+
 
 entity			(?i:"entity")
 property		(?i:"property")
@@ -49,7 +49,7 @@ property		(?i:"property")
 				
 
 
-"/*"			BEGIN (comment) ;	/* entree en zone de commentaire		*/
+"/*"			BEGIN (comment) ;	/* debut de commentaire				*/
 <comment>[^*\n]*	{}			/* ignore tout ce qui n'est pas * 		*/
 <comment>"*"+[^*/\n]*	{}			/* ignore tout ce qui n'est pas * suivi de /	*/
 
@@ -57,20 +57,21 @@ property		(?i:"property")
 <comment>"*"+"/"	BEGIN( INITIAL );	/* fin de commentaire				*/
 		
 
-\" 			{ string_buffer_ptr = string_buffer; BEGIN (string ); }
+\" 			{ string_buffer_ptr = string_buffer; BEGIN (string ); }	/* debut constante texte	*/
 <string>\"		{ 
-				BEGIN(INITIAL); * string_buffer_ptr = '\0';  
+				BEGIN(INITIAL); * string_buffer_ptr = '\0';  	/* fin constante texte		*/
 				strcpy( yylval.string_value , string_buffer ) ;
 				return T_CSTE_STRING;				
 			}
 
 <string>\\n		{ * string_buffer_ptr ++ = '\n';  }
-<string>\\t		{ * string_buffer_ptr ++ = '\t';  }
-<string>\\r		{ * string_buffer_ptr ++ = '\r';  }
-<string>\\b		{ * string_buffer_ptr ++ = '\b';  }
-<string>\\f		{ * string_buffer_ptr ++ = '\f';  }
+<string>\t		{ * string_buffer_ptr ++ = '\t';  }
+<string>\r		{ * string_buffer_ptr ++ = '\r';  }
+<string>\b		{ * string_buffer_ptr ++ = '\b';  }
+<string>\f		{ * string_buffer_ptr ++ = '\f';  }
 
-<string>[^\"]+		{ char * src;
+<string>[^\"]+		{ 
+			  char * src;
 			  src = yytext;
 			  while( * src )
 			  {
@@ -78,6 +79,7 @@ property		(?i:"property")
 			  }
 			}
 
+<INITIAL>\n		{ lineNumber ++ ;}
 
 {spacetab}		{ /* nothing */ }
 

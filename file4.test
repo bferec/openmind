@@ -1,13 +1,19 @@
 /* test commentaire	*/
 
+echo "test affichage constante texte:\n";
 echo  "Hello World !\n";
 
+
+echo "test \taffichage expressions numeriques:\n";
 echo (3+2)* 7 ;
 
+
+echo "test affichage constante boolenne True:\n";
 echo True;
 
+echo "test affichage expressions boolenne:\f";
 echo 1 == 1;     
 
- eereur
+
 
 
