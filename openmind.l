@@ -11,12 +11,16 @@
 #include "openmind.tab.h"
 
 extern int lineNumber;
+extern int charNumber;
+
 extern int yychar;
 
 extern char *  msgerror;
 
 extern void yyerror(const char * msg);
 
+char string_buffer[ MAXLENGTH_STRING + 1 ];
+char * string_buffer_ptr;
 
 BOOL err_check_ident;
 
@@ -31,18 +35,49 @@ guid			{hexanumber}\-{hexanumber}\-{hexanumber}\-{hexanumber}\-{hexanumber}
 integer			{digit}+
 float			{digit}+\.{digit}+|\.{digit}+
 ident			[a-zA-Z_][0-9a-zA-Z_]*	
-string			\"[^"]*\"
+
 spacetab		[ \t\r]+
 
 entity			(?i:"entity")
 property		(?i:"property")
 
+%x comment
+%x string
+
 %%
 
-"/*"[^*]*"*/"|"/*"[^/]*"*/" ;
-\/\/.* ;
+				
 
-"\n"			{ ++ lineNumber  ; }
+
+"/*"			BEGIN (comment) ;	/* entree en zone de commentaire		*/
+<comment>[^*\n]*	{}			/* ignore tout ce qui n'est pas * 		*/
+<comment>"*"+[^*/\n]*	{}			/* ignore tout ce qui n'est pas * suivi de /	*/
+
+<comment>\n		{++ lineNumber  ; charNumber = 0; }
+<comment>"*"+"/"	BEGIN( INITIAL );	/* fin de commentaire				*/
+		
+
+\" 			{ string_buffer_ptr = string_buffer; BEGIN (string ); }
+<string>\"		{ 
+				BEGIN(INITIAL); * string_buffer_ptr = '\0';  
+				strcpy( yylval.string_value , string_buffer ) ;
+				return T_CSTE_STRING;				
+			}
+
+<string>\\n		{ * string_buffer_ptr ++ = '\n';  }
+<string>\\t		{ * string_buffer_ptr ++ = '\t';  }
+<string>\\r		{ * string_buffer_ptr ++ = '\r';  }
+<string>\\b		{ * string_buffer_ptr ++ = '\b';  }
+<string>\\f		{ * string_buffer_ptr ++ = '\f';  }
+
+<string>[^\"]+		{ char * src;
+			  src = yytext;
+			  while( * src )
+			  {
+				* string_buffer_ptr ++ = * src ++ ;  
+			  }
+			}
+
 
 {spacetab}		{ /* nothing */ }
 
@@ -84,11 +119,6 @@ property		(?i:"property")
 {integer}		{ yylval.number_value.integer_value = atoi( yytext ) ; return T_INT ; }
 {float}			{ yylval.number_value.float_value = atof( yytext )   ; return T_FLOAT ; }
 {guid}			{ strcpy( yylval.string_value , yytext ) ; return T_GUID;}
-{string}		{ 
-				int l;l = strlen(yytext);			
-				strncpy( yylval.string_value , yytext+ 1 , l -2 ) ;
-				return T_CSTE_STRING;
-			}
 
 "True"			{yylval.boolean_value = True ;  return T_TRUE ; }
 "False"			{yylval.boolean_value = False ; return T_FALSE ; }
@@ -122,7 +152,7 @@ property		(?i:"property")
 				}
 			}
 
-.			{ sprintf( msgerror, "caractere inconnu : [%s] ", yytext  ); yyerror(msgerror) ; return T_UNKNOWN;}
+.			{ charNumber ++; sprintf( msgerror, "caractere inconnu : [%s] ", yytext  ); yyerror(msgerror) ; return T_UNKNOWN;}
 
 %%
 

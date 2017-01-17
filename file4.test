@@ -1,3 +1,4 @@
+/* test commentaire	*/
 
 echo  "Hello World !\n";
 
@@ -5,5 +6,8 @@ echo (3+2)* 7 ;
 
 echo True;
 
-echo 1 == 1;
+echo 1 == 1;     
+
+ eereur
+
 

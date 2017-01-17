@@ -2,12 +2,13 @@
 
 #include "openmindlib.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 extern int yydebug;
 extern int yyparse();
 extern int yylex (void);
 extern int lineNumber;
+extern int charNumber;
 
 extern FILE * yyin;
 
@@ -35,6 +36,7 @@ int main(int argc , char * * argv)
 	}
 
 	lineNumber=1;
+	charNumber=0;
 
 
 	do 

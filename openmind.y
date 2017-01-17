@@ -34,6 +34,7 @@ extern int yychar;
 
 
 int lineNumber;	/* current line number */
+int charNumber;	/* current char number */
 
 void yyerror(const char* s);
 
@@ -173,6 +174,9 @@ stmt:
 	| T_QUIT		{exit (0);}
 ;
 
+/* -------------------- */
+/* affichage		*/
+/* -------------------- */
 echo_stmt:
 	T_ECHO numeric_expr		{fprintf(stdout, "%f" , $2); }
 	| T_ECHO string_expr		{fprintf(stdout, "%s" , $2); }
@@ -356,6 +360,6 @@ string_expr:
 /* -------------------- */
 void yyerror(const char* msg) 
 {
-	fprintf( stderr, "Erreur en ligne %3.3d : [%s]\n", lineNumber , msg  );
+	fprintf( stderr, "Erreur ligne [%4.4d] : caractere [%4.4d] [%s]\n", lineNumber , charNumber , msg  );
 }
 
