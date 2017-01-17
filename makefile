@@ -19,4 +19,4 @@ lex.yy.c: openmind.l
 	$(LEX) openmind.l
 
 clean:
-	rm openmind openmind.tab.c lex.yy.c openmind.tab.h *.output *.o
+	rm openmind openmind.tab.* *.yy.c  *.output *.o

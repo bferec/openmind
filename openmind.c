@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "openmindlib.h"
 
@@ -37,7 +38,6 @@ int main(int argc , char * * argv)
 
 	lineNumber=1;
 	charNumber=0;
-
 
 	do 
 	{ 

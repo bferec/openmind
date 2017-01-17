@@ -64,24 +64,19 @@ property		(?i:"property")
 				return T_CSTE_STRING;				
 			}
 
-<string>\\n		{ * string_buffer_ptr ++ = '\n';  }
-<string>\t		{ * string_buffer_ptr ++ = '\t';  }
-<string>\r		{ * string_buffer_ptr ++ = '\r';  }
-<string>\b		{ * string_buffer_ptr ++ = '\b';  }
-<string>\f		{ * string_buffer_ptr ++ = '\f';  }
+<string>\\n		{ * string_buffer_ptr ++ = '\n'; }
+<string>\\t		{ * string_buffer_ptr ++ = '\t'; }
+<string>\\r		{ * string_buffer_ptr ++ = '\r'; }
+<string>\\f		{ * string_buffer_ptr ++ = '\f'; }
+<string>\\\\		{ * string_buffer_ptr ++ = '\\'; }
 
-<string>[^\"]+		{ 
-			  char * src;
-			  src = yytext;
-			  while( * src )
-			  {
-				* string_buffer_ptr ++ = * src ++ ;  
-			  }
+<string>[^\"\n\r\f\t\\]	{ 
+			  * string_buffer_ptr ++ = * yytext;
 			}
 
 <INITIAL>\n		{ lineNumber ++ ;}
 
-{spacetab}		{ /* nothing */ }
+<INITIAL>{spacetab}	{ /* nothing */ }
 
 
 
@@ -139,7 +134,6 @@ property		(?i:"property")
 	
 (?i:"exit")		{return T_QUIT;}
 (?i:"quit")		{return T_QUIT;}
-
 
 {ident}			{
 				if( check_ident( yytext ) ) 
