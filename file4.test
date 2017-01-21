@@ -1,5 +1,5 @@
 /* test commentaire	*/
-
+/*
 echo "test affichage constante texte:\t\t";
 echo  "\\Hello World\\ !\n";
 
@@ -14,9 +14,42 @@ echo  "\n";
 
 echo "test affichage expressions boolenne:\t";
 echo 1 == 1;  
-   
+echo  "\n";
+
+*/
+
+x = 2;
+echo  "x = ";
+echo x;
+echo  "\n";
+
+y = 7.5;
+echo  "y = ";
+echo y;
+echo  "\n";
+
+echo "addition de deux constantes entieres: 3+5= ";
+echo 3 + 5;
+echo  "\n";
+
+echo "addition de deux constantes flottante: 10.75 + 5.25 = ";
+echo 10.75 + 5.25;
+echo  "\n";
+
+echo "addition de deux constantes heterogenes: 3 + 7.0 = ";
+echo 3 + 7.0;
+echo  "\n";
+echo "addition de deux constantes heterogenes: 3.5 + 5 = ";
+echo 3.5 + 5;
 echo  "\n";
 
 
+echo "addition de deux variables :x+y = ";
+echo x+y;
+echo  "\n";
 
+
+echo "addition de variable + constante : x+3 = ";
+echo x + 3;
+echo  "\n";
 

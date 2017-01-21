@@ -1,7 +1,11 @@
 %{
-/* ------------ */
-/* openmind.l	*/
-/* ------------ */
+/* -------------------------------------*/
+/* -------------------------------------*/
+/* 					*/
+/* openmind.l				*/
+/* 					*/
+/* -------------------------------------*/
+/* -------------------------------------*/
 
 #include <stdio.h>
 #include <string.h>
@@ -113,13 +117,14 @@ property		(?i:"property")
 "=="			{return T_EQUAL;}
 "=" 			{return T_ASSIGN;}
 
-{integer}		{ yylval.number_value.integer_value = atoi( yytext ) ; return T_INT ; }
-{float}			{ yylval.number_value.float_value = atof( yytext )   ; return T_FLOAT ; }
+{integer}		{ yylval.number_value.number_type = INTEGER_NUMBER_TYPE ; yylval.number_value.integer_value = atoi( yytext ) ; return T_INT ; }
+{float}			{ yylval.number_value.number_type = FLOAT_NUMBER_TYPE ; yylval.number_value.float_value = atof( yytext )   ; return T_FLOAT ; }
+
 {guid}			{ strcpy( yylval.string_value , yytext ) ; return T_GUID;}
 
 "True"			{yylval.boolean_value = True ;  return T_TRUE ; }
 "False"			{yylval.boolean_value = False ; return T_FALSE ; }
-
+ 
 
 {entity}		{return T_ENTITY;}
 {property}		{return T_PROPERTY;}

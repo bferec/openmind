@@ -1,4 +1,4 @@
-/* parserlib.c	*/
+/* openmindlib.c	*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,9 +9,11 @@
 
 #include "openmindlib.h"
 
-#define KEYWORDS_COUNT 12
 
-char msgerror[ 256 ];
+int lineNumber;	/* current line number */
+int charNumber;	/* current char number */
+
+char msgerror[ MAXLENGTH_STRING + 1 ];
 
 /* -------------------------------------------------------------*/
 /* mots cles ne pouvant être utilises en tant que variable	*/
@@ -37,6 +39,11 @@ int randomize(int min, int max)
 
 }
 
+void yyerror(const char* msg) 
+{
+	fprintf( stderr, "Erreur ligne [%4.4d] : caractere [%4.4d] [%s]\n", lineNumber , charNumber , msg  );
+}
+
 /* -----------------------------------------------------*/
 /* generation d'un guid à la mode microsoft		*/
 /* -----------------------------------------------------*/
@@ -55,6 +62,7 @@ int n[5] ;
 }
 
 /* -----------------------------------------------------*/
+/* return string to  lowercase				ù/
 /* -----------------------------------------------------*/
 char * strlwr( char * s )
 {
@@ -75,6 +83,7 @@ char * begin;
 }
 
 /* -----------------------------------------------------*/
+/* return string to  uppercase				ù/
 /* -----------------------------------------------------*/
 char * strupr( char * s )
 {
@@ -118,8 +127,6 @@ int i;
 	fprintf( stderr , "TROUVE MOT CLE : [%d]\n" , onekeyword == NULL );
 }
 
-
-
 /* -----------------------------------------------------*/
 /* parcours recursif de l'arbre	des variables		*/
 /* -----------------------------------------------------*/
@@ -146,6 +153,7 @@ int compare;
 }
 
 /* -----------------------------------------------------*/
+/* find an identifier with ident			*/
 /* -----------------------------------------------------*/
 variable * find_variable( char * oneIdent )
 {
@@ -155,11 +163,16 @@ variable_node * node ;
 
 	result = (variable *) NULL;
 
+	fprintf( stderr , "recherche variable...\n" );
 	node = find_variable_node(  oneIdent ,  var_list );
 
 	if( node != (variable_node *) NULL )
+	{
 		result = node -> v;
-
+		fprintf( stderr , "variable trouvée\n" );
+	}
+	else
+		fprintf( stderr , "variable non trouvée\n" );
 	return result;
 }
 
@@ -181,18 +194,20 @@ return invalid_result;
 /* ident inférieur à gauche				*/
 /* ident superieur à droite				*/
 /* -----------------------------------------------------*/
-void addVarNode( variable_node * oneNode , variable_node * tree )
+variable_node * addVarNode( variable_node * oneNode , variable_node * current_NodeTree )
 {
-	if( tree == NULL )
+	if( current_NodeTree == NULL )
 	{
-		tree = 	oneNode;
+		current_NodeTree = oneNode;
 	}
-	else if( strcmp(oneNode ->v -> ident , tree -> v -> ident ) < 0 )
+	else if( strcmp(oneNode ->v -> ident , current_NodeTree -> v -> ident ) < 0 )
 	{
-		tree -> left  = oneNode;
+		current_NodeTree -> left = addVarNode( oneNode , current_NodeTree -> left );
 	}
 	else
-		tree -> right = oneNode;
+		current_NodeTree -> right = addVarNode( oneNode , current_NodeTree -> right );
+
+	return current_NodeTree;
 }
 
 /* -----------------------------------------------------*/
@@ -202,23 +217,42 @@ void addVarNode( variable_node * oneNode , variable_node * tree )
 variable * createVar( char * oneIdent )
 {
 variable * result ;
-variable_node * newvarnode;
+variable_node * new_VarNode;
 
-	newvarnode = find_variable_node( oneIdent ,  var_list);
-	if( newvarnode ==  (variable_node *) NULL )
+	new_VarNode = find_variable_node( oneIdent ,  var_list);
+	if( new_VarNode ==  (variable_node *) NULL )
 	{
-		newvarnode  = (variable_node *) malloc( sizeof( variable_node ) );
-		newvarnode -> v = (variable *) malloc( sizeof( variable ) );
-		newvarnode -> v -> ident = malloc( strlen( oneIdent ) + 1 );
-		strcpy( newvarnode -> v -> ident  , oneIdent );	
-		newvarnode -> v -> type =  UNKNOWN;
-		newvarnode -> left = newvarnode -> right = (variable_node *) NULL;
-		addVarNode( newvarnode , var_list );
+		new_VarNode  = (variable_node *) malloc( sizeof( variable_node ) );
+		new_VarNode -> v = (variable *) malloc( sizeof( variable ) );
+		new_VarNode -> v -> ident = malloc( strlen( oneIdent ) + 1 );
+		strcpy( new_VarNode -> v -> ident  , oneIdent );	
+		new_VarNode -> v -> type =  UNKNOWN_IDENTIFIER_TYPE;
+		new_VarNode -> left = new_VarNode -> right = (variable_node *) NULL;
+		var_list = addVarNode( new_VarNode , var_list );
 	}
-	result  = newvarnode -> v;
+	result = new_VarNode -> v;
 	
 return result;		
 }
 
+/* -----------------------------------------------------*/
+/* return float ou int value of identifier according	*/
+/* to type						*/
+/* -----------------------------------------------------*/
+double getValueNumber( numberValue v )
+{
+double result;
+	result = 0;
+	switch( v.number_type )
+	{
+		case INTEGER_NUMBER_TYPE:
+			result = (double) v.integer_value;
+		break;
 
+		case FLOAT_NUMBER_TYPE:
+			result = (double) v.float_value;
+		break;
+	}
 
+	return result;
+}
