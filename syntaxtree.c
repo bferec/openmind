@@ -19,7 +19,7 @@
 /* -----------------------------------------------------*/
 /* racine de l'arbre syntaxique				*/
 /* -----------------------------------------------------*/
-syntaxTreeNode * syntaxTree;
+/* syntaxTreeNode * syntaxTree; */
 
 /* -----------------------------------------------------*/
 /* allocation memoire pour un noeud 			*/
@@ -44,8 +44,8 @@ syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr )
 
 	resultNode = syntaxTreeNodeAlloc();
 
-
 	resultNode -> type = CONSTANT_SYNTAXTREE_NODETYPE;
+
 	resultNode -> cste.type = oneType;
 
 	switch( oneType )
@@ -148,9 +148,12 @@ syntaxTreeNode * oper( int oneOper, int OperandsCount, ...)
 	resultNode -> oper.OperandsCount = OperandsCount;
 
 	/* operand_number; */
-	resultNode -> oper.operands = (struct syntaxTreeNode_ * *) calloc( OperandsCount , sizeof( struct syntaxTreeNode_ * ) );
-	if( resultNode -> oper.operands == (struct syntaxTreeNode_ * *) NULL )
-		yyerror("operands of operator vector allocation : Out of Memory" );
+	if( OperandsCount > 0 )
+	{
+		resultNode -> oper.operands = (struct syntaxTreeNode_ * *) calloc( OperandsCount , sizeof( struct syntaxTreeNode_ * ) );
+		if( resultNode -> oper.operands == (struct syntaxTreeNode_ * *) NULL )
+			yyerror("operands of operator vector allocation : Out of Memory" );
+	}
 	return resultNode;
 }
 

@@ -93,7 +93,7 @@ typedef struct variable
 /* -----------------------------------------------------*/
 /* une constante du programme				*/
 /* -----------------------------------------------------*/
-typedef struct 
+typedef struct constant_
 {
 	ConstantType type;
 	value val;
@@ -156,14 +156,20 @@ typedef struct variable_node
 
 void yyerror(const char* s);
 
-
 void NewGuid( char * result );
 BOOL  check_ident( char * oneident );
 variable * find_variable( char * oneIdent );
 variable * createVar( char * oneIdent );
+
+
 char * strlwr( char * );
 char * strupr( char * );
 double getValueNumber( numberValue v );
 void yyerror(const char* msg);
+void * expression( syntaxTreeNode * oneNode );
 
+syntaxTreeNode * oper( int oneOper, int OperandsCount, ...);
+syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr );
+syntaxTreeNode * Var( VarType oneType, variable * oneVarPtr );
+void Free_SyntaxTreeNode( syntaxTreeNode * oneNode );
 
