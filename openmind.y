@@ -142,14 +142,12 @@ stmtList:
 				{
 					expression( $1 ) ; 
 					/* dumpSyntaxTreeNode( $1 ); */
-					fprintf(stderr , "\n" );
 					Free_SyntaxTreeNode( $1 ); 
 				}
 	| stmtList stmt T_SEMICOLON	
 				{ 
 					 expression( $2 ) ; 
 					/* dumpSyntaxTreeNode( $2 ); */
-					fprintf(stderr , "\n" );
 					Free_SyntaxTreeNode( $2 ); 
 				}
 

@@ -1,6 +1,8 @@
 
 echo 3;
 
+echo  "\n";
+echo  "test constante texte\n";
 
 3/7;		/* ok */
 
@@ -10,6 +12,15 @@ echo 3;
 
 
 a = 5;		/* ok */
+
+echo  "a =";
+echo a;
+
+echo  "\n";
+
+text = "test d'une variable texte";
+echo text;
+text
 
 b = 7;		/* ok */
 
