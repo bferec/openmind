@@ -66,6 +66,15 @@ char op;
 				case T_PLUS_SIGN:
 					op = '+';
 				break;
+				case T_MINUS_SIGN:
+					op = '-';
+				break;
+				case T_ASTERISK:
+					op = '*';
+				break;
+				case T_SLASH:
+					op = '/';
+				break;
 			}
 			fprintf( stderr , "Node operateur [ %c ] %d operandes \n", op , oneNode -> oper.OperandsCount );
 			for( int i = 0 ; i < oneNode->oper.OperandsCount ; i ++ )
