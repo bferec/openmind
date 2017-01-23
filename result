@@ -1,2 +1,0 @@
-bison -d -v openmind.y
-makefile:17 : la recette pour la cible « openmind.tab.c » a échouée

@@ -6,8 +6,8 @@ APPNAME = openmind
 all: $(APPNAME)
 
 
-$(APPNAME): $(APPNAME).tab.o lex.yy.o $(APPNAME)lib.o syntaxtree.o $(APPNAME)interpret.o
-	$(CC) -o $(APPNAME) $(APPNAME).c $(APPNAME)lib.c  syntaxtree.c  $(APPNAME).tab.o lex.yy.o  $(APPNAME)interpret.c -lm
+$(APPNAME): $(APPNAME).tab.o lex.yy.o $(APPNAME)lib.o $(APPNAME)varlist.o syntaxtree.o $(APPNAME)interpret.o
+	$(CC) -o $(APPNAME) $(APPNAME).c $(APPNAME)lib.c i$(APPNAME)varlist.c  syntaxtree.c  $(APPNAME).tab.o lex.yy.o  $(APPNAME)interpret.c -lm
 
 $(APPNAME)lib.o: $(APPNAME)lib.c $(APPNAME)lib.h
 	$(CC) -c $(APPNAME)lib.c
@@ -17,6 +17,9 @@ $(APPNAME)Interpret.o: $(APPNAME)interpret.c $(APPNAME).tab.h
 
 syntaxtree.o: syntaxtree.c $(APPNAME)lib.h	
 	$(CC) -c syntaxtree.c
+
+openmindvarlist.o: openmindvarlist.c
+	$(CC) -c openmindvarlist.c
 
 lex.yy.o: lex.yy.c $(APPNAME).tab.h
 

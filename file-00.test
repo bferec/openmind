@@ -13,14 +13,13 @@ echo  "test constante texte\n";
 
 a = 5;		/* ok */
 
-echo  "a =";
+echo  "a = ";
 echo a;
 
 echo  "\n";
 
 text = "test d'une variable texte";
 echo text;
-text
 
 b = 7;		/* ok */
 

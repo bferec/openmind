@@ -17,15 +17,17 @@
 /* interpretation d'une constante	*/
 /* -------------------------------------*/
 
-value expression_Constante(syntaxTreeNode * oneNode,  constant * oneConstante )
+value expression_Constante(syntaxTreeNode * oneNode )
 {
 value result;	
+constant * oneConstante;
+
+	oneConstante = & oneNode -> cste ;
 
 	fprintf( stderr, "constante\n" );
 	switch( oneConstante -> type )
 	{
 		case INT_CONSTANT_TYPE:
-
 			result.integer_value =  oneConstante -> val.integer_value ;
 		break;
 
@@ -52,11 +54,12 @@ value result;
 /* -------------------------------------*/
 /* interpretation d'une variable	*/
 /* -------------------------------------*/
-value  expression_Variable(syntaxTreeNode * oneNode , variable * oneVariable )
+value  expression_Variable(syntaxTreeNode * oneNode )
 {
 value result;	
-	
-	/* fprintf( stderr, "Variable\n" ); */
+variable * oneVariable;
+
+	oneVariable = oneNode -> var;
 
 	switch( oneVariable -> type )
 	{
@@ -101,7 +104,7 @@ variable  * currentVar;
 constant * constante;
 variable * rvalue_var;
 
-	currentVar = & oneOperatorNode -> operands[0]-> var;
+	currentVar = oneOperatorNode -> operands[0]-> var;
 
 	switch( oneOperatorNode -> operands[1] -> type )
 		{
@@ -113,6 +116,8 @@ variable * rvalue_var;
 					case 	INT_CONSTANT_TYPE:
 						currentVar -> type = INTEGER_IDENTIFIER_TYPE;
 						currentVar -> val.integer_value  =  constante -> val.integer_value;
+						
+						
 					break;
 
 					case 	FLOAT_CONSTANT_TYPE:
@@ -143,8 +148,7 @@ variable * rvalue_var;
 			break;
 
 			case IDENTIFIER_SYNTAXTREE_NODETYPE:
-				
-				rvalue_var =  & oneOperatorNode -> operands[1]-> var;
+				rvalue_var =  oneOperatorNode -> operands[1]-> var;
 
 				switch( rvalue_var -> type )
 				{
@@ -183,7 +187,7 @@ variable * rvalue_var;
 /* -------------------------------------*/
 /* interpretation d'une operateur	*/
 /* -------------------------------------*/
-void  echo(operator * oneOperatorNode) 
+void  echo(operator * oneOperatorNode ) 
 {
 constant * constante;
 variable  * currentVar;
@@ -221,11 +225,11 @@ variable  * currentVar;
 
 			case IDENTIFIER_SYNTAXTREE_NODETYPE:
 				
-				currentVar = & oneOperatorNode -> operands[i]-> var;
+				currentVar = oneOperatorNode -> operands[i]-> var;
 				switch( currentVar -> type )
 				{
 					case 	INTEGER_IDENTIFIER_TYPE:
-						printf( "%d" , currentVar-> val.integer_value );
+						printf( "%d" , currentVar -> val.integer_value );
 					break;
 
 					case 	FLOAT_IDENTIFIER_TYPE:
@@ -320,11 +324,11 @@ value result;
 	switch( oneNode -> type )
 	{
 		case CONSTANT_SYNTAXTREE_NODETYPE:
-			result = expression_Constante( oneNode , & oneNode -> cste );
+			result = expression_Constante( oneNode );
 		break;
 
 		case IDENTIFIER_SYNTAXTREE_NODETYPE:
-			result =  expression_Variable( oneNode , & oneNode -> var );
+			result =  expression_Variable( oneNode );
 		break;
 
 		case OPERATOR_SYNTAXTREE_NODETYPE:

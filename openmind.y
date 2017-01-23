@@ -17,6 +17,7 @@
 #include <stdarg.h>
 
 #include "openmindlib.h"
+#include "openmindvarlist.h"
 
 #define YYDEBUG 0  /* For debugging */
 #define DEBUG 0 

@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "openmindlib.h"
+# include "openmindvarlist.h"
 
 #include "openmind.tab.h"
 
@@ -160,8 +160,8 @@ property		(?i:"property")
 				 }				
 				else
 				{
-					yylval.var = createVar( yytext );
 					
+					yylval.var = createVar( yytext );
 					return T_IDENTIFIER;
 				}
 			}

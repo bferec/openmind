@@ -52,7 +52,7 @@ char op;
 		break;
 
 		case IDENTIFIER_SYNTAXTREE_NODETYPE:
-			fprintf( stderr , "Node Identifier: %s\n", oneNode->var.ident  ); 
+			fprintf( stderr , "Node Identifier: %s\n", oneNode->var -> ident  ); 
 		break;
 
 		case OPERATOR_SYNTAXTREE_NODETYPE:
@@ -160,9 +160,9 @@ syntaxTreeNode * resultNode;
 
 	resultNode -> type = IDENTIFIER_SYNTAXTREE_NODETYPE;
 
-	memcpy( & resultNode->var , (variable *) oneVarPtr  , sizeof( variable ));
-	resultNode->var.type = oneType;
-	/* fprintf( stderr , "var() %s\n" , resultNode->var.ident); */
+	resultNode-> var = oneVarPtr ;
+	resultNode-> var -> type = oneType;
+	/* fprintf( stderr , "var() %s\n" , resultNode->var-> ident);  */
 	return resultNode;
 }
 
@@ -231,16 +231,19 @@ void Free_ConstantSyntaxTreeNode( syntaxTreeNode * oneNode  )
 /* -----------------------------------------------------*/
 void Free_VarSyntaxTreeNode( syntaxTreeNode * oneNode  )
 {
-	switch( oneNode-> var.type  )
+	switch( oneNode-> var -> type  )
 	{
 		case 	GUID_IDENTIFIER_TYPE:
-			free( oneNode -> var.val.guid_value );
+			free( oneNode -> var-> val.guid_value );
 		break;
 
 		case	STRING_IDENTIFIER_TYPE:
-			free( oneNode -> var.val.string_value );
+			free( oneNode -> var -> val.string_value );
 		break;
 	}	
+	fprintf( stderr , "liberation de la variable %s\n" , oneNode -> var -> ident);
+	free( oneNode -> var -> ident );
+	free( oneNode -> var );
 	free( oneNode );
 }
 /* -----------------------------------------------------*/
