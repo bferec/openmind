@@ -46,7 +46,7 @@ extern int yychar;
 %union 
 {
 	numberValue  number_value;			/* numeric value				*/
-	enum { False, True } boolean_value;		/* booleanvalue					*/
+	enum { False, True } boolean_value;		/* boolean value				*/
 	char guid_value[ GUID_LENGTH ];			/* guid value identifier of entity or property	*/
 	char string_value[ MAXLENGTH_STRING + 1 ] ;	/* string constant and vars.			*/
 	variable * var;
@@ -137,9 +137,22 @@ extern int yychar;
 /* liste instructions	*/
 /* -------------------- */
 stmtList:
-	stmt T_SEMICOLON 		{ exit (0); }
-	| stmtList stmt T_SEMICOLON	{ expression( $2 ) ; Free_SyntaxTreeNode( $2 ); }
-	| %empty
+
+	| stmt T_SEMICOLON 	
+				{
+					/* expression( $1 ) ; */
+					dumpSyntaxTreeNode( $1 ); 
+					fprintf(stderr , "\n" );
+					Free_SyntaxTreeNode( $1 ); 
+				}
+	| stmtList stmt T_SEMICOLON	
+				{ 
+					/* expression( $2 ) ; */
+					dumpSyntaxTreeNode( $2 ); 
+					fprintf(stderr , "\n" );
+					Free_SyntaxTreeNode( $2 ); 
+				}
+
 ;
 
 /* -------------------- */
@@ -170,8 +183,8 @@ assign_stmt:
 /* gauche de =		*/
 /* -------------------- */
 lvalue:
-	T_IDENTIFIER								{ $$ = Var( $1->type ,  $1 ); }
-	| T_IDENTIFIER T_LEFT_SQUARE_BRACKET expr T_RIGHT_SQUARE_BRACKET	{/* variable tableau */}
+	T_IDENTIFIER				{ $$ = Var( $1 -> type , (void *) $1 ); }
+	| T_IDENTIFIER T_LEFT_SQUARE_BRACKET expr T_RIGHT_SQUARE_BRACKET	{ /* variable tableau */ }
 	| error T_SEMICOLON 		{YYABORT;}
 ;
 /* -------------------- */
@@ -238,15 +251,15 @@ expr:
 /* -------------------- */
 guid_expr:
 	T_AUTO		{ $$ = oper( T_AUTO , 0 );  }
-	| T_GUID	{ $$ = Const( GUID_CONSTANT_TYPE , & $1 );}
+	| T_GUID	{ $$ = Const( GUID_CONSTANT_TYPE , (void *) $1 );}
 ;
 
 /* -------------------- */
 /* Expression numerique	*/
 /* -------------------- */
 numeric_expr:
-	T_INT 						{ $$ = Const( INT_CONSTANT_TYPE , & $1 ); }
-	| T_FLOAT					{ $$ = Const( FLOAT_CONSTANT_TYPE , & $1 ); }
+	T_INT 						{ $$ = Const( INT_CONSTANT_TYPE   , (void *) & $1.integer_value); }
+	| T_FLOAT					{ $$ = Const( FLOAT_CONSTANT_TYPE , (void *) & $1.float_value );  }
 	| T_IDENTIFIER					{ $$ = Var( $1-> type ,  $1 ); }
 	| T_LEFT_BRACKET numeric_expr T_RIGHT_BRACKET	{ $$ = $2;}
 	| T_MINUS_SIGN numeric_expr 			{ $$ = oper( T_MINUS_SIGN , 1 , $2 ) ; }
@@ -260,8 +273,8 @@ numeric_expr:
 /* Expression booleeene	*/
 /* -------------------- */
 boolean_expr:	
-	T_TRUE					{ $$ = Const( BOOLEEAN_CONSTANT_TYPE , & $1 ); }
-	| T_FALSE				{ $$ = Const( BOOLEEAN_CONSTANT_TYPE , & $1 ); }
+	T_TRUE					{ $$ = Const( BOOLEEAN_CONSTANT_TYPE , (void *) & $1); }
+	|T_FALSE				{ $$ = Const( BOOLEEAN_CONSTANT_TYPE , (void *) & $1); }
 
 	| T_NOT boolean_expr			{ $$ = oper( T_NOT , 1, $2 ); }
 	| expr T_OR expr			{ $$ = oper( T_OR  , 2, $1 , $3 ); }
@@ -279,8 +292,8 @@ boolean_expr:
 /* Expression chaine	*/
 /* -------------------- */
 string_expr:
-	T_CSTE_STRING				{ $$ = Const( STRING_CONSTANT_TYPE , $1 ); }
-	| T_IDENTIFIER				{ $$ = Var( $1-> type , $1 ); }bferec
+	T_CSTE_STRING				{ $$ = Const( STRING_CONSTANT_TYPE , (void *) $1 ); }
+	| T_IDENTIFIER				{ $$ = Var( $1-> type , (void *) $1 ); }
 
 	| string_expr T_AMPERSAND  string_expr	{ $$ = oper( T_AMPERSAND , 2, $1 , $3 );}
 ;

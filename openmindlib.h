@@ -168,6 +168,7 @@ double getValueNumber( numberValue v );
 void yyerror(const char* msg);
 void * expression( syntaxTreeNode * oneNode );
 
+void  dumpSyntaxTreeNode(syntaxTreeNode * oneNode );
 syntaxTreeNode * oper( int oneOper, int OperandsCount, ...);
 syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr );
 syntaxTreeNode * Var( VarType oneType, variable * oneVarPtr );

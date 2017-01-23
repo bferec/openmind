@@ -1,9 +1,10 @@
 /* test assignation et creation */
 
 mavar = 2;
+
 monautrevar = "tagada";
 
-y = 2;
+y = 5;
 
 tst = True;
 
