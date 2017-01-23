@@ -99,7 +99,8 @@ extern int yychar;
 
 %token<boolean_value> T_TRUE
 %token<boolean_value>  T_FALSE
-
+%token<guid_value>  T_GUID
+%token<string_value> T_CSTE_STRING
 %token<var> T_IDENTIFIER
 
 /* -------------------------------------*/
@@ -115,12 +116,10 @@ extern int yychar;
 %token T_ECHO
 %token T_QUIT
 
-%token<guid_value>  T_GUID
-%token<string_value> T_CSTE_STRING
-
 %token T_UNKNOWN
 
-%type <node> stmtList stmt create_stmt echo_stmt assign_stmt expr string_expr numeric_expr boolean_expr guid_expr lvalue
+%type <node> stmtList stmt create_stmt echo_stmt assign_stmt 
+%type <node> expr string_expr numeric_expr boolean_expr guid_expr lvalue
 
 /* -------------------- */
 /* -------------------- */
@@ -281,7 +280,8 @@ boolean_expr:
 /* -------------------- */
 string_expr:
 	T_CSTE_STRING				{ $$ = Const( STRING_CONSTANT_TYPE , $1 ); }
-	| T_IDENTIFIER				{ $$ = Var( $1-> type , $1 ); }
+	| T_IDENTIFIER				{ $$ = Var( $1-> type , $1 ); }bferec
+
 	| string_expr T_AMPERSAND  string_expr	{ $$ = oper( T_AMPERSAND , 2, $1 , $3 );}
 ;
 

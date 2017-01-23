@@ -32,7 +32,7 @@ BOOL err_check_ident;
 
 %option noyywrap
 
-digit			[0-9]
+digit			[0-9]	
 hexadigit		{digit}|[a-fA-F]
 hexanumber		{hexadigit}+
 guid			{hexanumber}\-{hexanumber}\-{hexanumber}\-{hexanumber}\-{hexanumber}
@@ -122,7 +122,11 @@ property		(?i:"property")
 				yylval.number_value.integer_value = atoi( yytext ) ; 
 				return T_INT ; 
 			}
-{float}			{ yylval.number_value.number_type = FLOAT_NUMBER_TYPE ; yylval.number_value.float_value = atof( yytext )   ; return T_FLOAT ; }
+{float}			{
+				yylval.number_value.number_type = FLOAT_NUMBER_TYPE ; 
+				yylval.number_value.float_value = atof( yytext ) ; 
+				return T_FLOAT ; 
+			}
 
 {guid}			{ strcpy( yylval.guid_value , yytext ) ; return T_GUID;}
 
