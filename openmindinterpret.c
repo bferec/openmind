@@ -17,69 +17,72 @@
 /* interpretation d'une constante	*/
 /* -------------------------------------*/
 
-void * expression_Constante(syntaxTreeNode * oneNode,  constant * oneConstante )
+value expression_Constante(syntaxTreeNode * oneNode,  constant * oneConstante )
 {
-	void * result;	
+value result;	
+
 	fprintf( stderr, "constante\n" );
 	switch( oneConstante -> type )
 	{
 		case INT_CONSTANT_TYPE:
 
-			result = (void *) & oneConstante -> val.integer_value ;
+			result.integer_value =  oneConstante -> val.integer_value ;
 		break;
 
 		case FLOAT_CONSTANT_TYPE:
-			result = (void *) & oneConstante -> val.float_value ;
+			result.float_value =  oneConstante -> val.float_value ;
 		break;
 
 		case BOOLEEAN_CONSTANT_TYPE:
-			result = (void *) & oneConstante -> val.boolean_value ;
+			result.boolean_value =  oneConstante -> val.boolean_value ;
 		break;
 
 		case GUID_CONSTANT_TYPE:
-			result = (void *) & oneConstante -> val.guid_value ;
+			strcpy( result.guid_value ,  oneConstante -> val.guid_value ) ;
 		break;
 
 		case STRING_CONSTANT_TYPE:
-			result = (void *) & oneConstante -> val.string_value ;
+			strcpy( result.string_value ,  oneConstante -> val.string_value ) ;
 		break;
 	}
 
 	return result;
 }
+
 /* -------------------------------------*/
 /* interpretation d'une variable	*/
 /* -------------------------------------*/
-void * expression_Variable(syntaxTreeNode * oneNode , variable * oneVariable )
+value  expression_Variable(syntaxTreeNode * oneNode , variable * oneVariable )
 {
-	void * result;	
-	result = (void *) NULL;
+value result;	
+
+	
+
 	fprintf( stderr, "Variable\n" );
 
 	switch( oneVariable -> type )
 	{
-		case UNKNOWN_IDENTIFIER_TYPE:
-			result = (void *) & "#UNKNOWN#" ;
+		case UNKNOWN_IDENTIFIER_TYPE:		
 		break;
 		
 		case INTEGER_IDENTIFIER_TYPE:
-			result = (void *) & oneVariable -> val.integer_value ;
+			result.integer_value =  oneVariable -> val.integer_value ;
 		break;
 
 		case FLOAT_IDENTIFIER_TYPE:
-			result = (void *) & oneVariable -> val.float_value ;
+			result.float_value =  oneVariable -> val.float_value ;
 		break;
 
 		case BOOLEAN_IDENTIFIER_TYPE:
-			result = (void *) & oneVariable -> val.boolean_value ;
+			result.boolean_value =  oneVariable -> val.boolean_value ;
 		break;
 
 		case GUID_IDENTIFIER_TYPE:
-			result = (void *) & oneVariable -> val.guid_value ;
+			strcpy( result.guid_value , oneVariable -> val.guid_value );
 		break;
 
 		case STRING_IDENTIFIER_TYPE:
-			result = (void *) & oneVariable -> val.string_value ;
+			strcpy( result.string_value ,  oneVariable -> val.string_value ) ;
 		break;
 
 		case ENTITY_IDENTIFIER_TYPE:
@@ -90,21 +93,31 @@ void * expression_Variable(syntaxTreeNode * oneNode , variable * oneVariable )
 	return result;
 }
 
+
+/* -------------------------------------*/
+/* interpretation d'une assignation	*/
+/* -------------------------------------*/
+void  assign(operator * oneOperNode) 
+{
+variable  * currentVar;
+	currentVar = & oneOperNode -> operands[0]-> var;
+	
+}
 /* -------------------------------------*/
 /* interpretation d'une operateur	*/
 /* -------------------------------------*/
-void echo(operator * oneOper) 
+void  echo(operator * oneOperNode) 
 {
 constant * constante;
 variable  * currentVar;
 
-	for( int i = 0 ; i < oneOper -> OperandsCount ; i ++ )
+	for( int i = 0 ; i < oneOperNode -> OperandsCount ; i ++ )
 	{
-		switch( oneOper->operands[i] -> type )
+		switch( oneOperNode -> operands[i] -> type )
 		{
 			case CONSTANT_SYNTAXTREE_NODETYPE:
 				
-				constante =  & oneOper -> operands[i]-> cste;
+				constante =  & oneOperNode -> operands[i]-> cste;
 				switch( constante -> type )
 				{
 					case 	INT_CONSTANT_TYPE:
@@ -131,7 +144,7 @@ variable  * currentVar;
 
 			case IDENTIFIER_SYNTAXTREE_NODETYPE:
 
-				currentVar = & oneOper -> operands[i]-> var;
+				currentVar = & oneOperNode -> operands[i]-> var;
 				switch( currentVar -> type )
 				{
 					case 	INTEGER_IDENTIFIER_TYPE:
@@ -162,25 +175,49 @@ variable  * currentVar;
 /* -------------------------------------*/
 /* interpretation d'une operateur	*/
 /* -------------------------------------*/
-void * expression_Operator( syntaxTreeNode * oneNode )
+value expression_Operator( syntaxTreeNode * oneNode )
 {
-void * result;	
+value result;	
 char guid[GUID_LENGTH]; 
 
-	result = (void *) NULL;
 	operator * currentOper;
 	fprintf( stderr, "Operateur\n" );
+
 	currentOper = & oneNode-> oper;
 
 	switch( currentOper -> type )
 	{
+		case T_PLUS_SIGN:
+			/* return expression( currentOper-> operands[0] ) +  expression( currentOper-> operands[1] ) ; */
+		break;
+
+		case T_MINUS_SIGN:
+			/* if( currentOper-> operandscount == 2 )
+				return expression( currentOper-> operands[0] ) -  expression( currentOper-> operands[1] ) ;
+			   else
+				return - expression( currentOper-> operands[0] ) ;
+			*/
+		break;
+
+		case T_ASTERISK:
+			/* return expression( currentOper-> operands[0] ) *  expression( currentOper-> operands[1] ) ; */
+		break;
+
+		case T_SLASH:
+			/* return expression( currentOper-> operands[0] ) /  expression( currentOper-> operands[1] ) ; */
+		break;
+
 		case T_ECHO:
 			echo( currentOper );
 		break;
 
-		case T_AUTO:
+		case T_ASSIGN:
+			assign( currentOper );
+		break;
 
-		NewGuid( guid ); result = (void *) guid ;
+		case T_AUTO:
+		NewGuid( guid); 
+		strcpy( result.guid_value , guid );		
 		break;
 	}
 
@@ -191,11 +228,9 @@ char guid[GUID_LENGTH];
 /* -------------------------------------*/
 /* interpretation d'une expression	*/
 /* -------------------------------------*/
-void * expression( syntaxTreeNode * oneNode )
+value expression( syntaxTreeNode * oneNode )
 {
-void * result;
-
-	result =  NULL;
+value result;
 
 	fprintf( stderr, "expression\n" );
 
@@ -207,15 +242,15 @@ void * result;
 	switch( oneNode -> type )
 	{
 		case CONSTANT_SYNTAXTREE_NODETYPE:
-			return expression_Constante( oneNode , & oneNode -> cste );
+			result = expression_Constante( oneNode , & oneNode -> cste );
 		break;
 
 		case IDENTIFIER_SYNTAXTREE_NODETYPE:
-			return expression_Variable( oneNode , & oneNode -> var );
+			result =  expression_Variable( oneNode , & oneNode -> var );
 		break;
 
 		case OPERATOR_SYNTAXTREE_NODETYPE:
-			return expression_Operator( oneNode  );
+			result = expression_Operator( oneNode  );
 		break;
 	}
 	return result;
