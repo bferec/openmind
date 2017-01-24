@@ -12,7 +12,7 @@ $(APPNAME): $(APPNAME).tab.o lex.yy.o $(APPNAME)lib.o $(APPNAME)varlist.o syntax
 $(APPNAME)lib.o: $(APPNAME)lib.c $(APPNAME)lib.h
 	$(CC) -c $(APPNAME)lib.c
 	
-$(APPNAME)Interpret.o: $(APPNAME)interpret.c $(APPNAME).tab.h $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h
+$(APPNAME)Interpret.o: $(APPNAME)interpret.c $(APPNAME).tab.h $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h expressions.h
 	$(CC) -c $(APPNAME)interpret.c
 
 syntaxtree.o: syntaxtree.c $(APPNAME)lib.h  entity.h openmindvalue.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h	

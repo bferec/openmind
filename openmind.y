@@ -26,6 +26,7 @@
 
 #include "syntaxtree.h"
 
+#include "expressions.h"
 
 #define YYDEBUG 0  /* For debugging */
 #define DEBUG 0 

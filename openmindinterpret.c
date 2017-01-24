@@ -18,7 +18,7 @@
 #include "operator.h"
 #include "syntaxtree.h"
 
-#include "openmindInterpret.h"
+#include "expressions.h"
 
 #include "openmind.tab.h"
 
@@ -35,7 +35,6 @@ constant * oneConstante;
 	oneConstante = & oneNode -> cste ;
 
 	/* fprintf( stderr, "constante\n" ); */
-
 
 	switch( oneConstante -> type )
 	{
@@ -56,12 +55,12 @@ constant * oneConstante;
 
 		case GUID_CONSTANT_TYPE:
 			result.type = GUID_EXPRESSION;
-			strcpy( result.value.guid_value ,  oneConstante -> val.guid_value ) ;
+			result.value.guid_value = oneConstante -> val.guid_value  ;
 		break;
 
 		case STRING_CONSTANT_TYPE:
 			result.type = STRING_EXPRESSION;
-			strcpy( result.value.string_value ,  oneConstante -> val.string_value ) ;
+			result.value.string_value = oneConstante -> val.string_value  ;
 		break;
 	}
 
@@ -84,23 +83,28 @@ variable * oneVariable;
 		break;
 		
 		case INTEGER_IDENTIFIER_TYPE:
+			result.type = INTEGER_EXPRESSION;
 			result.value.integer_value =  oneVariable -> val.integer_value ;
 		break;
 
 		case FLOAT_IDENTIFIER_TYPE:
+			result.type = FLOAT_EXPRESSION;
 			result.value.float_value =  oneVariable -> val.float_value ;
 		break;
 
 		case BOOLEAN_IDENTIFIER_TYPE:
+			result.type = BOOLEAN_EXPRESSION;
 			result.value.boolean_value =  oneVariable -> val.boolean_value ;
 		break;
 
 		case GUID_IDENTIFIER_TYPE:
-			strcpy( result.value.guid_value , oneVariable -> val.guid_value );
+			result.type = GUID_EXPRESSION;
+			result.value.guid_value = oneVariable -> val.guid_value;
 		break;
 
 		case STRING_IDENTIFIER_TYPE:
-			strcpy( result.value.string_value ,  oneVariable -> val.string_value ) ;
+			result.type = STRING_EXPRESSION;
+			result.value.string_value =  oneVariable -> val.string_value;
 		break;
 
 		case ENTITY_IDENTIFIER_TYPE:
@@ -209,83 +213,114 @@ variable * rvalue_var;
 	
 }
 /* -------------------------------------*/
-/* interpretation d'une operateur	*/
+/* echo operator			*/
 /* -------------------------------------*/
 void  echo(operator * oneOperatorNode ) 
 {
 constant * constante;
 variable  * currentVar;
+expression_Value * operandResult ;
+
+	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(value ) );
 
 	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
 	{
-		switch( oneOperatorNode -> operands[i] -> type )
+		operandResult[i] = expression( oneOperatorNode -> operands[i] );
+		switch( operandResult[i].type )
 		{
-			case CONSTANT_SYNTAXTREE_NODETYPE:
-				
-				constante =  & oneOperatorNode -> operands[i]-> cste;
-				switch( constante -> type )
-				{
-					case 	INT_CONSTANT_TYPE:
-						printf( "%d" , constante -> val.integer_value );
-					break;
-
-					case 	FLOAT_CONSTANT_TYPE:
-						printf( "%f" , constante -> val.float_value );
-					break;
-
-					case	BOOLEEAN_CONSTANT_TYPE:
-						printf( "%d" , constante -> val.boolean_value ? "True" : "False" );
-					break;
-
-					case 	GUID_CONSTANT_TYPE:
-						printf( "%s" , constante -> val.guid_value );
-					break;
-
-					case	STRING_CONSTANT_TYPE:
-						printf( "%s" , constante-> val.string_value );
-					break;
-				}
+			case INTEGER_EXPRESSION:
+				printf( "%d" , operandResult-> value.integer_value );
 			break;
 
-			case IDENTIFIER_SYNTAXTREE_NODETYPE:
-				
-				currentVar = oneOperatorNode -> operands[i]-> var;
-				switch( currentVar -> type )
-				{
-					case 	INTEGER_IDENTIFIER_TYPE:
-						printf( "%d" , currentVar -> val.integer_value );
-					break;
+			case FLOAT_EXPRESSION:
+				printf( "%f" , operandResult-> value.float_value );
+			break;
 
-					case 	FLOAT_IDENTIFIER_TYPE:
-						printf( "%f" , currentVar -> val.float_value );
-					break;
+			case STRING_EXPRESSION:
+				printf( "%s" , operandResult-> value.string_value );
+			break;
 
-					case	BOOLEAN_IDENTIFIER_TYPE:
-						printf( "%d" , currentVar -> val.boolean_value ? "True" : "False" );
-					break;
+			case GUID_EXPRESSION:
+				printf( "%s" , operandResult-> value.guid_value );
+			break;
 
-					case 	GUID_IDENTIFIER_TYPE:
-						printf( "%s" , currentVar -> val.guid_value );
-					break;
+			case BOOLEAN_EXPRESSION:
+				printf( "%d" , operandResult -> value.boolean_value ? "True" : "False" );
+			break;
 
-					case	STRING_IDENTIFIER_TYPE:
-						printf( "%s" , currentVar -> val.string_value );
-					break;
-				}			
+			case ENTITY_EXPRESSION:
+			case PROPERTY_EXPRESSION:
+			break;
+
+			default:
 			break;
 		}
 	}
+
+	free( operandResult );
 }
 
-/* -------------------------------------*/
-/* interpretation d'une operateur	*/
+/*--------------------------------------*/
+/* + operator				*/
+/*--------------------------------------*/
+expression_Value expression_Operator_T_PLUS_SIGN( operator * oneOperatorNode  )
+{
+expression_Value result;
+operator * currentOperator;
+expression_Value * operandResult ;
+
+
+	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(value ) );
+
+	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
+	{
+		operandResult[i] = expression( oneOperatorNode -> operands[i] );
+		switch( operandResult[i].type )
+		{
+			case INTEGER_EXPRESSION:
+			result.type = INTEGER_EXPRESSION;
+			result.value.integer_value +=  operandResult[i].value.integer_value;
+			break;
+
+			case FLOAT_EXPRESSION:
+				result.type = FLOAT_EXPRESSION;
+				result.value.float_value +=  operandResult[i].value.float_value;
+			break;
+
+			case STRING_EXPRESSION:
+			break;
+
+			case GUID_EXPRESSION:
+			break
+;
+			case BOOLEAN_EXPRESSION:
+			break;
+
+			case ENTITY_EXPRESSION:
+			break;
+
+			case PROPERTY_EXPRESSION:
+			break;
+
+			default:
+			break;
+		}
+	}
+	
+	free( operandResult );
+
+	return result;
+}
+
+/*--------------------------------------*/
+/* operateur interpretation 		*/
 /* -------------------------------------*/
 expression_Value expression_Operator( syntaxTreeNode * oneNode )
 {
 expression_Value result;	
 char guid[GUID_LENGTH]; 
 
-	operator * currentOperator;
+operator * currentOperator;
 	
 	/* fprintf( stderr, "Operateur\n" ); */
 
@@ -294,7 +329,7 @@ char guid[GUID_LENGTH];
 	switch( currentOperator -> type )
 	{
 		case T_PLUS_SIGN:
-			/* return expression( currentOperator-> operands[0] ) +  expression( currentOperator-> operands[1] ) ; */
+			result =  expression_Operator_T_PLUS_SIGN( currentOperator ) ; 
 		break;
 
 		case T_MINUS_SIGN:

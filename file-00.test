@@ -6,11 +6,11 @@ echo  "\n";
 
 echo  "TEST affichage expression numerique simple : ";
 
-3/7;		/* ok */
+echo 3/7;		/* ok */
 echo  "\n";
 
 echo  "TEST affichage expression numerique simple avec parentheses: ";
-2 * (5+1) ;	/* ok */
+echo 2 * (5+1) ;	/* ok */
 echo  "TEST variables...\n";
 
 echo  "TEST affectation de constante numerique à une variable A \n";
