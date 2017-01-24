@@ -1,6 +1,7 @@
 
 echo 3;
 
+
 echo  "\n";
 echo  "test constante texte\n";
 

@@ -95,6 +95,9 @@ return invalid_result;
 }
 
 
+
+
+
 /* -----------------------------------------------------*/
 /* ajout nouvel identificateur sans valeur/type		*/
 /* dans l'arbre						*/
@@ -113,7 +116,6 @@ variable_node * new_VarNode;
 		new_VarNode -> v -> ident = malloc( MAXLENGTH_STRING + 1 );
 		strcpy( new_VarNode -> v -> ident  , oneIdent );	
 		new_VarNode -> v -> type =  UNKNOWN_IDENTIFIER_TYPE;
-
 		new_VarNode -> next = var_list-> next ;
 		if( var_list-> next  != NULL)
 			 ( var_list-> next ) -> previous = new_VarNode;

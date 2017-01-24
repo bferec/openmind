@@ -30,7 +30,7 @@
 /* -----------------------------------------------------*/
 void  dumpSyntaxTreeNode(syntaxTreeNode * oneNode )
 {
-char op;
+char operator_lib[MAXLENGTH_STRING + 1];
 
 	switch( oneNode -> type )
 	{
@@ -65,26 +65,30 @@ char op;
 
 		case OPERATOR_SYNTAXTREE_NODETYPE:
 			
+
 			switch( oneNode -> oper.type )
 			{
 				case T_ASSIGN:
-				op = '=';
+				strcpy( operator_lib , "=" );
 				break;
 
 				case T_PLUS_SIGN:
-					op = '+';
+				strcpy( operator_lib , "+" );
 				break;
 				case T_MINUS_SIGN:
-					op = '-';
+				strcpy( operator_lib , "-" );
 				break;
 				case T_ASTERISK:
-					op = '*';
+				strcpy( operator_lib , "*" );
 				break;
 				case T_SLASH:
-					op = '/';
+				strcpy( operator_lib , "/" );
+				break;
+				case T_ECHO:
+				strcpy( operator_lib , "echo" );
 				break;
 			}
-			fprintf( stderr , "Node operateur [ %c ] %d operandes \n", op , oneNode -> oper.OperandsCount );
+			fprintf( stderr , "Node operateur [ %s ] %d operandes \n", operator_lib , oneNode -> oper.OperandsCount );
 			for( int i = 0 ; i < oneNode->oper.OperandsCount ; i ++ )
 			{
 				dumpSyntaxTreeNode(oneNode -> oper. operands[i] );
@@ -239,43 +243,53 @@ void Free_ConstantSyntaxTreeNode( syntaxTreeNode * oneNode  )
 /* -----------------------------------------------------*/
 void Free_VarSyntaxTreeNode( syntaxTreeNode * oneNode  )
 {
-	switch( oneNode-> var -> type  )
+	if( oneNode != NULL )
 	{
-		case 	GUID_IDENTIFIER_TYPE:
-			free( oneNode -> var-> val.guid_value );
-		break;
-
-		case	STRING_IDENTIFIER_TYPE:
-			free( oneNode -> var -> val.string_value );
-		break;
-	}	
-	fprintf( stderr , "liberation de la variable %s\n" , oneNode -> var -> ident);
-	free( oneNode -> var -> ident );
-	free( oneNode -> var );
-	free( oneNode );
+		if( oneNode-> var != NULL )
+		{
+			switch( oneNode-> var -> type  )
+			{
+				case 	GUID_IDENTIFIER_TYPE:
+					free( oneNode -> var-> val.guid_value );
+				break;
+	
+				case	STRING_IDENTIFIER_TYPE:
+					free( oneNode -> var -> val.string_value );
+				break;
+			}	
+			free( oneNode-> var -> ident );
+			free( oneNode -> var );
+		}
+		free( oneNode );
+	}
 }
 /* -----------------------------------------------------*/
 /* suppression d'un noeud operateur			*/ 
 /* -----------------------------------------------------*/
 void Free_OperSyntaxTreeNode( syntaxTreeNode * oneNode  )
 {
-	for( int i = 0 ; i < oneNode -> oper.OperandsCount ; i ++ )
+	if( oneNode != NULL )
 	{
-		switch( oneNode -> oper.operands[i] -> type )
-		{
-			case CONSTANT_SYNTAXTREE_NODETYPE:
-				Free_ConstantSyntaxTreeNode( oneNode -> oper.operands[i] );
-			break;
+		for( int i = 0 ; i < oneNode -> oper.OperandsCount ; i ++ )
+		{	if( oneNode -> oper.operands[i] != NULL )
+			{
+				switch( oneNode -> oper.operands[i] -> type )
+				{
+					case CONSTANT_SYNTAXTREE_NODETYPE:
+						Free_ConstantSyntaxTreeNode( oneNode -> oper.operands[i] );
+					break;
 
-			case IDENTIFIER_SYNTAXTREE_NODETYPE:
-				Free_VarSyntaxTreeNode( oneNode -> oper.operands[i] );
-			break;
+					case IDENTIFIER_SYNTAXTREE_NODETYPE:
+						Free_VarSyntaxTreeNode( oneNode -> oper.operands[i] );
+					break;
+				}
+			}
 		}
+		if( oneNode -> oper.operands != NULL )
+			free( oneNode -> oper.operands );
+
+		free( oneNode );
 	}
-
-	free( oneNode -> oper.operands );
-
-	free( oneNode );
 }
 
 /* -----------------------------------------------------*/

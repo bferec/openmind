@@ -150,14 +150,14 @@ stmtList:
 	| stmt T_SEMICOLON 	
 				{
 					expression( $1 ) ; 
-					/* dumpSyntaxTreeNode( $1 ); */
-					Free_SyntaxTreeNode( $1 ); 
+					 dumpSyntaxTreeNode( $1 ); 
+					/* Free_SyntaxTreeNode( $1 ); */
 				}
 	| stmtList stmt T_SEMICOLON	
 				{ 
 					 expression( $2 ) ; 
 					/* dumpSyntaxTreeNode( $2 ); */
-					Free_SyntaxTreeNode( $2 ); 
+					/* Free_SyntaxTreeNode( $1 ); */
 				}
 
 ;
