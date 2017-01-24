@@ -26,10 +26,7 @@ void dumpvarNode( variable_node * n)
 	if( n )
 	{
 		fprintf( stdout , "variable node %s\n" , n-> v -> ident );
-		fprintf( stdout , "a gauche:\n");
-		dumpvarNode( n -> left )  ;
-		fprintf( stdout , "a droite:\n");
-		dumpvarNode( n -> right )  ;
+		dumpvarNode( n -> next )  ;
 	}
 }
 
@@ -47,25 +44,21 @@ variable_node * find_variable_node( char * oneIdent ,  variable_node * oneNode )
 {
 int compare;
 
+variable_node * currentNode;
 
-	if( oneNode != NULL )
+	currentNode = oneNode;
+	while( currentNode != NULL )
 	{
 		
-		compare = strcmp( oneIdent , oneNode-> v -> ident);
+		compare = strcmp( oneIdent , currentNode-> v -> ident);
 
 		if( ! compare )  
 		{
-			return oneNode;
-			fprintf(stdout , "TROUVE:\n" , oneIdent );
+			break;
 		}
-
-		if( compare < 0 )
-			return find_variable_node(oneIdent , oneNode -> left );
-
-		return find_variable_node(oneIdent , oneNode -> right );
+		currentNode = currentNode -> next;
 	}
-
-	return oneNode;
+	return currentNode;
 
 }
 
@@ -101,29 +94,6 @@ BOOL invalid_result;
 return invalid_result;
 }
 
-/* -----------------------------------------------------*/
-/* ajout nouveau noeud 					*/
-/* dans l'arbre	des identifiers				*/
-/* ident inférieur à gauche				*/
-/* ident superieur à droite				*/
-/* -----------------------------------------------------*/
-variable_node * addVarNode( variable_node * oneNode , variable_node * current_NodeTree )
-{
-	if( current_NodeTree == NULL )
-	{
-		current_NodeTree = oneNode;
-	}
-	else if( strcmp(oneNode -> v -> ident , current_NodeTree -> v -> ident ) < 0 )
-	{
-		current_NodeTree -> left = addVarNode( oneNode , current_NodeTree -> left );
-	}
-	else
-		current_NodeTree -> right = addVarNode( oneNode , current_NodeTree -> right );
-
-	return current_NodeTree;
-}
-
-
 
 /* -----------------------------------------------------*/
 /* ajout nouvel identificateur sans valeur/type		*/
@@ -135,15 +105,19 @@ variable * result ;
 variable_node * new_VarNode;
 
 	new_VarNode = find_variable_node( oneIdent ,  var_list);
+
 	if( new_VarNode == (variable_node *) NULL )
 	{
 		new_VarNode  = (variable_node *) malloc( sizeof( variable_node ) );
 		new_VarNode -> v = (variable *) malloc( sizeof( variable ) );
-		new_VarNode -> v -> ident = malloc( strlen( oneIdent ) + 1 );
+		new_VarNode -> v -> ident = malloc( MAXLENGTH_STRING + 1 );
 		strcpy( new_VarNode -> v -> ident  , oneIdent );	
 		new_VarNode -> v -> type =  UNKNOWN_IDENTIFIER_TYPE;
-		new_VarNode -> left = new_VarNode -> right = (variable_node *) NULL;
-		var_list = addVarNode( new_VarNode , var_list );
+
+		new_VarNode -> next = var_list-> next ;
+		if( var_list-> next  != NULL)
+			 ( var_list-> next ) -> previous = new_VarNode;
+		var_list = new_VarNode;
 	}
 	result = new_VarNode -> v;
 	
@@ -152,24 +126,4 @@ return result;
 
 
 
-/* -----------------------------------------------------*/
-/* return float ou int value of identifier according	*/
-/* to type						*/
-/* -----------------------------------------------------*/
-double getValueNumber( numberValue v )
-{
-double result;
-	result = 0;
-	switch( v.number_type )
-	{
-		case INTEGER_NUMBER_TYPE:
-			result = (double) v.integer_value;
-		break;
 
-		case FLOAT_NUMBER_TYPE:
-			result = (double) v.float_value;
-		break;
-	}
-
-	return result;
-}

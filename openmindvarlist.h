@@ -44,13 +44,15 @@ typedef struct variable
 typedef struct variable_node
 {
 	variable * v;
-	struct variable_node * left;
-	struct variable_node * right;	
+	struct variable_node * previous;
+	struct variable_node * next;	
 }variable_node;
 
-double getValueNumber( numberValue v );
-variable * find_variable( char * oneIdent );
+
 variable * createVar( char * oneIdent );
+
+variable * find_variable( char * oneIdent );
+
 BOOL  check_ident( char * oneident );
 void DumpVarList();
 
