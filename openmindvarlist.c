@@ -7,7 +7,10 @@
 #include <ctype.h>
 
 
-# include "openmindvarlist.h"
+#include "openmindlib.h"
+#include "entity.h"
+#include "openmindvalue.h"
+#include "openmindvarlist.h"
 
 /* -----------------------------------------------------*/
 /* liste des variables					*/

@@ -13,6 +13,14 @@
 #include <stdarg.h>
 
 #include "openmindlib.h"
+#include "entity.h"
+#include "openmindvalue.h"
+#include "openmindvarlist.h"
+
+#include "openmindconstant.h"
+#include "operator.h"
+
+#include "syntaxtree.h"
 
 #include "openmind.tab.h"
 

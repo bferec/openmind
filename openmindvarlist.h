@@ -6,9 +6,7 @@
 /* -------------------------------------*/
 /* -------------------------------------*/
 
-#define GUID_LENGTH 33			/* longueur xhaine guid hors zero final			*/
-#define BOOL int			/* type booleen						*/
-#define MAXLENGTH_STRING 255		/* longueur maxi identificateurs et constantes texte	*/
+
 
 
 /* -------------------------------------*/
@@ -30,44 +28,6 @@ typedef enum
 } VarType;
 
 
-/* -----------------------------------------------------*/
-/* definition entite					*/
-/* -----------------------------------------------------*/
-typedef struct entity
-{
-	char guid[GUID_LENGTH];
-	char name[ MAXLENGTH_STRING  + 1 ];
-	BOOL unique_name;
-	
-}entity;
-
-/* -----------------------------------------------------*/
-/* definition propriete					*/
-/* -----------------------------------------------------*/
-typedef struct property
-{
-	char guid[GUID_LENGTH];
-	char name[ MAXLENGTH_STRING  + 1 ];
-	BOOL unique_name;
-}property;
-
-
-
-
-/* -------------------------------------*/
-/* type valeur pour constante ou var	*/
-/* -------------------------------------*/
-typedef	union
-{
-	int integer_value;
-	float float_value;
-	char * string_value;
-	char * guid_value;
-	int boolean_value;
-	entity  * entity_value;
-	property * property_value;
-}value;
-
 
 /* -----------------------------------------------------*/
 /* une variable du programme				*/
@@ -88,6 +48,9 @@ typedef struct variable_node
 	struct variable_node * right;	
 }variable_node;
 
-
+double getValueNumber( numberValue v );
 variable * find_variable( char * oneIdent );
 variable * createVar( char * oneIdent );
+BOOL  check_ident( char * oneident );
+void DumpVarList();
+
