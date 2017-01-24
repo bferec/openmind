@@ -36,4 +36,4 @@ syntaxTreeNode * oper( int oneOper, int OperandsCount, ...);
 syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr );
 syntaxTreeNode * Var( VarType oneType, variable * oneVarPtr );
 void Free_SyntaxTreeNode( syntaxTreeNode * oneNode );
-value  expression( syntaxTreeNode * oneNode );
+

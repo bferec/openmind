@@ -190,7 +190,7 @@ assign_stmt:
 /* gauche de =		*/
 /* -------------------- */
 lvalue:
-	T_IDENTIFIER				{ $$ = Var( $1 -> type , (void *) $1 ); }
+	T_IDENTIFIER			{ $$ = Var( $1 -> type , $1 ); }
 	| T_IDENTIFIER T_LEFT_SQUARE_BRACKET expr T_RIGHT_SQUARE_BRACKET	{ /* variable tableau */ }
 	| error T_SEMICOLON 		{YYABORT;}
 ;
@@ -267,7 +267,7 @@ guid_expr:
 numeric_expr:
 	T_INT 						{ $$ = Const( INT_CONSTANT_TYPE   , (void *) & $1.integer_value); }
 	| T_FLOAT					{ $$ = Const( FLOAT_CONSTANT_TYPE , (void *) & $1.float_value );  }
-	| T_IDENTIFIER					{ $$ = Var( $1-> type ,  $1 ); }
+	| T_IDENTIFIER					{ $$ = Var( $1-> type , $1 ); }
 	| T_LEFT_BRACKET numeric_expr T_RIGHT_BRACKET	{ $$ = $2;}
 	| T_MINUS_SIGN numeric_expr 			{ $$ = oper( T_MINUS_SIGN , 1 , $2 ) ; }
 	| numeric_expr T_PLUS_SIGN numeric_expr		{ $$ = oper( T_PLUS_SIGN  , 2 , $1 , $3 ) ; }	
@@ -300,7 +300,7 @@ boolean_expr:
 /* -------------------- */
 string_expr:
 	T_CSTE_STRING				{ $$ = Const( STRING_CONSTANT_TYPE , (void *) $1 ); }
-	| T_IDENTIFIER				{ $$ = Var( $1-> type , (void *) $1 ); }
+	| T_IDENTIFIER				{ $$ = Var( $1-> type , $1 ); }
 
 	| string_expr T_AMPERSAND  string_expr	{ $$ = oper( T_AMPERSAND , 2, $1 , $3 );}
 ;

@@ -24,13 +24,59 @@
 
 #include "openmind.tab.h"
 
+char buffer[MAXLENGTH_STRING + 1 ];
+
+char * getOperandeTypeLibelle( syntaxTreeNode * oneNode )
+{
+	switch( oneNode -> type )
+	{
+		case CONSTANT_SYNTAXTREE_NODETYPE:
+		strcpy( buffer , "Type constant" );
+		break;
+		case IDENTIFIER_SYNTAXTREE_NODETYPE:
+		strcpy( buffer , "Type variable" );
+		break;
+		case OPERATOR_SYNTAXTREE_NODETYPE:
+		strcpy( buffer , "Type operator" );
+		break;
+	}
+	return buffer;
+}
+
+/* -----------------------------------------------------*/
+/* -----------------------------------------------------*/
+char *  getOperatorLibelle( int oneOperatorType )
+{
+
+	switch( oneOperatorType )
+	{
+		case T_ASSIGN:
+		strcpy( buffer , "=" );
+		break;
+		case T_PLUS_SIGN:
+			strcpy( buffer , "+" );
+		break;
+		case T_MINUS_SIGN:
+			strcpy( buffer , "-" );
+		break;
+		case T_ASTERISK:
+			strcpy( buffer , "*" );
+		break;
+		case T_SLASH:
+			strcpy( buffer , "/" );
+		break;
+		case T_ECHO:
+			strcpy( buffer , "echo" );
+		break;
+	}
+return buffer;
+}
 
 /* -----------------------------------------------------*/
 /* dump noeud						*/
 /* -----------------------------------------------------*/
 void  dumpSyntaxTreeNode(syntaxTreeNode * oneNode )
 {
-char operator_lib[MAXLENGTH_STRING + 1];
 
 	switch( oneNode -> type )
 	{
@@ -38,61 +84,33 @@ char operator_lib[MAXLENGTH_STRING + 1];
 			switch( oneNode->cste.type  )
 			{
 				case 	INT_CONSTANT_TYPE:
-					fprintf( stderr , "Node constante Integer  :[%d]\n" , oneNode -> cste.val.integer_value );
+					 fprintf( stderr , "Node constante Integer  :[%d]\n" , oneNode -> cste.val.integer_value ); 
 				break;
 
 				case 	FLOAT_CONSTANT_TYPE:
-					fprintf( stderr , "Node constante  Float  :[%f]\n" , oneNode -> cste.val.float_value );
+					 fprintf( stderr , "Node constante  Float  :[%f]\n" , oneNode -> cste.val.float_value ); 
 				break;
 
 				case	BOOLEEAN_CONSTANT_TYPE:
-					fprintf( stderr , "Node constante  Boolean : [%s]\n" , oneNode -> cste.val.boolean_value ? "#True" : "#False"  );
+					 fprintf( stderr , "Node constante  Boolean : [%s]\n" , oneNode -> cste.val.boolean_value ? "#True" : "#False"  ); 
 				break;
 
 				case 	GUID_CONSTANT_TYPE:
-					fprintf( stderr , "Node constante  guid : [%s]\n" , oneNode -> cste.val.guid_value);
+					 fprintf( stderr , "Node constante  guid : [%s]\n" , oneNode -> cste.val.guid_value); 
 				break;
 
 				case	STRING_CONSTANT_TYPE:
-					fprintf( stderr , "Node constante  string : [%s]\n" , oneNode -> cste.val.string_value);
+					 fprintf( stderr , "Node constante  string : [%s]\n" , oneNode -> cste.val.string_value); 
 				break;
 		}
 		break;
 
 		case IDENTIFIER_SYNTAXTREE_NODETYPE:
-			fprintf( stderr , "Node Identifier: %s\n", oneNode->var -> ident  ); 
+			/* fprintf( stderr , "Node Identifier: %s\n", oneNode->var -> ident  );  */
 		break;
 
 		case OPERATOR_SYNTAXTREE_NODETYPE:
-			
-
-			switch( oneNode -> oper.type )
-			{
-				case T_ASSIGN:
-				strcpy( operator_lib , "=" );
-				break;
-
-				case T_PLUS_SIGN:
-				strcpy( operator_lib , "+" );
-				break;
-				case T_MINUS_SIGN:
-				strcpy( operator_lib , "-" );
-				break;
-				case T_ASTERISK:
-				strcpy( operator_lib , "*" );
-				break;
-				case T_SLASH:
-				strcpy( operator_lib , "/" );
-				break;
-				case T_ECHO:
-				strcpy( operator_lib , "echo" );
-				break;
-			}
-			fprintf( stderr , "Node operateur [ %s ] %d operandes \n", operator_lib , oneNode -> oper.OperandsCount );
-			for( int i = 0 ; i < oneNode->oper.OperandsCount ; i ++ )
-			{
-				dumpSyntaxTreeNode(oneNode -> oper. operands[i] );
-			}
+			/* fprintf( stderr , "Node operateur [%s] %d operandes \n", getOperatorLibelle(oneNode -> oper.type ), oneNode -> oper.OperandsCount ); */
 		break;
 	}
 }
@@ -105,7 +123,8 @@ char operator_lib[MAXLENGTH_STRING + 1];
 /* -----------------------------------------------------*/
 syntaxTreeNode * syntaxTreeNodeAlloc()
 {
-	syntaxTreeNode * resultNode;
+syntaxTreeNode * resultNode;
+
 	resultNode = (syntaxTreeNode *) malloc( sizeof( syntaxTreeNode ) );
 	if( resultNode == (syntaxTreeNode *) NULL )
 		yyerror("SyntaxtreeNode allocation : Out of Memory" );
@@ -167,30 +186,38 @@ syntaxTreeNode * Var( VarType oneType, variable * oneVarPtr )
 {
 syntaxTreeNode * resultNode;
 
-
+	/* fprintf( stderr , "var() ajout de d'une variable \n"); */
 	resultNode = syntaxTreeNodeAlloc();
 
 	resultNode -> type = IDENTIFIER_SYNTAXTREE_NODETYPE;
 
+	if( oneVarPtr == NULL )
+	{
+		yyerror( "variable not found tu build Syntax Tree\n" );
+	}
 	resultNode-> var = oneVarPtr ;
 	resultNode-> var -> type = oneType;
-	/* fprintf( stderr , "var() %s\n" , resultNode->var-> ident);  */
+	/* printf( stderr , "var() %s\n" , resultNode->var-> ident);  */
+
 	return resultNode;
 }
 
 /* -----------------------------------------------------*/
 /* creation de noeud operateur				*/
 /* -----------------------------------------------------*/
-syntaxTreeNode * oper( int oneOper, int OperandsCount, ...)
+syntaxTreeNode * oper( int oneOperType, int OperandsCount, ...)
 {
 	syntaxTreeNode * resultNode;
+	syntaxTreeNode * operandeNode;
+
+	/* fprintf( stderr , "oper() type :[%s] \n" , getOperatorLibelle( oneOperType ) );  */
 	resultNode = syntaxTreeNodeAlloc();
 	va_list listOperands;
 	
 	/* fprintf( stderr , "oper() type %d\n" , oneOper ); */
 	resultNode = syntaxTreeNodeAlloc();
 	resultNode -> type = OPERATOR_SYNTAXTREE_NODETYPE;
-	resultNode -> oper.type = oneOper;
+	resultNode -> oper.type = oneOperType;
 	resultNode -> oper.OperandsCount = OperandsCount;
 
 	/* operand_number; */
@@ -198,22 +225,22 @@ syntaxTreeNode * oper( int oneOper, int OperandsCount, ...)
 	{
 		/* fprintf( stderr , "%d operands memory allocation\n" , OperandsCount ); */
 		resultNode -> oper.operands = (struct syntaxTreeNode_ * *) calloc( OperandsCount , sizeof( syntaxTreeNode *) );
-
 		if( resultNode -> oper.operands == (struct syntaxTreeNode_ * *) NULL )
 			yyerror("operands of operator vector allocation : Out of Memory" );
-		for( int i = 0 ; i < OperandsCount  ; i ++ )
-		{
-			resultNode -> oper.operands[i] = ( syntaxTreeNode *)  malloc( sizeof( syntaxTreeNode ) );
-			if( resultNode -> oper.operands[i]  == (syntaxTreeNode *) NULL )
-				yyerror("operands n of operator vector allocation : Out of Memory");
-		}
+
 
 		va_start( listOperands, OperandsCount );
+
 		for( int i = 0 ; i < OperandsCount  ; i ++ )
 		{
-			/* fprintf(stderr , "affectation de l'operande %d\n" , i ); */
-			memcpy( resultNode -> oper.operands[i] , va_arg( listOperands , syntaxTreeNode * ) , sizeof(syntaxTreeNode) );
+			resultNode -> oper.operands[i] = syntaxTreeNodeAlloc();
+			if( resultNode -> oper.operands[i]  == (syntaxTreeNode *) NULL )
+				yyerror("operands n of operator vector allocation : Out of Memory");
+			operandeNode = va_arg( listOperands , syntaxTreeNode * );
+			/* fprintf( stderr, "operande %d %s\n" , i , getOperandeTypeLibelle( operandeNode)  ); */
+			resultNode -> oper.operands[i] =  operandeNode;
 		}
+
 		va_end( listOperands );
 	}
 	return resultNode;
@@ -247,18 +274,7 @@ void Free_VarSyntaxTreeNode( syntaxTreeNode * oneNode  )
 	{
 		if( oneNode-> var != NULL )
 		{
-			switch( oneNode-> var -> type  )
-			{
-				case 	GUID_IDENTIFIER_TYPE:
-					free( oneNode -> var-> val.guid_value );
-				break;
-	
-				case	STRING_IDENTIFIER_TYPE:
-					free( oneNode -> var -> val.string_value );
-				break;
-			}	
-			free( oneNode-> var -> ident );
-			free( oneNode -> var );
+			/* deleteVar(oneNode-> var -> ident ); */
 		}
 		free( oneNode );
 	}
@@ -280,7 +296,7 @@ void Free_OperSyntaxTreeNode( syntaxTreeNode * oneNode  )
 					break;
 
 					case IDENTIFIER_SYNTAXTREE_NODETYPE:
-						Free_VarSyntaxTreeNode( oneNode -> oper.operands[i] );
+						Free_VarSyntaxTreeNode( oneNode -> oper.operands[i] );	
 					break;
 				}
 			}
@@ -308,7 +324,7 @@ void Free_SyntaxTreeNode( syntaxTreeNode * oneNode )
 		break;
 
 		case OPERATOR_SYNTAXTREE_NODETYPE:
-			Free_OperSyntaxTreeNode( oneNode );
+			Free_OperSyntaxTreeNode( oneNode );	
 		break;
 	}
 }
