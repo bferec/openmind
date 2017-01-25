@@ -4,31 +4,3 @@ echo  "\n";
 
 
 
-echo  "TEST affichage expression numerique simple : ";
-
-echo 3/7;		/* ok */
-echo  "\n";
-
-echo  "TEST affichage expression numerique simple avec parentheses: ";
-echo 2 * (5+1) ;	/* ok */
-echo  "TEST variables...\n";
-
-echo  "TEST affectation de constante numerique à une variable A \n";
-A = 5;		/* ok */
-
-echo  "A = ";
-echo A;
-echo  "\n";
-
-echo  "TEST affectation de varible numerique A à une variable B \n";
-B = A;
-echo  "B = ";
-echo B;
-echo  "\n";
-echo  "TEST affectation de 2 variables numerique A et B à une variable C \n";
-C = A + B;
-echo  "C = ";
-echo C;
-echo  "\n";
-
-

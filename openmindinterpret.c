@@ -27,6 +27,29 @@
 /* interpretation d'une constante	*/
 /* -------------------------------------*/
 
+void dumpExpressionValue( expression_Value ev )
+{
+
+	if( ev.type == INTEGER_EXPRESSION )
+		fprintf( stderr , "value integer: [%d]\n" , ev.value.integer_value  );
+	if( ev.type == FLOAT_EXPRESSION )
+		fprintf( stderr , "value float: [%f]\n" , ev.value.float_value  );
+	if( ev.type == BOOLEAN_EXPRESSION )
+		fprintf( stderr, "value boolean [%d]\n" , ev.value.boolean_value ? "True" : "False" );
+	if( ev.type == GUID_EXPRESSION )
+		if( ev.value.guid_value != NULL )
+			fprintf( stderr, "value guid [%s]\n" , ev.value.guid_value );
+		else
+			fprintf( stderr, "value guid non presente]\n" );
+
+	if( ev.type == STRING_EXPRESSION )
+		if( ev.value.string_value != NULL )
+			fprintf( stderr, "value string [%s]\n" , ev.value.string_value );
+		else
+			fprintf( stderr, "value string non presente \n" );
+
+}
+
 expression_Value expression_Constante(syntaxTreeNode * oneNode )
 {
 expression_Value result;	
@@ -63,7 +86,7 @@ constant * oneConstante;
 			result.value.string_value = oneConstante -> val.string_value  ;
 		break;
 	}
-
+	dumpExpressionValue( result );
 	return result;
 }
 
@@ -112,6 +135,7 @@ variable * oneVariable;
 		break;
 	}
 
+	dumpExpressionValue( result );
 	return result;
 }
 
@@ -223,9 +247,13 @@ expression_Value * operandResult ;
 
 	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(value ) );
 
+	fprintf( stderr , "echo %d operandes\n" , oneOperatorNode -> OperandsCount);
+
+
 	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
 	{
 		operandResult[i] = expression( oneOperatorNode -> operands[i] );
+		dumpExpressionValue( operandResult[i] );
 		switch( operandResult[i].type )
 		{
 			case INTEGER_EXPRESSION:

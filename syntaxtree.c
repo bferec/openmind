@@ -106,11 +106,11 @@ void  dumpSyntaxTreeNode(syntaxTreeNode * oneNode )
 		break;
 
 		case IDENTIFIER_SYNTAXTREE_NODETYPE:
-			/* fprintf( stderr , "Node Identifier: %s\n", oneNode->var -> ident  );  */
+			 fprintf( stderr , "Node Identifier: %s\n", oneNode->var -> ident  );  
 		break;
 
 		case OPERATOR_SYNTAXTREE_NODETYPE:
-			/* fprintf( stderr , "Node operateur [%s] %d operandes \n", getOperatorLibelle(oneNode -> oper.type ), oneNode -> oper.OperandsCount ); */
+			 fprintf( stderr , "Node operateur [%s] %d operandes \n", getOperatorLibelle(oneNode -> oper.type ), oneNode -> oper.OperandsCount ); 
 		break;
 	}
 }
@@ -243,6 +243,7 @@ syntaxTreeNode * oper( int oneOperType, int OperandsCount, ...)
 
 		va_end( listOperands );
 	}
+	dumpSyntaxTreeNode(resultNode);
 	return resultNode;
 }
 
