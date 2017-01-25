@@ -1,6 +1,7 @@
-echo  "TEST affichage constante numerique : ";
-echo 3;
-echo  "\n";
+echo  3;
+
+
+
 
 
 

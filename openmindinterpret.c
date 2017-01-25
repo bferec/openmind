@@ -24,32 +24,61 @@
 
 
 /* -------------------------------------*/
-/* interpretation d'une constante	*/
+/* dump contenu  expression		*/
 /* -------------------------------------*/
-
 void dumpExpressionValue( expression_Value ev )
 {
+	
+	fprintf( stderr , "debut DUMP expression\n" );
 
-	if( ev.type == INTEGER_EXPRESSION )
-		fprintf( stderr , "value integer: [%d]\n" , ev.value.integer_value  );
-	if( ev.type == FLOAT_EXPRESSION )
-		fprintf( stderr , "value float: [%f]\n" , ev.value.float_value  );
-	if( ev.type == BOOLEAN_EXPRESSION )
-		fprintf( stderr, "value boolean [%d]\n" , ev.value.boolean_value ? "True" : "False" );
-	if( ev.type == GUID_EXPRESSION )
-		if( ev.value.guid_value != NULL )
-			fprintf( stderr, "value guid [%s]\n" , ev.value.guid_value );
-		else
-			fprintf( stderr, "value guid non presente]\n" );
+	switch( ev.type )
+	{
+		case INTEGER_EXPRESSION:
+			fprintf( stderr , "value integer: \n" );
+			fprintf( stderr , "value integer: [%d]\n" , ev.value.integer_value  );
+		break;
 
-	if( ev.type == STRING_EXPRESSION )
-		if( ev.value.string_value != NULL )
-			fprintf( stderr, "value string [%s]\n" , ev.value.string_value );
-		else
-			fprintf( stderr, "value string non presente \n" );
+		case FLOAT_EXPRESSION:
+			fprintf( stderr , "value float: \n");
+			fprintf( stderr , "value float: [%f]\n" , ev.value.float_value  );
+		break;
+
+		case BOOLEAN_EXPRESSION:
+			fprintf( stderr , "value boolan: \n");
+			fprintf( stderr, "value boolean [%d]\n" , ev.value.boolean_value ? "True" : "False" );
+		break;
+
+		case GUID_EXPRESSION:
+			fprintf( stderr , "value Guid: \n");
+			if( ev.value.guid_value != NULL )
+				fprintf( stderr, "value guid [%s]\n" , ev.value.guid_value );
+			else
+				fprintf( stderr, "value guid non presente]\n" );
+		break;
+
+		case STRING_EXPRESSION:
+			fprintf( stderr , "value string: \n");
+			if( ev.value.string_value != NULL )
+				fprintf( stderr, "value string [%s]\n" , ev.value.string_value );
+			else
+				fprintf( stderr, "value string non presente \n" );
+		break;
+
+		case VOID_EXPRESSION:
+			fprintf( stderr, "Void expression\n" );
+		break;
+
+		default:
+		fprintf( stderr, "Type expression inconnu\n");
+		break;
+	}
+	fprintf( stderr , "fin DUMP expression\n" );
 
 }
 
+/* -------------------------------------*/
+/* evaluation d'une constante		*/
+/* -------------------------------------*/
 expression_Value expression_Constante(syntaxTreeNode * oneNode )
 {
 expression_Value result;	
@@ -57,8 +86,7 @@ constant * oneConstante;
 
 	oneConstante = & oneNode -> cste ;
 
-	/* fprintf( stderr, "constante\n" ); */
-
+	fprintf( stderr, "expression constante\n" ); 
 	switch( oneConstante -> type )
 	{
 		case INT_CONSTANT_TYPE:
@@ -86,17 +114,21 @@ constant * oneConstante;
 			result.value.string_value = oneConstante -> val.string_value  ;
 		break;
 	}
+	fprintf( stderr, "fin expression constante\n" ); 
 	dumpExpressionValue( result );
 	return result;
 }
 
 /* -------------------------------------*/
-/* interpretation d'une variable	*/
+/* evaluation d'une variable		*/
 /* -------------------------------------*/
 expression_Value  expression_Variable(syntaxTreeNode * oneNode )
 {
 expression_Value result;	
 variable * oneVariable;
+
+
+	fprintf( stderr, "expression constante\n" ); 
 
 	oneVariable = oneNode -> var;
 
@@ -134,11 +166,10 @@ variable * oneVariable;
 		case PROPERTY_IDENTIFIER_TYPE:
 		break;
 	}
-
+	fprintf( stderr, "fin expression variable\n" ); 
 	dumpExpressionValue( result );
 	return result;
 }
-
 
 /* -------------------------------------*/
 /* interpretation d'une assignation	*/
@@ -149,6 +180,8 @@ variable  * currentVar;
 constant * constante;
 variable * rvalue_var;
 
+
+	fprintf( stderr, "assign operator \n" ); 
 	currentVar = oneOperatorNode -> operands[0]-> var;
 
 	switch( oneOperatorNode -> operands[1] -> type )
@@ -252,6 +285,7 @@ expression_Value * operandResult ;
 
 	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
 	{
+		fprintf( stderr, "echo eval de  l'operande %d\n" , i ); 
 		operandResult[i] = expression( oneOperatorNode -> operands[i] );
 		dumpExpressionValue( operandResult[i] );
 		switch( operandResult[i].type )
@@ -297,7 +331,7 @@ expression_Value result;
 operator * currentOperator;
 expression_Value * operandResult ;
 
-
+	fprintf( stderr, "expression +\n" ); 
 	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(value ) );
 
 	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
@@ -336,7 +370,7 @@ expression_Value * operandResult ;
 	}
 	
 	free( operandResult );
-
+	fprintf( stderr, "fin expression +\n" ); 
 	return result;
 }
 
@@ -350,7 +384,7 @@ char guid[GUID_LENGTH];
 
 operator * currentOperator;
 	
-	/* fprintf( stderr, "Operateur\n" ); */
+	fprintf( stderr, "expression operator\n" ); 
 
 	currentOperator = & oneNode-> oper;
 
@@ -377,10 +411,12 @@ operator * currentOperator;
 		break;
 
 		case T_ECHO:
+		result.type = VOID_EXPRESSION;
 			echo( currentOperator );
 		break;
 
 		case T_ASSIGN:
+			result.type = VOID_EXPRESSION;
 			assign( currentOperator );
 		break;
 
@@ -389,7 +425,7 @@ operator * currentOperator;
 		strcpy( result.value.guid_value , guid );		
 		break;
 	}
-
+	fprintf( stderr, "fin expression operator\n" ); 
 	return result;
 }
 
