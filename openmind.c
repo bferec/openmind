@@ -14,13 +14,16 @@ extern int charNumber;
 extern FILE * yyin;
 
 
+char debugFileName[ 256 ];
+
 int main( int argc , char * * argv ) 
 {
 
-	if( DEBUG == 0 )
+	if( DEBUG == 1 )
 	{	
 		fclose( stderr );
-		stderr = fopen("/dev/null", "w" );
+		sprintf( debugFileName , "%s.err.txt" , argv[0] );
+		stderr = fopen(debugFileName, "w" );
 	}
 
 	

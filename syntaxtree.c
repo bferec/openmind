@@ -181,7 +181,6 @@ syntaxTreeNode * resultNode;
 			 fprintf( stderr , "Const() type string : [%s]\n" , resultNode -> cste.val.string_value); 
 		break;
 	}
-	/* dumpSyntaxTreeNode(resultNode); */
 
 return resultNode;
 }
@@ -244,15 +243,13 @@ syntaxTreeNode * operandeNode;
 				yyerror("operands n of operator vector allocation : Out of Memory");
 
 			operandeNode = va_arg( listOperands , syntaxTreeNode * );
-			fprintf( stderr, "operande No %d :  %s\n" , i , getOperandeTypeLibelle( operandeNode )  ); 
+			/* fprintf( stderr, "operande No %d :  %s\n" , i , getOperandeTypeLibelle( operandeNode )  );  */
 
 			resultNode -> oper.operands[i] =  operandeNode;
 		}
 
 		va_end( listOperands );
 	}
-
-	/* dumpSyntaxTreeNode(resultNode); */
 
 	return resultNode;
 }
@@ -283,10 +280,6 @@ void Free_VarSyntaxTreeNode( syntaxTreeNode * oneNode  )
 {
 	if( oneNode != NULL )
 	{
-		if( oneNode-> var != NULL )
-		{
-			/* deleteVar(oneNode-> var -> ident ); */
-		}
 		free( oneNode );
 	}
 }

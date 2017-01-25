@@ -19,10 +19,10 @@ typedef enum
 } expressionType;
 
 
-typedef union
+typedef struct
 {
-	value value;	
 	expressionType type;
+	value value;	
 }expression_Value;
 
 

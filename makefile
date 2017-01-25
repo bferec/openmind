@@ -6,7 +6,7 @@ APPNAME = openmind
 all: $(APPNAME)
 
 
-$(APPNAME): $(APPNAME).tab.o lex.yy.o $(APPNAME)lib.o $(APPNAME)varlist.o syntaxtree.o $(APPNAME)interpret.o
+$(APPNAME): $(APPNAME).tab.o lex.yy.o $(APPNAME)lib.o $(APPNAME)varlist.o syntaxtree.o $(APPNAME)interpret.o $(APPNAME).c
 	$(CC) -o $(APPNAME) $(APPNAME).c $(APPNAME)lib.c $(APPNAME)varlist.c  syntaxtree.c  $(APPNAME).tab.o lex.yy.o  $(APPNAME)interpret.c -lm
 
 $(APPNAME)lib.o: $(APPNAME)lib.c $(APPNAME)lib.h
@@ -41,6 +41,7 @@ clean:
 		[ -f "syntaxtree.o" ] 		&& rm syntaxtree.o; \
 		[ -f "$(APPNAME)varlist.o" ]	&& rm $(APPNAME)varlist.o; \
 		[ -f "$(APPNAME).output" ] 	&& rm $(APPNAME).output; \
+		[ -f "$(APPNAME).err.txt" ] 	&& rm $(APPNAME).err.txt; \
 		rm $(APPNAME).zip; \
 		zip $(APPNAME).zip *; \
 

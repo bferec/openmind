@@ -25,7 +25,7 @@ void dumpvarNode( variable_node * oneVariableNode)
 {
 	if( oneVariableNode )
 	{
-		fprintf( stdout , "variable node %s\n" , oneVariableNode-> v -> ident );
+		fprintf( stderr , "variable node %s\n" , oneVariableNode-> v -> ident );
 	}
 }
 

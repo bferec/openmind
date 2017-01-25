@@ -1,5 +1,48 @@
-echo  3;
 
+ECHO "Bonjour";
+ECHO "\n";
+
+ECHO 5;
+ECHO "\n";
+
+
+echo "60 + 4";
+echo " = ";
+echo 60 + 4;
+ECHO "\n";
+
+echo "61.5 + 1.7";
+echo " = ";
+echo 61.5 + 1.7;
+ECHO "\n";
+
+X = 7;
+echo "X= ";
+echo X;
+ECHO "\n";
+
+Y = 5;
+echo "Y= ";
+echo Y;
+ECHO "\n";
+
+
+Z = X + Y;
+
+
+echo X;
+echo "(x) + ";
+echo Y;
+echo "(y) = ";
+echo Z;
+ECHO " (z)\n";
+
+echo "B = X ";
+ECHO "\n";
+B = X;
+echo "B => ";
+echo B;
+ECHO "\n";
 
 
 
