@@ -26,18 +26,19 @@
 
 char buffer[MAXLENGTH_STRING + 1 ];
 
+
 char * getOperandeTypeLibelle( syntaxTreeNode * oneNode )
 {
 	switch( oneNode -> type )
 	{
 		case CONSTANT_SYNTAXTREE_NODETYPE:
-		strcpy( buffer , "Type constant" );
+		strcpy( buffer , "constant type" );
 		break;
 		case IDENTIFIER_SYNTAXTREE_NODETYPE:
-		strcpy( buffer , "Type variable" );
+		strcpy( buffer , "Variable type" );
 		break;
 		case OPERATOR_SYNTAXTREE_NODETYPE:
-		strcpy( buffer , "Type operator" );
+		strcpy( buffer , "operator Type" );
 		break;
 	}
 	return buffer;
@@ -78,6 +79,7 @@ return buffer;
 void  dumpSyntaxTreeNode(syntaxTreeNode * oneNode )
 {
 
+	fprintf( stderr , "\nDEBUT dumpSyntaxTreeNode\n" );
 	switch( oneNode -> type )
 	{
 		case CONSTANT_SYNTAXTREE_NODETYPE:
@@ -110,9 +112,10 @@ void  dumpSyntaxTreeNode(syntaxTreeNode * oneNode )
 		break;
 
 		case OPERATOR_SYNTAXTREE_NODETYPE:
-			 fprintf( stderr , "Node operateur [%s] %d operandes \n", getOperatorLibelle(oneNode -> oper.type ), oneNode -> oper.OperandsCount ); 
+			 fprintf( stderr , "Node operateur:[%s] comportant %d operandes \n", getOperatorLibelle(oneNode -> oper.type ), oneNode -> oper.OperandsCount ); 
 		break;
 	}
+	fprintf( stderr , "FIN dumpSyntaxTreeNode\n" );
 }
 
 
@@ -137,7 +140,10 @@ syntaxTreeNode * resultNode;
 /* -----------------------------------------------------*/
 syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr )
 {
-	syntaxTreeNode * resultNode;
+syntaxTreeNode * resultNode;
+
+	/* fprintf( stderr , "Const()\n" ); */
+
 	resultNode = syntaxTreeNodeAlloc();
 	resultNode -> type = CONSTANT_SYNTAXTREE_NODETYPE;
 	resultNode -> cste.type = oneType;
@@ -146,17 +152,17 @@ syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr )
 	{
 		case 	INT_CONSTANT_TYPE:
 			resultNode -> cste.val.integer_value = * (int *) oneconstantPtr;
-			/* fprintf( stderr , "Const()  Integer  :[%d]\n" , resultNode -> cste.val.integer_value ); */
+			 fprintf( stderr , "Const()  Integer  :[%d]\n" , resultNode -> cste.val.integer_value ); 
 		break;
 
 		case 	FLOAT_CONSTANT_TYPE:
 			resultNode -> cste.val.float_value = * (float *) oneconstantPtr;
-			/* fprintf( stderr , "Const()  Float  :[%f]\n" , resultNode -> cste.val.float_value ); */
+			 fprintf( stderr , "Const()  Float  :[%f]\n" , resultNode -> cste.val.float_value ); 
 		break;
 
 		case	BOOLEEAN_CONSTANT_TYPE:
 			resultNode -> cste.val.boolean_value = * (int *) oneconstantPtr;
-			/* fprintf( stderr , "Const()  Boolean : [%s]\n" , resultNode -> cste.val.boolean_value ? "#True" : "#False"  ); */
+			 fprintf( stderr , "Const()  Boolean : [%s]\n" , resultNode -> cste.val.boolean_value ? "#True" : "#False"  ); 
 		break;
 
 		case 	GUID_CONSTANT_TYPE:
@@ -164,7 +170,7 @@ syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr )
 			if( resultNode -> cste.val.guid_value == NULL )
 				yyerror("Guid value of constant allocation : Out of Memory" );
 			strcpy( resultNode -> cste.val.guid_value , (char *) oneconstantPtr );
-			/* fprintf( stderr , "Const()  guid : [%s]\n" , resultNode -> cste.val.guid_value); */
+			 fprintf( stderr , "Const()  guid : [%s]\n" , resultNode -> cste.val.guid_value); 
 		break;
 
 		case	STRING_CONSTANT_TYPE:
@@ -172,9 +178,10 @@ syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr )
 			if( resultNode -> cste.val.string_value == NULL )
 				yyerror("string value of constant allocation : Out of Memory" );
 			strcpy( resultNode -> cste.val.string_value , (char *) oneconstantPtr );
-			/* fprintf( stderr , "Const() type string : [%s]\n" , resultNode -> cste.val.string_value); */
+			 fprintf( stderr , "Const() type string : [%s]\n" , resultNode -> cste.val.string_value); 
 		break;
 	}
+	/* dumpSyntaxTreeNode(resultNode); */
 
 return resultNode;
 }
@@ -207,8 +214,8 @@ syntaxTreeNode * resultNode;
 /* -----------------------------------------------------*/
 syntaxTreeNode * oper( int oneOperType, int OperandsCount, ...)
 {
-	syntaxTreeNode * resultNode;
-	syntaxTreeNode * operandeNode;
+syntaxTreeNode * resultNode;
+syntaxTreeNode * operandeNode;
 
 	/* fprintf( stderr , "oper() type :[%s] \n" , getOperatorLibelle( oneOperType ) );  */
 	resultNode = syntaxTreeNodeAlloc();
@@ -228,7 +235,6 @@ syntaxTreeNode * oper( int oneOperType, int OperandsCount, ...)
 		if( resultNode -> oper.operands == (struct syntaxTreeNode_ * *) NULL )
 			yyerror("operands of operator vector allocation : Out of Memory" );
 
-
 		va_start( listOperands, OperandsCount );
 
 		for( int i = 0 ; i < OperandsCount  ; i ++ )
@@ -236,14 +242,18 @@ syntaxTreeNode * oper( int oneOperType, int OperandsCount, ...)
 			resultNode -> oper.operands[i] = syntaxTreeNodeAlloc();
 			if( resultNode -> oper.operands[i]  == (syntaxTreeNode *) NULL )
 				yyerror("operands n of operator vector allocation : Out of Memory");
+
 			operandeNode = va_arg( listOperands , syntaxTreeNode * );
-			/* fprintf( stderr, "operande %d %s\n" , i , getOperandeTypeLibelle( operandeNode)  ); */
+			fprintf( stderr, "operande No %d :  %s\n" , i , getOperandeTypeLibelle( operandeNode )  ); 
+
 			resultNode -> oper.operands[i] =  operandeNode;
 		}
 
 		va_end( listOperands );
 	}
-	dumpSyntaxTreeNode(resultNode);
+
+	/* dumpSyntaxTreeNode(resultNode); */
+
 	return resultNode;
 }
 

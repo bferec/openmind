@@ -151,7 +151,6 @@ stmtList:
 	| stmt T_SEMICOLON 	
 				{
 					expression( $1 ) ; 
-					 dumpSyntaxTreeNode( $1 ); 
 					/* Free_SyntaxTreeNode( $1 ); */
 				}
 	| stmtList stmt T_SEMICOLON	
@@ -300,7 +299,7 @@ boolean_expr:
 /* Expression chaine	*/
 /* -------------------- */
 string_expr:
-	T_CSTE_STRING				{ $$ = Const( STRING_CONSTANT_TYPE , (void *) $1 ); }
+	T_CSTE_STRING				{ $$ = Const( STRING_CONSTANT_TYPE , $1 ); }
 	| T_IDENTIFIER				{ $$ = Var( $1-> type , $1 ); }
 
 	| string_expr T_AMPERSAND  string_expr	{ $$ = oper( T_AMPERSAND , 2, $1 , $3 );}

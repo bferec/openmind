@@ -1,6 +1,6 @@
 YACC = bison -d
 LEX = flex
-CC = gcc
+CC = gcc 
 APPNAME = openmind
 
 all: $(APPNAME)
