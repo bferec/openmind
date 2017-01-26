@@ -37,15 +37,24 @@ echo "(y) = ";
 echo Z;
 ECHO " (z)\n";
 
-echo "B = X ";
-ECHO "\n";
-B = X;
+echo "B = -X";
+B = -X;
 echo "B => ";
-echo b;
+echo B;
 ECHO "\n";
 
 
-echo (D = 333);
+D =  X-Y;
+echo "D= x-y\n";
+echo "D =>";
 echo D;
+ECHO "\n";
+
+echo "e = -0.6\n";
+E =  - 0.60;
+ECHO "e => ";
+echo E;
+ECHO "\n";
+
 
 

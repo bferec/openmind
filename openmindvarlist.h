@@ -48,8 +48,11 @@ typedef struct variable_node
 
 variable * createVar( char * oneIdent );
 variable * find_variable( char * oneIdent );
+void ClearVarList( );
+/*
 void deleteVar( char * oneIdent );
 void removeVarNodeFromList( variable_node * oneVariableNode );
+*/
 
 BOOL  check_ident( char * oneident );
 void DumpVarList();

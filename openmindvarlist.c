@@ -1,6 +1,11 @@
-/* -------------------------------------------------------------*/
-/* openmindvarlist.c						*/
-/* -------------------------------------------------------------*/
+/* -------------------------------------*/
+/* -------------------------------------*/
+/* 					*/
+/* openmindvarlist.c			*/
+/* 					*/
+/* -------------------------------------*/
+/* -------------------------------------*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,6 +35,7 @@ void dumpvarNode( variable_node * oneVariableNode)
 }
 
 /* -----------------------------------------------------*/
+/* affichage de toutes les variables			*/
 /* -----------------------------------------------------*/
 void DumpVarList( )
 {
@@ -101,6 +107,7 @@ BOOL invalid_result;
 	invalid_result =  findkeyword( oneident ) != NULL ;
 
 return invalid_result;
+
 }
 
 /* -----------------------------------------------------*/
@@ -120,25 +127,6 @@ variable * result;
 	return result;
 }
 
-/* -----------------------------------------------------*/
-/* libartion memoire pour une variable			*/
-/* -----------------------------------------------------*/
-void FreeMemVar(variable * oneVariable)
-{
-	if( oneVariable != NULL )
-	{
-		if( oneVariable -> ident != NULL )
-			free( oneVariable -> ident  );
-
-		if( oneVariable -> val.guid_value != NULL )
-			free( oneVariable -> val.guid_value  );
-
-		if( oneVariable -> val.string_value != NULL )
-			free( oneVariable -> val.string_value  );
-
-		free( oneVariable );
-	}
-}
 
 
 /* -----------------------------------------------------*/
@@ -161,42 +149,64 @@ void addVarNodeToList( variable_node * oneVariableNode )
 }
 
 /* -----------------------------------------------------*/
+/* librration memoire pour une variable			*/
 /* -----------------------------------------------------*/
-void removeVarNodeFromList( variable_node * oneVariableNode )
+void FreeMemVar(variable * oneVariable)
 {
-variable_node * currentVarNode;
-
-	if( oneVariableNode ==  var_list )
-	{	
-		var_list = var_list -> next;
-		var_list -> previous = NULL;
-	}
-	else
-	{	
-		if( oneVariableNode -> next != NULL )
-		{
-			(oneVariableNode -> next) -> previous = oneVariableNode -> previous;
-		}
-		if( currentVarNode -> previous != NULL )
-		{
-			(oneVariableNode -> previous) -> next  = oneVariableNode -> next;
-		}
-		
-	}
-}
-/* -----------------------------------------------------*/
-/* -----------------------------------------------------*/
-void deleteVar( char * oneIdent )
-{
-variable_node * varNodeToDelete;
-
-	varNodeToDelete = find_variable_node( oneIdent );
-	if( varNodeToDelete != (variable_node *) NULL )
+	if( oneVariable != NULL )
 	{
-		FreeMemVar(varNodeToDelete -> v );
-		removeVarNodeFromList( varNodeToDelete );
+		// fprintf( stderr , "Free ident of Var [%s]\n" , oneVariable -> ident );
+		if( oneVariable -> ident != NULL )
+			free( oneVariable -> ident  );
+
+		if( oneVariable -> type == GUID_IDENTIFIER_TYPE )
+		{
+			// fprintf( stderr , "Free guid var space\n" );
+			if( oneVariable -> val.guid_value != NULL )
+				free( oneVariable -> val.guid_value  );
+		}
+		if( oneVariable -> type == STRING_IDENTIFIER_TYPE )
+		{
+			// fprintf( stderr , "Free string var space\n" );
+			if( oneVariable -> val.string_value != NULL )
+				free( oneVariable -> val.string_value  );
+		}
+		// fprintf( stderr , "liberation Var\n" );
+		free( oneVariable );
 	}
 }
+
+/* -----------------------------------------------------*/
+/* affichage de toutes les variables			*/
+/* -----------------------------------------------------*/
+void ClearVarList( )
+{
+
+variable_node * n;
+variable_node * previous;
+
+
+	// fprintf( stderr , "liberation de toutes les Variables\n" ); 
+
+	previous = (variable_node *) NULL;
+	n = var_list;
+	
+	while( n )
+	{
+		FreeMemVar( n -> v );
+		previous = n;
+		n = n -> next;
+	}
+
+	n = previous;
+	
+	while( n )
+	{
+		free(n);
+		n = n -> previous;
+	}
+}
+
 
 /* -----------------------------------------------------*/
 /* ajout nouvel identificateur sans valeur/type		*/
@@ -207,9 +217,7 @@ variable * createVar( char * oneIdent )
 variable * result ;
 variable_node * new_VarNode;
 
-/*
-	DumpVarList( );
-*/
+
 	new_VarNode = find_variable_node( oneIdent );
 
 	if( new_VarNode == (variable_node *) NULL )
@@ -219,12 +227,18 @@ variable_node * new_VarNode;
 
 		if( new_VarNode == (variable_node *) NULL )
 			yyerror( "Memory allocation for variable_node impossible\n");
+
+		new_VarNode -> next = new_VarNode -> previous = NULL;
+
 		/* fprintf( stderr , "Allocation memoire de la variable dans le noeud ...\n"); */
 		new_VarNode -> v = allocMemVar();
+
 		/* fprintf( stderr , "mise en place identificateur [%s] de la variable dans le noeud ...\n" , oneIdent ); */
 		strcpy( new_VarNode -> v -> ident  , oneIdent );	
+
 		/* fprintf( stderr , "mise en place du type de la variable dans le noeud ...\n"); */
 		new_VarNode -> v -> type =  UNKNOWN_IDENTIFIER_TYPE;
+
 		/* fprintf( stderr , "ajout du noeud dans la liste...\n"); */
 		addVarNodeToList( new_VarNode );
 	}

@@ -1,9 +1,20 @@
+/* -------------------------------------*/
+/* -------------------------------------*/
+/* 					*/
+/* openmindvarlist.c			*/
+/* 					*/
+/* -------------------------------------*/
+/* -------------------------------------*/
+
 #include <stdio.h>
 #include <string.h>
 
 #include "openmindlib.h"
+#include "entity.h"
+#include "openmindvalue.h"
+#include "openmindvarlist.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 extern int yydebug;
 extern int yyparse();
@@ -14,7 +25,7 @@ extern int charNumber;
 extern FILE * yyin;
 
 
-char debugFileName[ 256 ];
+char debugFileName[ MAXLENGTH_STRING + 1 ];
 
 int main( int argc , char * * argv ) 
 {
@@ -27,9 +38,6 @@ int main( int argc , char * * argv )
 	}
 
 	
-
-	/* yydebug = 1;	 */
-
 	fprintf( stderr , "Fdl...\n");
 	if(argc > 1 )
 	{ 
@@ -47,9 +55,21 @@ int main( int argc , char * * argv )
 
 	do 
 	{ 
+
 		yyparse();
+
 	} while( ! feof(yyin) );
 
+	fprintf( stdout , "Bye.\n");
+
+	ClearVarList();
+
+	if( yyin != NULL )
+	{
+		fclose( yyin );
+	}
+
+	fclose(stderr);
 
 	return 0;
 }

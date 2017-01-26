@@ -90,32 +90,32 @@ constant * oneConstante;
 		case INT_CONSTANT_TYPE:
 			result.type = INTEGER_EXPRESSION;
 			result.value.integer_value =  oneConstante -> val.integer_value ;
-			fprintf( stderr, "retour expression constante ,  type integer , valeur : [%d]\n" , result.value.integer_value); 
+			// fprintf( stderr, "retour expression constante ,  type integer , valeur : [%d]\n" , result.value.integer_value); 
 
 		break;
 
 		case FLOAT_CONSTANT_TYPE:
 			result.type = FLOAT_EXPRESSION;
 			result.value.float_value =  oneConstante -> val.float_value ;
-			fprintf( stderr, "retour expression constante ,  type float , valeur : [%f]\n" ,  result.value.float_value ); 
+			// fprintf( stderr, "retour expression constante ,  type float , valeur : [%f]\n" ,  result.value.float_value ); 
 		break;
 
 		case BOOLEEAN_CONSTANT_TYPE:
 			result.type = BOOLEAN_EXPRESSION;
 			result.value.boolean_value =  oneConstante -> val.boolean_value ;
-			fprintf( stderr, "retour expression constante ,  type Boolean : [%s]\n",  result.value.boolean_value ? "True" : "False" ); 
+			// fprintf( stderr, "retour expression constante ,  type Boolean : [%s]\n",  result.value.boolean_value ? "True" : "False" ); 
 		break;
 
 		case GUID_CONSTANT_TYPE:
 			result.type = GUID_EXPRESSION;
 			result.value.guid_value = oneConstante -> val.guid_value  ;
-			fprintf( stderr, "retour expression constante ,  type guid : [%s]\n" , result.value.guid_value ); 
+			// fprintf( stderr, "retour expression constante ,  type guid : [%s]\n" , result.value.guid_value ); 
 		break;
 
 		case STRING_CONSTANT_TYPE:
 			result.type = STRING_EXPRESSION;
 			result.value.string_value = oneConstante -> val.string_value  ;
-			fprintf( stderr, "retour expression constante ,  type string : [%s]\n"  , result.value.string_value  ); 
+			// fprintf( stderr, "retour expression constante ,  type string : [%s]\n"  , result.value.string_value  ); 
 		break;
 	}
 
@@ -140,7 +140,7 @@ variable * oneVariable;
 		case INTEGER_IDENTIFIER_TYPE:
 			result.type = INTEGER_EXPRESSION;
 			result.value.integer_value =  oneVariable -> val.integer_value ;
-			fprintf( stderr, "retour expression Variable ,  type integer , valeur : [%d]\n" , result.value.integer_value); 
+			// fprintf( stderr, "retour expression Variable ,  type integer , valeur : [%d]\n" , result.value.integer_value); 
 		break;
 
 		case FLOAT_IDENTIFIER_TYPE:
@@ -167,7 +167,9 @@ variable * oneVariable;
 		case PROPERTY_IDENTIFIER_TYPE:
 		break;
 	}
-	dumpExpressionValue( result );
+
+	//dumpExpressionValue( result );
+
 	return result;
 }
 
@@ -183,36 +185,45 @@ expression_Value operandResult ;
 	currentVar = oneOperatorNode -> operands[0]-> var;
 
 	operandResult = expression( oneOperatorNode -> operands[1] );
+
 	switch( operandResult.type )
 	{
 		case INTEGER_EXPRESSION:
-			currentVar -> type = INTEGER_IDENTIFIER_TYPE;
 			currentVar -> val.integer_value  = operandResult.value.integer_value;
+			currentVar -> type = INTEGER_IDENTIFIER_TYPE;
 			result.type = INTEGER_EXPRESSION;
 			result.value.integer_value =  currentVar -> val.integer_value;
 		break;
 
 		case FLOAT_EXPRESSION:
-			currentVar -> type = FLOAT_IDENTIFIER_TYPE;
 			currentVar -> val.float_value  = operandResult.value.float_value;
+			currentVar -> type = FLOAT_IDENTIFIER_TYPE;
 			result.type = FLOAT_EXPRESSION;
 			result.value.integer_value =  currentVar -> val.float_value;
 		break;
 
 		case STRING_EXPRESSION:
-			currentVar -> type = STRING_IDENTIFIER_TYPE;
-			if( currentVar -> val.string_value != NULL );
+			if( currentVar -> val.string_value != NULL );	/* reallocation	*/
 				free( currentVar -> val.string_value );
+
 			currentVar -> val.string_value = (char *) malloc( strlen( operandResult.value.string_value) + 1 );
 			if( currentVar -> val.string_value == NULL )
 				yyerror( "Memory allocation for variable string content impossible\n");
+
 			strcpy( currentVar -> val.string_value ,  operandResult.value.string_value );
+			currentVar -> type = STRING_IDENTIFIER_TYPE;
 			result.type = STRING_EXPRESSION;
 			result.value.string_value =  currentVar -> val.string_value ;
 		break;
 
 		case GUID_EXPRESSION:
 			currentVar -> type = GUID_IDENTIFIER_TYPE;
+			if( currentVar -> val.guid_value == NULL );
+			currentVar -> val.guid_value = (char *) malloc( GUID_LENGTH + 1 );
+
+			if( currentVar -> val.guid_value == NULL )
+				yyerror( "Memory allocation for variable Guid content impossible\n");
+
 			strcpy( currentVar -> val.guid_value , operandResult.value.guid_value );
 			currentVar -> type = GUID_IDENTIFIER_TYPE;
 			result.type = GUID_EXPRESSION;
@@ -220,10 +231,10 @@ expression_Value operandResult ;
 		break;
 
 		case BOOLEAN_EXPRESSION:
-			currentVar -> type = GUID_IDENTIFIER_TYPE;
-			currentVar -> val.guid_value = operandResult.value.guid_value;			
+			currentVar -> val.boolean_value = operandResult.value.boolean_value;	
+			currentVar -> type = BOOLEAN_IDENTIFIER_TYPE;		
 			result.type = BOOLEAN_EXPRESSION;
-			result.value.guid_value = currentVar -> val.guid_value;
+			result.value.boolean_value = currentVar -> val.boolean_value;
 		break;
 
 		case ENTITY_EXPRESSION:
@@ -252,12 +263,12 @@ expression_Value * operandResult ;
 
 	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value  ) );
 
-	fprintf( stderr , "echo %d operandes\n" , oneOperatorNode -> OperandsCount);
+	// fprintf( stderr , "echo %d operandes\n" , oneOperatorNode -> OperandsCount);
 
 	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
 	{
-		fprintf( stderr, "OPERATOR=ECHO - eval de  l'operande %d/%d\n" , i+1, oneOperatorNode -> OperandsCount ); 
-		/* dumpSyntaxTreeNode( oneOperatorNode -> operands[i] ); */
+		// fprintf( stderr, "OPERATOR=ECHO - eval de  l'operande %d/%d\n" , i+1, oneOperatorNode -> OperandsCount ); 
+		// dumpSyntaxTreeNode( oneOperatorNode -> operands[i] ); 
 
 		operandResult[i] = expression( oneOperatorNode -> operands[i] );
 
@@ -367,11 +378,129 @@ float resultNumber;
 }
 
 /*--------------------------------------*/
+/* - operator				*/
+/*--------------------------------------*/
+expression_Value expression_Operator_T_MINUS_SIGN( operator * oneOperatorNode  )
+{
+expression_Value result;
+operator * currentOperator;
+expression_Value * operandResult ;
+
+expressionType typeRetour;
+float resultNumber;
+
+	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
+
+	result.value.integer_value = result.value.float_value = resultNumber = 0;
+
+	result.type = INTEGER_EXPRESSION;
+
+	if( oneOperatorNode -> OperandsCount == 1 )
+	{
+		switch( operandResult[0].type )
+		{
+			case INTEGER_EXPRESSION:
+				resultNumber = - operandResult[0].value.integer_value;
+			break;
+
+			case FLOAT_EXPRESSION:
+				result.type = FLOAT_EXPRESSION;
+				resultNumber =  - operandResult[1].value.float_value;
+			break;
+
+			case STRING_EXPRESSION:
+				yyerror( "Unable to substract String\n" );
+			break;
+
+			case GUID_EXPRESSION:
+				yyerror( "Unable to substract Guid\n" );
+			break;
+
+			case BOOLEAN_EXPRESSION:
+				yyerror( "Unable to substract Boolean\n" );
+			break;
+
+			case ENTITY_EXPRESSION:
+				yyerror( "Unable to substract entity\n" );
+			break;
+
+			case PROPERTY_EXPRESSION:
+				yyerror( "Unable to Add Property\n" );
+			break;
+
+			default:
+			break;
+		}
+	}		
+	else
+	{
+
+		for( int i = 1 ; i < oneOperatorNode -> OperandsCount ; i ++ )
+		{
+			operandResult[i] = expression( oneOperatorNode -> operands[i] );
+			switch( operandResult[i].type )
+			{
+				case INTEGER_EXPRESSION:
+					if( i > 0 )
+						resultNumber -=  operandResult[i].value.integer_value;
+					else 
+						resultNumber =  operandResult[i].value.integer_value;
+				break;
+
+				case FLOAT_EXPRESSION:
+					result.type = FLOAT_EXPRESSION;
+					if( i > 0 )
+						resultNumber -=  operandResult[i].value.float_value;
+					else 
+						resultNumber =  operandResult[i].value.float_value;
+				break;
+
+				case STRING_EXPRESSION:
+					yyerror( "Unable to substract String\n" );
+				break;
+
+				case GUID_EXPRESSION:
+					yyerror( "Unable to substract Guid\n" );
+				break;
+
+				case BOOLEAN_EXPRESSION:
+					yyerror( "Unable to substract Boolean\n" );
+				break;
+
+				case ENTITY_EXPRESSION:
+					yyerror( "Unable to substract entity\n" );
+				break;
+
+				case PROPERTY_EXPRESSION:
+					yyerror( "Unable to Add Property\n" );
+				break;
+
+				default:
+				break;
+			}
+		}
+	}
+
+	if( result.type == INTEGER_EXPRESSION )	
+	{
+		result.value.integer_value = (int) resultNumber;
+	}
+	else if( result.type == FLOAT_EXPRESSION )	
+	{
+		result.value.float_value = resultNumber;
+	}
+	
+	free( operandResult );
+
+	return result;
+}
+/*--------------------------------------*/
 /* operateur interpretation 		*/
 /* -------------------------------------*/
 expression_Value expression_Operator( syntaxTreeNode * oneNode )
 {
-expression_Value result;	
+expression_Value result;
+	
 char guid[GUID_LENGTH]; 
 
 operator * currentOperator;
@@ -381,12 +510,16 @@ operator * currentOperator;
 	switch( currentOperator -> type )
 	{
 		case T_PLUS_SIGN:
-			fprintf( stderr, "expression_Operator_T_PLUS_SIGN()\n" ); 
+			//fprintf( stderr, "expression_Operator_T_PLUS_SIGN()\n" ); 
+
 			result =  expression_Operator_T_PLUS_SIGN( currentOperator ) ; 
-			fprintf( stderr, "Fin expression_Operator_T_PLUS_SIGN()\n" ); 
+
+			//fprintf( stderr, "Fin expression_Operator_T_PLUS_SIGN()\n" ); 
 		break;
 
 		case T_MINUS_SIGN:
+			result =  expression_Operator_T_MINUS_SIGN( currentOperator ) ; 
+
 			/* if( currentOper-> operandscount == 2 )
 				return expression( currentOperator-> operands[0] ) -  expression( currentOperator-> operands[1] ) ;
 			   else
@@ -403,16 +536,16 @@ operator * currentOperator;
 		break;
 
 		case T_ECHO:
-			fprintf( stderr, "Operator_ECHO()\n" ); 
+			/* fprintf( stderr, "Operator_ECHO()\n" ); */
 			result.type = VOID_EXPRESSION;
 			expression_Operator_ECHO( currentOperator );
-			fprintf( stderr, "Fin Operator_ECHO()\n" ); 
+			/* fprintf( stderr, "Fin Operator_ECHO()\n" ); */
 		break;
 
 		case T_ASSIGN:
-			fprintf( stderr, "Operator_Assign()\n" ); 
+			/* fprintf( stderr, "Operator_Assign()\n" ); */
 			result =  expression_Operator_Assign( currentOperator );
-			fprintf( stderr, "Fin Operator_Assign()\n" ); 
+			/* fprintf( stderr, "Fin Operator_Assign()\n" ); */
 		break;
 
 		case T_AUTO:
@@ -433,7 +566,7 @@ expression_Value expression( syntaxTreeNode * oneNode )
 {
 expression_Value result;
 
-	fprintf( stderr, "expression()\n" );
+	/* fprintf( stderr, "expression()\n" ); */
 
 	if( oneNode == (syntaxTreeNode *) NULL )
 	{
@@ -460,9 +593,9 @@ expression_Value result;
 			/* fprintf( stderr, "FIN expression_Operator()\n" );  */
 		break;
 	}
-	fprintf( stderr, "Fin expression()\n" ); 
+	/* fprintf( stderr, "Fin expression()\n" ); */
 
-	DumpVarList( );
+	/* DumpVarList( ); */
 
 	return result;
 }

@@ -152,17 +152,17 @@ syntaxTreeNode * resultNode;
 	{
 		case 	INT_CONSTANT_TYPE:
 			resultNode -> cste.val.integer_value = * (int *) oneconstantPtr;
-			 fprintf( stderr , "Const()  Integer  :[%d]\n" , resultNode -> cste.val.integer_value ); 
+			 // fprintf( stderr , "Const()  Integer  :[%d]\n" , resultNode -> cste.val.integer_value ); 
 		break;
 
 		case 	FLOAT_CONSTANT_TYPE:
 			resultNode -> cste.val.float_value = * (float *) oneconstantPtr;
-			 fprintf( stderr , "Const()  Float  :[%f]\n" , resultNode -> cste.val.float_value ); 
+			 // fprintf( stderr , "Const()  Float  :[%f]\n" , resultNode -> cste.val.float_value ); 
 		break;
 
 		case	BOOLEEAN_CONSTANT_TYPE:
 			resultNode -> cste.val.boolean_value = * (int *) oneconstantPtr;
-			 fprintf( stderr , "Const()  Boolean : [%s]\n" , resultNode -> cste.val.boolean_value ? "#True" : "#False"  ); 
+			// fprintf( stderr , "Const()  Boolean : [%s]\n" , resultNode -> cste.val.boolean_value ? "#True" : "#False"  ); 
 		break;
 
 		case 	GUID_CONSTANT_TYPE:
@@ -170,7 +170,7 @@ syntaxTreeNode * resultNode;
 			if( resultNode -> cste.val.guid_value == NULL )
 				yyerror("Guid value of constant allocation : Out of Memory" );
 			strcpy( resultNode -> cste.val.guid_value , (char *) oneconstantPtr );
-			 fprintf( stderr , "Const()  guid : [%s]\n" , resultNode -> cste.val.guid_value); 
+			// fprintf( stderr , "Const()  guid : [%s]\n" , resultNode -> cste.val.guid_value); 
 		break;
 
 		case	STRING_CONSTANT_TYPE:
@@ -178,7 +178,7 @@ syntaxTreeNode * resultNode;
 			if( resultNode -> cste.val.string_value == NULL )
 				yyerror("string value of constant allocation : Out of Memory" );
 			strcpy( resultNode -> cste.val.string_value , (char *) oneconstantPtr );
-			 fprintf( stderr , "Const() type string : [%s]\n" , resultNode -> cste.val.string_value); 
+			// fprintf( stderr , "Const() type string : [%s]\n" , resultNode -> cste.val.string_value); 
 		break;
 	}
 
@@ -192,7 +192,7 @@ syntaxTreeNode * Var( VarType oneType, variable * oneVarPtr )
 {
 syntaxTreeNode * resultNode;
 
-	/* fprintf( stderr , "var() ajout de d'une variable \n"); */
+	// fprintf( stderr , "var() ajout de d'une variable \n"); 
 	resultNode = syntaxTreeNodeAlloc();
 
 	resultNode -> type = IDENTIFIER_SYNTAXTREE_NODETYPE;
@@ -203,7 +203,7 @@ syntaxTreeNode * resultNode;
 	}
 	resultNode-> var = oneVarPtr ;
 	resultNode-> var -> type = oneType;
-	/* printf( stderr , "var() %s\n" , resultNode->var-> ident);  */
+	// printf( stderr , "var() %s\n" , resultNode->var-> ident);  
 
 	return resultNode;
 }
@@ -216,11 +216,11 @@ syntaxTreeNode * oper( int oneOperType, int OperandsCount, ...)
 syntaxTreeNode * resultNode;
 syntaxTreeNode * operandeNode;
 
-	/* fprintf( stderr , "oper() type :[%s] \n" , getOperatorLibelle( oneOperType ) );  */
+	// fprintf( stderr , "oper() type :[%s] \n" , getOperatorLibelle( oneOperType ) );  
 	resultNode = syntaxTreeNodeAlloc();
 	va_list listOperands;
 	
-	/* fprintf( stderr , "oper() type %d\n" , oneOper ); */
+	// fprintf( stderr , "oper() type %d\n" , oneOper ); 
 	resultNode = syntaxTreeNodeAlloc();
 	resultNode -> type = OPERATOR_SYNTAXTREE_NODETYPE;
 	resultNode -> oper.type = oneOperType;
@@ -229,7 +229,7 @@ syntaxTreeNode * operandeNode;
 	/* operand_number; */
 	if( OperandsCount > 0 )
 	{
-		/* fprintf( stderr , "%d operands memory allocation\n" , OperandsCount ); */
+		// fprintf( stderr , "%d operands memory allocation\n" , OperandsCount ); 
 		resultNode -> oper.operands = (struct syntaxTreeNode_ * *) calloc( OperandsCount , sizeof( syntaxTreeNode *) );
 		if( resultNode -> oper.operands == (struct syntaxTreeNode_ * *) NULL )
 			yyerror("operands of operator vector allocation : Out of Memory" );
@@ -243,7 +243,7 @@ syntaxTreeNode * operandeNode;
 				yyerror("operands n of operator vector allocation : Out of Memory");
 
 			operandeNode = va_arg( listOperands , syntaxTreeNode * );
-			/* fprintf( stderr, "operande No %d :  %s\n" , i , getOperandeTypeLibelle( operandeNode )  );  */
+			// fprintf( stderr, "operande No %d :  %s\n" , i , getOperandeTypeLibelle( operandeNode )  );  
 
 			resultNode -> oper.operands[i] =  operandeNode;
 		}
