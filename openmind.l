@@ -142,8 +142,8 @@ property		(?i:"property")
 
 {guid}			{ strcpy( yylval.guid_value , yytext ) ; return T_GUID;}
 
-"True"			{yylval.boolean_value = True ;  return T_TRUE ; }
-"False"			{yylval.boolean_value = False ; return T_FALSE ; }
+(?i:"True")		{yylval.boolean_value = True ;  return T_TRUE ; }
+(?i:"False")		{yylval.boolean_value = False ; return T_FALSE ; }
  
 
 {entity}		{return T_ENTITY;}

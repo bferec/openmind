@@ -17,14 +17,15 @@
 #include "openmindconstant.h"
 #include "operator.h"
 #include "syntaxtree.h"
-
 #include "expressions.h"
+#include "arithmeticOperator.h"
+#include "logicalOperator.h"
 
 #include "openmind.tab.h"
 
 
 /* -------------------------------------*/
-/* dump contenu  expression				*/
+/* dump contenu  expression		*/
 /* -------------------------------------*/
 void dumpExpressionValue( expression_Value ev )
 {
@@ -103,7 +104,7 @@ constant * oneConstante;
 		case BOOLEEAN_CONSTANT_TYPE:
 			result.type = BOOLEAN_EXPRESSION;
 			result.value.boolean_value =  oneConstante -> val.boolean_value ;
-			// fprintf( stderr, "retour expression constante ,  type Boolean : [%s]\n",  result.value.boolean_value ? "True" : "False" ); 
+			 // fprintf( stderr, "retour expression constante ,  type Boolean : [%s]\n",  result.value.boolean_value ? "True" : "False" ); 
 		break;
 
 		case GUID_CONSTANT_TYPE:
@@ -173,10 +174,11 @@ variable * oneVariable;
 	return result;
 }
 
+
 /* -------------------------------------*/
 /* interpretation d'une assignation	*/
 /* -------------------------------------*/
-expression_Value  expression_Operator_Assign(operator * oneOperatorNode) 
+expression_Value  expression_Operator_T_ASSIGN(operator * oneOperatorNode) 
 {
 variable  * currentVar;
 expression_Value result ;
@@ -203,17 +205,24 @@ expression_Value operandResult ;
 		break;
 
 		case STRING_EXPRESSION:
-			if( currentVar -> val.string_value != NULL );	/* reallocation	*/
+			// fprintf(stderr , "old string value for %s  is %d\n" , currentVar ->ident , ! currentVar -> val.string_value ? 1 : 0  );
+			if( currentVar -> val.string_value != (char *) NULL );	/* reallocation	*/
+			{
+				// fprintf(stderr , "free old string value %s\n" , currentVar -> val.string_value  );
 				free( currentVar -> val.string_value );
-
+			}
+			// fprintf(stderr , "allocating new space for string value \n"  );
 			currentVar -> val.string_value = (char *) malloc( strlen( operandResult.value.string_value) + 1 );
 			if( currentVar -> val.string_value == NULL )
 				yyerror( "Memory allocation for variable string content impossible\n");
 
+			// fprintf(stderr , "copy new string value\n" );
 			strcpy( currentVar -> val.string_value ,  operandResult.value.string_value );
 			currentVar -> type = STRING_IDENTIFIER_TYPE;
 			result.type = STRING_EXPRESSION;
+			// fprintf(stderr , "copy string value in expression result;\n" );
 			result.value.string_value =  currentVar -> val.string_value ;
+			// fprintf(stderr , "copied !\n" );
 		break;
 
 		case GUID_EXPRESSION:
@@ -248,9 +257,9 @@ expression_Value operandResult ;
 		break;
 	}
 
-	return result;
-	
+	return result;	
 }
+
 /* -------------------------------------*/
 /* echo operator			*/
 /* -------------------------------------*/
@@ -291,7 +300,7 @@ expression_Value * operandResult ;
 			break;
 
 			case BOOLEAN_EXPRESSION:
-				printf( "%d" , operandResult -> value.boolean_value ? "True" : "False" );
+				printf( "%s" , operandResult -> value.boolean_value ? "True" : "False" );
 			break;
 
 			case ENTITY_EXPRESSION:
@@ -306,194 +315,7 @@ expression_Value * operandResult ;
 	free( operandResult );
 }
 
-/*--------------------------------------*/
-/* + operator				*/
-/*--------------------------------------*/
-expression_Value expression_Operator_T_PLUS_SIGN( operator * oneOperatorNode  )
-{
-expression_Value result;
-operator * currentOperator;
-expression_Value * operandResult ;
 
-expressionType typeRetour;
-float resultNumber;
-
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
-
-	result.value.integer_value = result.value.float_value = resultNumber = 0;
-	result.type = INTEGER_EXPRESSION;
-
-
-	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
-	{
-		operandResult[i] = expression( oneOperatorNode -> operands[i] );
-		switch( operandResult[i].type )
-		{
-			case INTEGER_EXPRESSION:
-				resultNumber +=  operandResult[i].value.integer_value;
-			break;
-
-			case FLOAT_EXPRESSION:
-				result.type = FLOAT_EXPRESSION;
-				resultNumber +=  operandResult[i].value.float_value;
-			break;
-
-			case STRING_EXPRESSION:
-				result.type = INTEGER_EXPRESSION;
-				yyerror( "Unable to Add String\n" );
-			break;
-
-			case GUID_EXPRESSION:
-				yyerror( "Unable to Add Guid\n" );
-			break;
-
-			case BOOLEAN_EXPRESSION:
-				yyerror( "Unable to Add Boolean\n" );
-			break;
-
-			case ENTITY_EXPRESSION:
-				yyerror( "Unable to Add entity\n" );
-			break;
-
-			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to Add Property\n" );
-			break;
-
-			default:
-			break;
-		}
-	}
-	if( result.type == INTEGER_EXPRESSION )	
-	{
-		result.value.integer_value = (int) resultNumber;
-	}
-	else if( result.type == FLOAT_EXPRESSION )	
-	{
-		result.value.float_value = resultNumber;
-	}
-	
-	free( operandResult );
-
-	return result;
-}
-
-/*--------------------------------------*/
-/* - operator				*/
-/*--------------------------------------*/
-expression_Value expression_Operator_T_MINUS_SIGN( operator * oneOperatorNode  )
-{
-expression_Value result;
-operator * currentOperator;
-expression_Value * operandResult ;
-
-expressionType typeRetour;
-float resultNumber;
-
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
-
-	result.value.integer_value = result.value.float_value = resultNumber = 0;
-
-	result.type = INTEGER_EXPRESSION;
-
-	if( oneOperatorNode -> OperandsCount == 1 )
-	{
-		switch( operandResult[0].type )
-		{
-			case INTEGER_EXPRESSION:
-				resultNumber = - operandResult[0].value.integer_value;
-			break;
-
-			case FLOAT_EXPRESSION:
-				result.type = FLOAT_EXPRESSION;
-				resultNumber =  - operandResult[1].value.float_value;
-			break;
-
-			case STRING_EXPRESSION:
-				yyerror( "Unable to substract String\n" );
-			break;
-
-			case GUID_EXPRESSION:
-				yyerror( "Unable to substract Guid\n" );
-			break;
-
-			case BOOLEAN_EXPRESSION:
-				yyerror( "Unable to substract Boolean\n" );
-			break;
-
-			case ENTITY_EXPRESSION:
-				yyerror( "Unable to substract entity\n" );
-			break;
-
-			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to Add Property\n" );
-			break;
-
-			default:
-			break;
-		}
-	}		
-	else
-	{
-
-		for( int i = 1 ; i < oneOperatorNode -> OperandsCount ; i ++ )
-		{
-			operandResult[i] = expression( oneOperatorNode -> operands[i] );
-			switch( operandResult[i].type )
-			{
-				case INTEGER_EXPRESSION:
-					if( i > 0 )
-						resultNumber -=  operandResult[i].value.integer_value;
-					else 
-						resultNumber =  operandResult[i].value.integer_value;
-				break;
-
-				case FLOAT_EXPRESSION:
-					result.type = FLOAT_EXPRESSION;
-					if( i > 0 )
-						resultNumber -=  operandResult[i].value.float_value;
-					else 
-						resultNumber =  operandResult[i].value.float_value;
-				break;
-
-				case STRING_EXPRESSION:
-					yyerror( "Unable to substract String\n" );
-				break;
-
-				case GUID_EXPRESSION:
-					yyerror( "Unable to substract Guid\n" );
-				break;
-
-				case BOOLEAN_EXPRESSION:
-					yyerror( "Unable to substract Boolean\n" );
-				break;
-
-				case ENTITY_EXPRESSION:
-					yyerror( "Unable to substract entity\n" );
-				break;
-
-				case PROPERTY_EXPRESSION:
-					yyerror( "Unable to Add Property\n" );
-				break;
-
-				default:
-				break;
-			}
-		}
-	}
-
-	if( result.type == INTEGER_EXPRESSION )	
-	{
-		result.value.integer_value = (int) resultNumber;
-	}
-	else if( result.type == FLOAT_EXPRESSION )	
-	{
-		result.value.float_value = resultNumber;
-	}
-	
-	free( operandResult );
-
-	return result;
-}
 /*--------------------------------------*/
 /* operateur interpretation 		*/
 /* -------------------------------------*/
@@ -511,28 +333,20 @@ operator * currentOperator;
 	{
 		case T_PLUS_SIGN:
 			//fprintf( stderr, "expression_Operator_T_PLUS_SIGN()\n" ); 
-
 			result =  expression_Operator_T_PLUS_SIGN( currentOperator ) ; 
-
 			//fprintf( stderr, "Fin expression_Operator_T_PLUS_SIGN()\n" ); 
 		break;
 
 		case T_MINUS_SIGN:
 			result =  expression_Operator_T_MINUS_SIGN( currentOperator ) ; 
-
-			/* if( currentOper-> operandscount == 2 )
-				return expression( currentOperator-> operands[0] ) -  expression( currentOperator-> operands[1] ) ;
-			   else
-				return - expression( currentOperator-> operands[0] ) ;
-			*/
 		break;
 
 		case T_ASTERISK:
-			/* return expression( currentOperator-> operands[0] ) *  expression( currentOperator-> operands[1] ) ; */
+			result =  expression_Operator_T_ASTERISK( currentOperator ) ; 
 		break;
 
 		case T_SLASH:
-			/* return expression( currentOperator-> operands[0] ) /  expression( currentOperator-> operands[1] ) ; */
+			result =  expression_Operator_T_SLASH( currentOperator ) ; 
 		break;
 
 		case T_ECHO:
@@ -543,9 +357,13 @@ operator * currentOperator;
 		break;
 
 		case T_ASSIGN:
-			/* fprintf( stderr, "Operator_Assign()\n" ); */
-			result =  expression_Operator_Assign( currentOperator );
-			/* fprintf( stderr, "Fin Operator_Assign()\n" ); */
+			/* fprintf( stderr, "expression_Operator_T_ASSIGN()\n" ); */
+			result =  expression_Operator_T_ASSIGN( currentOperator );
+			/* fprintf( stderr, "Fin expression_Operator_T_ASSIGN()\n" ); */
+		break;
+
+		case T_OR:
+			result = expression_Operator_T_OR( currentOperator ) ; 
 		break;
 
 		case T_AUTO:

@@ -1,12 +1,4 @@
-/* test assignation et creation */
-
-mavar = 2;
-
-monautrevar = "tagada";
-
-y = 5;
-
-tst = True;
+/* test  creation entity et property */
 
 
 Create Entity
@@ -17,8 +9,9 @@ Create Entity
 
 Create Property
 {
-	Identity {Auto};
+	Identity {Auto};	
 	Name {"Type"} Unique ;
 };
 
 quit;
+

@@ -39,7 +39,7 @@ int randomize(int min, int max)
 /* -----------------------------------------------------*/
 void yyerror(const char* msg) 
 {
-	fprintf( stderr, "Erreur ligne [%4.4d] : caractere [%4.4d] [%s]\n", lineNumber , charNumber , msg  );
+	fprintf( stderr, "Error line [%4.4d] :  %s\n", lineNumber , msg  );
 }
 
 /* -----------------------------------------------------*/

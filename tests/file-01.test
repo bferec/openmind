@@ -1,0 +1,13 @@
+/* test assignation de variable texte et creation */
+
+
+Prenom = "Bruno";
+
+echo "Test Prenom=bruno  => ";
+echo Prenom;
+echo "\n";
+
+Nom = "Ferec"; 
+echo "Test nom=Ferec  => ";
+echo nom;
+echo "\n";

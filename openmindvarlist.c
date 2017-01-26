@@ -239,6 +239,9 @@ variable_node * new_VarNode;
 		/* fprintf( stderr , "mise en place du type de la variable dans le noeud ...\n"); */
 		new_VarNode -> v -> type =  UNKNOWN_IDENTIFIER_TYPE;
 
+		new_VarNode -> v -> val.string_value = (char * ) NULL;
+		new_VarNode -> v -> val.guid_value = (char * ) NULL;
+
 		/* fprintf( stderr , "ajout du noeud dans la liste...\n"); */
 		addVarNodeToList( new_VarNode );
 	}

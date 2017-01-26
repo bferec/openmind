@@ -1,0 +1,68 @@
+/* -----------------------------------------------------------------------------*/
+/* test operateurs arithmetique , constantes et variables arithmetiques.	*/
+/* -----------------------------------------------------------------------------*/
+
+
+ECHO "Bonjour";
+ECHO "\n";
+echo "Test echo 5 => ";
+ECHO 5;
+ECHO "\n";
+
+
+echo "TEST 12 / 3";
+echo " => ";
+echo 12 / 3;
+ECHO "\n";
+
+echo "TEST 10.0 / 3";
+echo " => ";
+echo 10.0 / 3;
+ECHO "\n";
+
+echo "TEST 10 / 3.0";
+echo " => ";
+echo 10 / 3.0;
+ECHO "\n";
+
+echo "TEST (60 + 4) * 2";
+echo " => ";
+echo (60 + 4) * 2;
+ECHO "\n";
+
+echo "TEST 61.5 + 1.7 => ";
+echo 61.5 + 1.7;
+ECHO "\n";
+
+x = 7;
+echo "TEST X=7 => ";
+echo X;
+ECHO "\n";
+
+Y = 5;
+echo "TEST Y= 5 => ";
+echo Y;
+ECHO "\n";
+
+echo "TEST Z = X + Y => ";
+Z = X + Y;
+echo Z;
+ECHO "\n";
+
+echo "TEST B = -X => ";
+B = -X;
+echo B;
+ECHO "\n";
+
+echo "TEST D= x-y => ";
+D =  X-Y;
+echo D;
+ECHO "\n";
+
+echo "TEST E= -0.6 => ";
+E =  - 0.60;
+echo E;
+ECHO "\n";
+
+
+

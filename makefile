@@ -6,14 +6,20 @@ APPNAME = openmind
 all: $(APPNAME)
 
 
-$(APPNAME): $(APPNAME).tab.o lex.yy.o $(APPNAME)lib.o $(APPNAME)varlist.o syntaxtree.o $(APPNAME)interpret.o $(APPNAME).c
-	$(CC) -o $(APPNAME) $(APPNAME).c $(APPNAME)lib.c $(APPNAME)varlist.c  syntaxtree.c  $(APPNAME).tab.o lex.yy.o  $(APPNAME)interpret.c -lm
+$(APPNAME): $(APPNAME).tab.o lex.yy.o $(APPNAME)lib.o $(APPNAME)varlist.o syntaxtree.o $(APPNAME)interpret.o arithmeticOperator.o logicalOperator.o  $(APPNAME).c
+	$(CC) -o $(APPNAME) $(APPNAME).c $(APPNAME)lib.c $(APPNAME)varlist.c  syntaxtree.c  $(APPNAME).tab.o lex.yy.o arithmeticOperator.o  logicalOperator.o $(APPNAME)interpret.c -lm
 
 $(APPNAME)lib.o: $(APPNAME)lib.c $(APPNAME)lib.h
 	$(CC) -c $(APPNAME)lib.c
 	
 $(APPNAME)Interpret.o: $(APPNAME)interpret.c $(APPNAME).tab.h $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h expressions.h
-	$(CC) -c $(APPNAME)interpret.c
+	$(CC) -c $(APPNAME)interpret.c 
+
+arithmeticOperator.o: arithmeticOperator.c arithmeticOperator.h $(APPNAME).tab.h $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h expressions.h
+	$(CC) -c arithmeticOperator.c 
+
+logicalOperator.o: logicalOperator.c logicalOperator.h $(APPNAME).tab.h $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h expressions.h
+	$(CC) -c logicalOperator.c 
 
 syntaxtree.o: syntaxtree.c $(APPNAME)lib.h  entity.h openmindvalue.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h	
 	$(CC) -c syntaxtree.c
@@ -39,6 +45,8 @@ clean:
 		[ -f "$(APPNAME)lib.o" ] 	&& rm $(APPNAME)lib.o; \
 		[ -f "$(APPNAME)interpret.o" ]	&& rm $(APPNAME)interpret.o; \
 		[ -f "syntaxtree.o" ] 		&& rm syntaxtree.o; \
+		[ -f "arithmeticOperator.o" ] 	&& rm arithmeticOperator.o; \
+		[ -f "logicalOperator.o" ] 	&& rm logicalOperator.o; \
 		[ -f "$(APPNAME)varlist.o" ]	&& rm $(APPNAME)varlist.o; \
 		[ -f "$(APPNAME).output" ] 	&& rm $(APPNAME).output; \
 		[ -f "$(APPNAME).err.txt" ] 	&& rm $(APPNAME).err.txt; \

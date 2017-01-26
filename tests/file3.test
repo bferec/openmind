@@ -1,0 +1,26 @@
+/* test string	*/
+
+b = true;
+c = false;
+
+echo "Test b=True => ";
+echo b;
+echo "\n";
+echo "Test c=False => ";
+echo c;
+echo "\n";
+
+echo b || c;
+/*
+echo "quote : \t-";
+
+echo "aaaa" < "bbbb";
+echo "aaaa" > "bbbb";
+
+echo "aaaa" == "bbbb";
+echo "aaaa" == "aaaa";
+echo "aaaa" != "bbbb";
+
+quit;
+*/
+

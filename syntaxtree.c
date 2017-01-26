@@ -142,7 +142,7 @@ syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr )
 {
 syntaxTreeNode * resultNode;
 
-	/* fprintf( stderr , "Const()\n" ); */
+	//fprintf( stderr , "Const()\n" );
 
 	resultNode = syntaxTreeNodeAlloc();
 	resultNode -> type = CONSTANT_SYNTAXTREE_NODETYPE;
@@ -162,7 +162,7 @@ syntaxTreeNode * resultNode;
 
 		case	BOOLEEAN_CONSTANT_TYPE:
 			resultNode -> cste.val.boolean_value = * (int *) oneconstantPtr;
-			// fprintf( stderr , "Const()  Boolean : [%s]\n" , resultNode -> cste.val.boolean_value ? "#True" : "#False"  ); 
+			//fprintf( stderr , "Const()  Boolean : [%s]\n" , resultNode -> cste.val.boolean_value ? "True" : "False"  ); 
 		break;
 
 		case 	GUID_CONSTANT_TYPE:
