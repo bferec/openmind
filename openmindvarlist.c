@@ -59,7 +59,7 @@ variable_node * currentNode;
 	while( currentNode != NULL )
 	{
 		/* fprintf( stderr , "recherche : %s - trouvé : %s\n" ,  oneIdent , currentNode-> v -> ident ); */
-		compare = strcmp( oneIdent , currentNode-> v -> ident);
+		compare = strcmp( strupr(oneIdent) , strupr(currentNode-> v -> ident) );
 
 		if( ! compare )  
 		{

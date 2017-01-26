@@ -6,9 +6,9 @@ ECHO 5;
 ECHO "\n";
 
 
-echo "60 + 4";
+echo "(60 + 4) * 2";
 echo " = ";
-echo 60 + 4;
+echo (60 + 4) * 2;
 ECHO "\n";
 
 echo "61.5 + 1.7";
@@ -16,7 +16,7 @@ echo " = ";
 echo 61.5 + 1.7;
 ECHO "\n";
 
-X = 7;
+x = 7;
 echo "X= ";
 echo X;
 ECHO "\n";
@@ -41,11 +41,11 @@ echo "B = X ";
 ECHO "\n";
 B = X;
 echo "B => ";
-echo B;
+echo b;
 ECHO "\n";
 
 
-
-
+echo (D = 333);
+echo D;
 
 

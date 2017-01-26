@@ -174,7 +174,7 @@ variable * oneVariable;
 /* -------------------------------------*/
 /* interpretation d'une assignation	*/
 /* -------------------------------------*/
-expression_Value  Operator_Assign(operator * oneOperatorNode) 
+expression_Value  expression_Operator_Assign(operator * oneOperatorNode) 
 {
 variable  * currentVar;
 expression_Value result ;
@@ -243,7 +243,7 @@ expression_Value operandResult ;
 /* -------------------------------------*/
 /* echo operator			*/
 /* -------------------------------------*/
-void  Operator_ECHO(operator * oneOperatorNode ) 
+void  expression_Operator_ECHO(operator * oneOperatorNode ) 
 {
 constant * constante;
 variable  * currentVar;
@@ -405,13 +405,13 @@ operator * currentOperator;
 		case T_ECHO:
 			fprintf( stderr, "Operator_ECHO()\n" ); 
 			result.type = VOID_EXPRESSION;
-			Operator_ECHO( currentOperator );
+			expression_Operator_ECHO( currentOperator );
 			fprintf( stderr, "Fin Operator_ECHO()\n" ); 
 		break;
 
 		case T_ASSIGN:
 			fprintf( stderr, "Operator_Assign()\n" ); 
-			result =  Operator_Assign( currentOperator );
+			result =  expression_Operator_Assign( currentOperator );
 			fprintf( stderr, "Fin Operator_Assign()\n" ); 
 		break;
 
