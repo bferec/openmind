@@ -1,7 +1,24 @@
-/* test string	*/
+/* test Boolean		*/
+
 
 b = true;
 c = false;
+
+echo "True || True => ";
+echo True || True;
+echo "\n";
+
+echo "False || False => ";
+echo False || False;
+echo "\n";
+
+echo "False || False ||  True => ";
+echo False || False ||  True ;
+echo "\n";
+
+echo "False || True => ";
+echo False || True;
+echo "\n";
 
 echo "Test b=True => ";
 echo b;
@@ -10,17 +27,52 @@ echo "Test c=False => ";
 echo c;
 echo "\n";
 
+echo "Test b || c => ";
 echo b || c;
-/*
-echo "quote : \t-";
+echo "\n";
 
-echo "aaaa" < "bbbb";
-echo "aaaa" > "bbbb";
+echo "Test c || c => ";
+echo c || c;
+echo "\n";
+echo "\n";
 
-echo "aaaa" == "bbbb";
-echo "aaaa" == "aaaa";
-echo "aaaa" != "bbbb";
 
-quit;
-*/
+echo "True && True => ";
+echo True && True;
+echo "\n";
+
+echo "False && False => ";
+echo False && False;
+echo "\n";
+
+echo "False && False &&  True => ";
+echo False && False &&  True ;
+echo "\n";
+
+echo "False && True => ";
+echo False && True;
+echo "\n";
+
+echo "Test b=True => ";
+echo b;
+echo "\n";
+echo "Test c=False => ";
+echo c;
+echo "\n";
+
+echo "Test b && c => ";
+echo b && c;
+echo "\n";
+
+echo "Test b && b => ";
+echo b && b;
+echo "\n";
+
+echo "Test ! True => ";
+echo ! True;
+echo "\n";
+
+echo "Test !b && b => ";
+echo ! b && b;
+echo "\n";
 

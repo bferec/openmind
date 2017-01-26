@@ -366,6 +366,14 @@ operator * currentOperator;
 			result = expression_Operator_T_OR( currentOperator ) ; 
 		break;
 
+		case T_AND:
+			result = expression_Operator_T_AND( currentOperator ) ; 
+		break;
+
+		case T_NOT:
+			result = expression_Operator_T_NOT( currentOperator ) ; 
+		break;
+
 		case T_AUTO:
 		result.type = GUID_EXPRESSION;
 		NewGuid( guid); 
