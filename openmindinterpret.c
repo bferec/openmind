@@ -174,12 +174,10 @@ variable * oneVariable;
 /* -------------------------------------*/
 /* interpretation d'une assignation	*/
 /* -------------------------------------*/
-void  Operator_Assign(operator * oneOperatorNode) 
+expression_Value  Operator_Assign(operator * oneOperatorNode) 
 {
 variable  * currentVar;
-constant * constante;
-variable * rvalue_var;
-
+expression_Value result ;
 expression_Value operandResult ;
 
 	currentVar = oneOperatorNode -> operands[0]-> var;
@@ -188,121 +186,58 @@ expression_Value operandResult ;
 	switch( operandResult.type )
 	{
 		case INTEGER_EXPRESSION:
-			currentVar -> val.integer_value  = operandResult.value.integer_value;
 			currentVar -> type = INTEGER_IDENTIFIER_TYPE;
+			currentVar -> val.integer_value  = operandResult.value.integer_value;
+			result.type = INTEGER_EXPRESSION;
+			result.value.integer_value =  currentVar -> val.integer_value;
 		break;
 
 		case FLOAT_EXPRESSION:
+			currentVar -> type = FLOAT_IDENTIFIER_TYPE;
 			currentVar -> val.float_value  = operandResult.value.float_value;
-			currentVar -> type = INTEGER_IDENTIFIER_TYPE;
+			result.type = FLOAT_EXPRESSION;
+			result.value.integer_value =  currentVar -> val.float_value;
 		break;
 
 		case STRING_EXPRESSION:
+			currentVar -> type = STRING_IDENTIFIER_TYPE;
+			if( currentVar -> val.string_value != NULL );
+				free( currentVar -> val.string_value );
+			currentVar -> val.string_value = (char *) malloc( strlen( operandResult.value.string_value) + 1 );
+			if( currentVar -> val.string_value == NULL )
+				yyerror( "Memory allocation for variable string content impossible\n");
+			strcpy( currentVar -> val.string_value ,  operandResult.value.string_value );
+			result.type = STRING_EXPRESSION;
+			result.value.string_value =  currentVar -> val.string_value ;
 		break;
 
 		case GUID_EXPRESSION:
+			currentVar -> type = GUID_IDENTIFIER_TYPE;
+			strcpy( currentVar -> val.guid_value , operandResult.value.guid_value );
+			currentVar -> type = GUID_IDENTIFIER_TYPE;
+			result.type = GUID_EXPRESSION;
+			result.value.guid_value = currentVar -> val.guid_value;
 		break;
 
 		case BOOLEAN_EXPRESSION:
+			currentVar -> type = GUID_IDENTIFIER_TYPE;
+			currentVar -> val.guid_value = operandResult.value.guid_value;			
+			result.type = BOOLEAN_EXPRESSION;
+			result.value.guid_value = currentVar -> val.guid_value;
 		break;
 
 		case ENTITY_EXPRESSION:
+			result.type = ENTITY_EXPRESSION;
+
 		case PROPERTY_EXPRESSION:
+			result.type = PROPERTY_EXPRESSION;
 		break;
 
 		default:
 		break;
 	}
 
-
-
-
-
-/*
-	switch( oneOperatorNode -> operands[1] -> type )
-		{
-			case CONSTANT_SYNTAXTREE_NODETYPE:
-				constante =  & oneOperatorNode -> operands[1]-> cste;
-
-				switch( constante -> type )
-				{
-					case 	INT_CONSTANT_TYPE:
-						currentVar -> type = INTEGER_IDENTIFIER_TYPE;
-						currentVar -> val.integer_value  =  constante -> val.integer_value;
-						
-					break;
-
-					case 	FLOAT_CONSTANT_TYPE:
-						currentVar -> type = FLOAT_IDENTIFIER_TYPE;
-						currentVar -> val.float_value  = constante -> val.float_value;
-					break;
-
-					case	BOOLEEAN_CONSTANT_TYPE:
-						currentVar -> type = BOOLEAN_IDENTIFIER_TYPE;
-						currentVar -> val.boolean_value  = constante -> val.boolean_value;
-					break;
-
-					case 	GUID_CONSTANT_TYPE:
-						currentVar -> type = GUID_IDENTIFIER_TYPE;
-						currentVar -> val.guid_value = (char *) malloc( GUID_LENGTH + 1 );
-						strcpy( currentVar -> val.guid_value , constante -> val.guid_value );
-
-					break;
-
-					case	STRING_CONSTANT_TYPE:
-						if( currentVar == NULL )
-						{
-							yyerror( "Variable non definie\n" );
-						}
-						currentVar -> type = STRING_IDENTIFIER_TYPE;
-						if( currentVar -> val.string_value != NULL )
-							free( currentVar -> val.string_value );
-						currentVar -> val.string_value = (char *) malloc( strlen( constante -> val.string_value ) + 1 );
-						if( currentVar -> val.string_value == NULL )
-							yyerror( "Memory allocation for variable string content impossible\n");
-						strcpy( currentVar -> val.string_value , constante -> val.string_value );
-						
-					break;
-				}
-			break;
-
-			case IDENTIFIER_SYNTAXTREE_NODETYPE:
-
-				rvalue_var =  oneOperatorNode -> operands[1]-> var;
-
-				switch( rvalue_var -> type )
-				{
-					case 	INTEGER_IDENTIFIER_TYPE:
-						currentVar -> type = INTEGER_IDENTIFIER_TYPE;
-						currentVar -> val.integer_value  =  rvalue_var -> val.integer_value;
-					break;
-
-					case 	FLOAT_IDENTIFIER_TYPE:
-						currentVar -> type = FLOAT_IDENTIFIER_TYPE;
-						currentVar -> val.float_value  =  rvalue_var -> val.float_value;
-					break;
-
-					case	BOOLEAN_IDENTIFIER_TYPE:
-						currentVar -> type = BOOLEAN_IDENTIFIER_TYPE;
-						currentVar -> val.boolean_value  = rvalue_var -> val.boolean_value;
-					break;
-
-					case 	GUID_IDENTIFIER_TYPE:
-						currentVar -> type = GUID_IDENTIFIER_TYPE;
-						strcpy( currentVar -> val.guid_value , rvalue_var -> val.guid_value );					
-					break;
-
-					case	STRING_IDENTIFIER_TYPE:
-						currentVar -> type = STRING_IDENTIFIER_TYPE;
-						if( currentVar -> val.string_value != NULL )
-							free( currentVar -> val.string_value );
-						currentVar -> val.string_value = (char *) malloc( strlen( rvalue_var -> val.string_value ) + 1 );
-						strcpy( currentVar -> val.string_value , rvalue_var -> val.string_value );
-					break;
-				}			
-			break;
-		}
-*/	
+	return result;
 	
 }
 /* -------------------------------------*/
@@ -476,8 +411,7 @@ operator * currentOperator;
 
 		case T_ASSIGN:
 			fprintf( stderr, "Operator_Assign()\n" ); 
-			result.type = VOID_EXPRESSION;
-			Operator_Assign( currentOperator );
+			result =  Operator_Assign( currentOperator );
 			fprintf( stderr, "Fin Operator_Assign()\n" ); 
 		break;
 
