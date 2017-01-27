@@ -20,7 +20,6 @@
 
 #include "syntaxtree.h"
 
-
 #include "openmind.tab.h"
 
 extern int lineNumber;
@@ -118,6 +117,7 @@ property		(?i:"property")
 "||"			{return T_OR;}
 "&&"			{return T_AND;}
 "!"			{return T_NOT;}
+"^"			{return T_XOR;}
 
 "<"			{return T_LESS_THAN;}
 ">"			{return T_MORE_THAN;}

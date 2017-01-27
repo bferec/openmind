@@ -23,6 +23,66 @@
 #include "openmind.tab.h"
 
 /*--------------------------------------*/
+/* 	^ operator (xor)		*/
+/*--------------------------------------*/
+expression_Value expression_Operator_T_XOR( operator * oneOperatorNode  )
+{
+expression_Value result;
+expression_Value * operandResult ;
+
+	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
+
+	result.type = BOOLEAN_EXPRESSION;
+	result.value.boolean_value = 1;	/* neutral for logical XOR */
+
+	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
+	{
+		operandResult[i] = expression( oneOperatorNode -> operands[i] );
+
+		switch( operandResult[i].type )
+		{
+			case INTEGER_EXPRESSION:
+				yyerror( "Unable to apply logical XOR to integer  numbers\n" );
+			break;
+
+			case FLOAT_EXPRESSION:
+				yyerror( "Unable to apply logical XOR to float numbers\n" );
+			break;
+
+			case STRING_EXPRESSION:
+				result.type = INTEGER_EXPRESSION;
+				yyerror( "Unable to apply logical XOR to Strings\n" );
+			break;
+
+			case GUID_EXPRESSION:
+				yyerror( "Unable to apply logical XOR to guids\n" );
+			break;
+
+			case BOOLEAN_EXPRESSION:
+				if( i == 0 )
+					result.value.boolean_value = operandResult[i].value.boolean_value;
+				else
+					result.value.boolean_value = result.value.boolean_value != operandResult[i].value.boolean_value;
+			break;
+
+			case ENTITY_EXPRESSION:
+				yyerror( "Unable to apply logical XOR to entitys\n" );
+			break;
+
+			case PROPERTY_EXPRESSION:
+				yyerror( "Unable to apply logical XOR to Propertys\n" );
+			break;
+
+			default:
+			break;
+		}
+	}
+
+
+	return result;
+}
+
+/*--------------------------------------*/
 /* 	|| operator (or)		*/
 /*--------------------------------------*/
 expression_Value expression_Operator_T_OR( operator * oneOperatorNode  )

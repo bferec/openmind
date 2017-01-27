@@ -94,6 +94,9 @@ extern int yychar;
 %token T_AND
 %left T_AND
 
+%token T_XOR
+%left T_XOR
+
 %token T_NOT 
 %right T_NOT
 
@@ -147,8 +150,7 @@ extern int yychar;
 /* liste instructions	*/
 /* -------------------- */
 stmtList:
-
-	| stmt T_SEMICOLON 	
+	stmt T_SEMICOLON 	
 				{
 					expression( $1 ) ; 
 					/* Free_SyntaxTreeNode( $1 ); */
@@ -156,7 +158,6 @@ stmtList:
 	| stmtList stmt T_SEMICOLON	
 				{ 
 					 expression( $2 ) ; 
-					/* dumpSyntaxTreeNode( $2 ); */
 					/* Free_SyntaxTreeNode( $1 ); */
 				}
 
@@ -258,7 +259,7 @@ expr:
 /* -------------------- */
 guid_expr:
 	T_AUTO		{ $$ = oper( T_AUTO , 0 );  }
-	| T_GUID	{ $$ = Const( GUID_CONSTANT_TYPE , (void *) $1 );}
+	| T_GUID	{ $$ = Const( GUID_CONSTANT_TYPE , $1 );}
 ;
 
 /* -------------------- */
@@ -287,7 +288,6 @@ boolean_expr:
 	| expr T_OR expr			{ $$ = oper( T_OR  , 2, $1 , $3 ); }
 	| expr T_AND expr			{ $$ = oper( T_AND , 2, $1 , $3 ); }
 	| T_RIGHT_BRACKET expr T_RIGHT_BRACKET	{ $$ = $2;}
-
 	| expr T_DIFFERENT  expr		{ $$ = oper( T_DIFFERENT , 2, $1 , $3 ); }
 	| expr T_EQUAL  expr			{ $$ = oper( T_EQUAL 	 , 2, $1 , $3 ); }	
 	| expr T_LESS_THAN  expr		{ $$ = oper( T_LESS_THAN , 2, $1 , $3 ); }	

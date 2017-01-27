@@ -374,6 +374,10 @@ operator * currentOperator;
 			result = expression_Operator_T_NOT( currentOperator ) ; 
 		break;
 
+		case T_XOR:
+			result = expression_Operator_T_XOR( currentOperator ) ; 
+		break;
+
 		case T_AUTO:
 		result.type = GUID_EXPRESSION;
 		NewGuid( guid); 

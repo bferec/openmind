@@ -7,7 +7,7 @@ all: $(APPNAME)
 
 
 $(APPNAME): $(APPNAME).tab.o lex.yy.o $(APPNAME)lib.o $(APPNAME)varlist.o syntaxtree.o $(APPNAME)interpret.o arithmeticOperator.o logicalOperator.o  $(APPNAME).c
-	$(CC) -o $(APPNAME) $(APPNAME).c $(APPNAME)lib.c $(APPNAME)varlist.c  syntaxtree.c  $(APPNAME).tab.o lex.yy.o arithmeticOperator.o  logicalOperator.o $(APPNAME)interpret.c -lm
+	$(CC) -o $(APPNAME) $(APPNAME).c $(APPNAME)lib.c $(APPNAME)varlist.c  syntaxtree.c $(APPNAME).tab.o lex.yy.o arithmeticOperator.o logicalOperator.o $(APPNAME)interpret.c -lm
 
 $(APPNAME)lib.o: $(APPNAME)lib.c $(APPNAME)lib.h
 	$(CC) -c $(APPNAME)lib.c
