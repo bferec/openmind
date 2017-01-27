@@ -72,7 +72,18 @@ echo "Test ! True => ";
 echo ! True;
 echo "\n";
 
-echo "Test !b && b => ";
-echo ! b && b;
+echo "Test !(b && b) => ";
+echo ! (b && b);
 echo "\n";
+
+echo "Test True ^  False => ";
+echo True ^ False;
+echo "\n";
+
+echo "Test True ^ True => ";
+echo True ^ True;
+echo "\n";
+
+
+
 

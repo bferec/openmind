@@ -1,18 +1,18 @@
 /* -------------------------------------*/
 /* -------------------------------------*/
 /* 					*/
-/* openmindvarlist.c			*/
+/* openmind.c				*/
 /* 					*/
 /* -------------------------------------*/
 /* -------------------------------------*/
 
 #include <stdio.h>
 #include <string.h>
-
 #include "openmindlib.h"
 #include "entity.h"
 #include "openmindvalue.h"
 #include "openmindvarlist.h"
+
 
 #define DEBUG 0
 

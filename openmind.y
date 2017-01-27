@@ -23,9 +23,7 @@
 
 #include "openmindconstant.h"
 #include "operator.h"
-
 #include "syntaxtree.h"
-
 #include "expressions.h"
 
 #define YYDEBUG 0  /* For debugging */
@@ -284,12 +282,15 @@ boolean_expr:
 	T_TRUE					{ $$ = Const( BOOLEEAN_CONSTANT_TYPE , (void *) & $1); }
 	|T_FALSE				{ $$ = Const( BOOLEEAN_CONSTANT_TYPE , (void *) & $1); }
 
-	| T_NOT boolean_expr			{ $$ = oper( T_NOT , 1, $2 ); }
+	| T_NOT expr				{ $$ = oper( T_NOT , 1, $2 ); }
 	| expr T_OR expr			{ $$ = oper( T_OR  , 2, $1 , $3 ); }
 	| expr T_AND expr			{ $$ = oper( T_AND , 2, $1 , $3 ); }
+	| expr T_XOR expr			{ $$ = oper( T_XOR , 2, $1 , $3 ); }
+
 	| T_RIGHT_BRACKET expr T_RIGHT_BRACKET	{ $$ = $2;}
+
 	| expr T_DIFFERENT  expr		{ $$ = oper( T_DIFFERENT , 2, $1 , $3 ); }
-	| expr T_EQUAL  expr			{ $$ = oper( T_EQUAL 	 , 2, $1 , $3 ); }	
+	| expr T_EQUAL      expr		{ $$ = oper( T_EQUAL 	 , 2, $1 , $3 ); }	
 	| expr T_LESS_THAN  expr		{ $$ = oper( T_LESS_THAN , 2, $1 , $3 ); }	
 	| expr T_MORE_THAN  expr		{ $$ = oper( T_MORE_THAN , 2, $1 , $3 ); }	
 
