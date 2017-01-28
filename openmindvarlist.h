@@ -19,7 +19,7 @@ typedef enum
 	BOOLEAN_IDENTIFIER_TYPE , 
 	GUID_IDENTIFIER_TYPE, 
 	STRING_IDENTIFIER_TYPE, 
-
+	CHAR_IDENTIFIER_TYPE, 
 	ENTITY_IDENTIFIER_TYPE , 
 	PROPERTY_IDENTIFIER_TYPE 
 } VarType;
@@ -49,10 +49,6 @@ typedef struct variable_node
 variable * createVar( char * oneIdent );
 variable * find_variable( char * oneIdent );
 void ClearVarList( );
-/*
-void deleteVar( char * oneIdent );
-void removeVarNodeFromList( variable_node * oneVariableNode );
-*/
 
 BOOL  check_ident( char * oneident );
 void DumpVarList();

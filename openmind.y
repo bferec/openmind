@@ -56,6 +56,7 @@ extern int yychar;
 	numberValue  number_value;			/* numeric value				*/
 	enum { False, True } boolean_value;		/* boolean value				*/
 	char guid_value[ GUID_LENGTH ];			/* guid value identifier of entity or property	*/
+	char char_value;				/* caracter value				*/
 	char string_value[ MAXLENGTH_STRING + 1 ] ;	/* string constant and vars.			*/
 	variable * var;
 	syntaxTreeNode * node;
@@ -112,6 +113,9 @@ extern int yychar;
 %token<boolean_value>  T_FALSE
 %token<guid_value>  T_GUID
 %token<string_value> T_CSTE_STRING
+
+%token<char_value> T_CSTE_CHAR
+
 %token<var> T_IDENTIFIER
 
 /* -------------------------------------*/
@@ -130,7 +134,7 @@ extern int yychar;
 %token T_UNKNOWN
 
 %type <node> stmtList stmt create_stmt echo_stmt assign_stmt 
-%type <node> expr string_expr numeric_expr boolean_expr guid_expr lvalue
+%type <node> expr char_expr string_expr numeric_expr boolean_expr guid_expr lvalue
 
 /* -------------------- */
 /* -------------------- */
@@ -165,11 +169,11 @@ stmtList:
 /* instruction		*/
 /* -------------------- */
 stmt:
-	expr 			{$$=$1;}
-	| create_stmt		{$$=$1;}
-	| echo_stmt		{$$=$1;}
-	| assign_stmt		{$$=$1;}
-	| T_QUIT		{exit (0);}
+	expr 			{ $$ = $1 ;}
+	| create_stmt		{ $$ = $1 ;}
+	| echo_stmt		{ $$ = $1 ;}
+	| assign_stmt		{ $$ = $1 ;}
+	| T_QUIT		{exit (0) ;}
 ;
 
 /* -------------------- */
@@ -247,10 +251,12 @@ name_defs:
 /* Expression		*/
 /* -------------------- */
 expr:
-	string_expr					
+	string_expr
+	| char_expr					
 	| numeric_expr
 	| boolean_expr
 	| guid_expr
+	| T_IDENTIFIER	{ $$ = Var( $1-> type , $1 ); }
 ;
 /* -------------------- */
 /* Expression	Guid	*/
@@ -258,6 +264,7 @@ expr:
 guid_expr:
 	T_AUTO		{ $$ = oper( T_AUTO , 0 );  }
 	| T_GUID	{ $$ = Const( GUID_CONSTANT_TYPE , $1 );}
+	| T_IDENTIFIER	{ $$ = Var( $1-> type , $1 ); }
 ;
 
 /* -------------------- */
@@ -279,20 +286,30 @@ numeric_expr:
 /* Expression booleeene	*/
 /* -------------------- */
 boolean_expr:	
-	T_TRUE					{ $$ = Const( BOOLEEAN_CONSTANT_TYPE , (void *) & $1); }
-	|T_FALSE				{ $$ = Const( BOOLEEAN_CONSTANT_TYPE , (void *) & $1); }
+	T_TRUE					{ $$ = Const( BOOLEEAN_CONSTANT_TYPE ,  & $1); }
+	|T_FALSE				{ $$ = Const( BOOLEEAN_CONSTANT_TYPE ,  & $1); }
+	| T_IDENTIFIER				{ $$ = Var( $1-> type , $1 ); }
 
-	| T_NOT expr				{ $$ = oper( T_NOT , 1, $2 ); }
-	| expr T_OR expr			{ $$ = oper( T_OR  , 2, $1 , $3 ); }
-	| expr T_AND expr			{ $$ = oper( T_AND , 2, $1 , $3 ); }
-	| expr T_XOR expr			{ $$ = oper( T_XOR , 2, $1 , $3 ); }
+	| T_NOT boolean_expr					{ $$ = oper( T_NOT , 1, $2 ); }
+	| boolean_expr T_OR boolean_expr			{ $$ = oper( T_OR  , 2, $1 , $3 ); }
+	| boolean_expr T_AND boolean_expr			{ $$ = oper( T_AND , 2, $1 , $3 ); }
+	| boolean_expr T_XOR boolean_expr			{ $$ = oper( T_XOR , 2, $1 , $3 ); }
+	| T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET		{ $$ = $2;}
 
-	| T_RIGHT_BRACKET expr T_RIGHT_BRACKET	{ $$ = $2;}
+	| boolean_expr T_DIFFERENT  boolean_expr		{ $$ = oper( T_DIFFERENT , 2, $1 , $3 ); }
+	| boolean_expr T_EQUAL      boolean_expr		{ $$ = oper( T_EQUAL 	 , 2, $1 , $3 ); }	
+	| boolean_expr T_LESS_THAN  boolean_expr		{ $$ = oper( T_LESS_THAN , 2, $1 , $3 ); }	
+	| boolean_expr T_MORE_THAN  boolean_expr		{ $$ = oper( T_MORE_THAN , 2, $1 , $3 ); }	
 
-	| expr T_DIFFERENT  expr		{ $$ = oper( T_DIFFERENT , 2, $1 , $3 ); }
-	| expr T_EQUAL      expr		{ $$ = oper( T_EQUAL 	 , 2, $1 , $3 ); }	
-	| expr T_LESS_THAN  expr		{ $$ = oper( T_LESS_THAN , 2, $1 , $3 ); }	
-	| expr T_MORE_THAN  expr		{ $$ = oper( T_MORE_THAN , 2, $1 , $3 ); }	
+;
+
+
+
+/* -------------------- */
+/* Expression caractere	*/
+/* -------------------- */
+char_expr:
+	T_CSTE_CHAR				{ $$ = Const( CHAR_CONSTANT_TYPE , & $1 ); }
 
 ;
 
@@ -301,10 +318,10 @@ boolean_expr:
 /* -------------------- */
 string_expr:
 	T_CSTE_STRING				{ $$ = Const( STRING_CONSTANT_TYPE , $1 ); }
-	| T_IDENTIFIER				{ $$ = Var( $1-> type , $1 ); }
-
 	| string_expr T_AMPERSAND  string_expr	{ $$ = oper( T_AMPERSAND , 2, $1 , $3 );}
 ;
+
+
 
 %%
 /* -------------------- */

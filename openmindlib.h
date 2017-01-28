@@ -18,8 +18,6 @@
 /* -------------------------------------*/
 typedef enum number_type { INTEGER_NUMBER_TYPE, FLOAT_NUMBER_TYPE } numberType;
 
-
-
 void yyerror(const char* s);
 
 void NewGuid( char * result );

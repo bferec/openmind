@@ -53,7 +53,7 @@ property		(?i:"property")
 
 %x comment
 %x string
-
+%x caracter
 %%
 
 				
@@ -75,6 +75,7 @@ property		(?i:"property")
 				return T_CSTE_STRING;				
 			}
 
+
 <string>\\n		{ * string_buffer_ptr ++ = '\n'; }
 <string>\\t		{ * string_buffer_ptr ++ = '\t'; }
 <string>\\r		{ * string_buffer_ptr ++ = '\r'; }
@@ -86,6 +87,23 @@ property		(?i:"property")
 			}
 
 <INITIAL>\n		{ lineNumber ++ ;}
+
+\'			{  string_buffer_ptr = string_buffer;  BEGIN (caracter ); }	/* debut constante caractere	*/
+<caracter>\'		{ 
+				BEGIN(INITIAL); * string_buffer_ptr = '\0';  	/* fin constante caractere		*/
+				strcpy( yylval.string_value , string_buffer ) ;
+				/* fprintf(stderr, "string lex : [%s]\n",  yylval.string_value); */
+				return T_CSTE_CHAR;				
+			}
+<caracter>\\n		{ * string_buffer_ptr ++ = '\n'; }
+<caracter>\\t		{ * string_buffer_ptr ++ = '\t'; }
+<caracter>\\r		{ * string_buffer_ptr ++ = '\r'; }
+<caracter>\\f		{ * string_buffer_ptr ++ = '\f'; }
+<caracter>\\\\		{ * string_buffer_ptr ++ = '\\'; }
+<caracter>[^\'\n\r\f\t\\]	{ 
+			  * string_buffer_ptr ++ = * yytext;
+			}
+
 
 <INITIAL>{spacetab}	{ /* nothing */ }
 

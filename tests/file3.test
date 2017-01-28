@@ -28,6 +28,7 @@ echo c;
 echo "\n";
 
 echo "Test b || c => ";
+
 echo b || c;
 echo "\n";
 
