@@ -20,6 +20,7 @@
 #include "expressions.h"
 #include "arithmeticOperator.h"
 #include "logicalOperator.h"
+#include "comparaisonOperator.h"
 
 #include "openmind.tab.h"
 
@@ -91,6 +92,7 @@ constant * oneConstante;
 		case INT_CONSTANT_TYPE:
 			result.type = INTEGER_EXPRESSION;
 			result.value.integer_value =  oneConstante -> val.integer_value ;
+			result.value.boolean_value =  oneConstante -> val.integer_value != 0 ;
 			// fprintf( stderr, "retour expression constante ,  type integer , valeur : [%d]\n" , result.value.integer_value); 
 
 		break;
@@ -98,6 +100,7 @@ constant * oneConstante;
 		case FLOAT_CONSTANT_TYPE:
 			result.type = FLOAT_EXPRESSION;
 			result.value.float_value =  oneConstante -> val.float_value ;
+			result.value.boolean_value =  oneConstante -> val.float_value != 0 ;
 			// fprintf( stderr, "retour expression constante ,  type float , valeur : [%f]\n" ,  result.value.float_value ); 
 		break;
 
@@ -118,6 +121,15 @@ constant * oneConstante;
 			result.value.string_value = oneConstante -> val.string_value  ;
 			// fprintf( stderr, "retour expression constante ,  type string : [%s]\n"  , result.value.string_value  ); 
 		break;
+
+		case CHAR_CONSTANT_TYPE:
+			result.type = CHAR_EXPRESSION;
+			result.value.char_value = oneConstante -> val.char_value  ;
+			result.value.boolean_value =  oneConstante -> val.char_value != 0 ;
+			// fprintf( stderr, "retour expression constante ,  type char : [%c]\n"  , result.value.char_value  ); 
+		break;
+
+
 	}
 
 	return result;
@@ -141,12 +153,14 @@ variable * oneVariable;
 		case INTEGER_IDENTIFIER_TYPE:
 			result.type = INTEGER_EXPRESSION;
 			result.value.integer_value =  oneVariable -> val.integer_value ;
+			result.value.boolean_value =  oneVariable -> val.integer_value != 0 ;
 			// fprintf( stderr, "retour expression Variable ,  type integer , valeur : [%d]\n" , result.value.integer_value); 
 		break;
 
 		case FLOAT_IDENTIFIER_TYPE:
 			result.type = FLOAT_EXPRESSION;
 			result.value.float_value =  oneVariable -> val.float_value ;
+			result.value.boolean_value =  oneVariable -> val.float_value != 0 ;
 		break;
 
 		case BOOLEAN_IDENTIFIER_TYPE:
@@ -157,6 +171,12 @@ variable * oneVariable;
 		case GUID_IDENTIFIER_TYPE:
 			result.type = GUID_EXPRESSION;
 			result.value.guid_value = oneVariable -> val.guid_value;
+		break;
+
+		case CHAR_IDENTIFIER_TYPE:
+			result.type = CHAR_EXPRESSION;
+			result.value.char_value = oneVariable -> val.char_value;
+			result.value.boolean_value =  oneVariable -> val.char_value != 0 ;
 		break;
 
 		case STRING_IDENTIFIER_TYPE:
@@ -225,6 +245,13 @@ expression_Value operandResult ;
 			// fprintf(stderr , "copied !\n" );
 		break;
 
+		case CHAR_EXPRESSION:
+			currentVar -> val.char_value  = operandResult.value.char_value;
+			currentVar -> type = CHAR_IDENTIFIER_TYPE;
+			result.value.char_value =  currentVar -> val.char_value;
+			result.type = CHAR_EXPRESSION;
+		break;
+
 		case GUID_EXPRESSION:
 			currentVar -> type = GUID_IDENTIFIER_TYPE;
 			if( currentVar -> val.guid_value == NULL );
@@ -248,6 +275,7 @@ expression_Value operandResult ;
 
 		case ENTITY_EXPRESSION:
 			result.type = ENTITY_EXPRESSION;
+		break;
 
 		case PROPERTY_EXPRESSION:
 			result.type = PROPERTY_EXPRESSION;
@@ -293,6 +321,10 @@ expression_Value * operandResult ;
 
 			case STRING_EXPRESSION:
 				printf( "%s" , operandResult-> value.string_value );
+			break;
+
+			case CHAR_EXPRESSION:
+				printf( "%c" , operandResult-> value.char_value );
 			break;
 
 			case GUID_EXPRESSION:
@@ -378,6 +410,14 @@ operator * currentOperator;
 			result = expression_Operator_T_XOR( currentOperator ) ; 
 		break;
 
+		case T_DIFFERENT:
+			result = expression_Operator_T_DIFFERENT( currentOperator ) ; 
+		break;
+
+		case T_EQUAL:
+			result = expression_Operator_T_EQUAL( currentOperator ) ; 
+		break;
+
 		case T_AUTO:
 		result.type = GUID_EXPRESSION;
 		NewGuid( guid); 
@@ -396,7 +436,6 @@ expression_Value expression( syntaxTreeNode * oneNode )
 {
 expression_Value result;
 
-	/* fprintf( stderr, "expression()\n" ); */
 
 	if( oneNode == (syntaxTreeNode *) NULL )
 	{
@@ -423,7 +462,6 @@ expression_Value result;
 			/* fprintf( stderr, "FIN expression_Operator()\n" );  */
 		break;
 	}
-	/* fprintf( stderr, "Fin expression()\n" ); */
 
 	/* DumpVarList( ); */
 

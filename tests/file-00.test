@@ -3,12 +3,22 @@
 /* -----------------------------------------------------------------------------*/
 
 
-ECHO "Bonjour";
+echo "hello "  + "World\n";
+
+t = "concatenation of two ";
+u = "string is done by + operator\n";
+
+v = t+u;
+echo v;
+
 ECHO "\n";
 echo "Test echo 5 => ";
 ECHO 5;
 ECHO "\n";
 
+echo "Test echo +5 => ";
+ECHO + 5;
+ECHO "\n";
 
 echo "TEST 12 / 3";
 echo " => ";
@@ -34,8 +44,9 @@ echo "TEST 61.5 + 1.7 => ";
 echo 61.5 + 1.7;
 ECHO "\n";
 
-x = 7;
+
 echo "TEST X=7 => ";
+x = 7;
 echo X;
 ECHO "\n";
 
@@ -64,5 +75,20 @@ E =  - 0.60;
 echo E;
 ECHO "\n";
 
+
+echo "TEST Y= +5 => ";
+Y = +5;
+echo Y;
+ECHO "\n";
+
+echo "TEST Y= Y + +Y => ";
+Y = Y + +Y;
+echo Y;
+ECHO "\n";
+
+
+echo "test division par zero";
+echo 5 / 0;
+ECHO "\n";
 
 

@@ -91,8 +91,7 @@ property		(?i:"property")
 \'			{  string_buffer_ptr = string_buffer;  BEGIN (caracter ); }	/* debut constante caractere	*/
 <caracter>\'		{ 
 				BEGIN(INITIAL); * string_buffer_ptr = '\0';  	/* fin constante caractere		*/
-				strcpy( yylval.string_value , string_buffer ) ;
-				/* fprintf(stderr, "string lex : [%s]\n",  yylval.string_value); */
+				yylval.char_value , string_buffer[0] ;
 				return T_CSTE_CHAR;				
 			}
 <caracter>\\n		{ * string_buffer_ptr ++ = '\n'; }
@@ -144,15 +143,11 @@ property		(?i:"property")
 "=" 			{return T_ASSIGN;}
 
 {integer}		{ 
-				yylval.number_value.number_type = INTEGER_NUMBER_TYPE ; 
 				yylval.number_value.integer_value = atoi( yytext ) ; 
-				/* fprintf(stderr, "entier lex : [%d]\n",  yylval.number_value.integer_value ); */
 				return T_INT ; 
 			}
 {float}			{
-				yylval.number_value.number_type = FLOAT_NUMBER_TYPE ; 
 				yylval.number_value.float_value = atof( yytext ) ; 
-				/* fprintf(stderr, "flottant lex: [%f]\n",  yylval.number_value.integer_value ); */
 				return T_FLOAT ; 
 			}
 

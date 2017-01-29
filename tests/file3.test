@@ -1,5 +1,4 @@
-/* test Boolean		*/
-
+/* test Boolean	 et compare */
 
 b = true;
 c = false;
@@ -28,7 +27,6 @@ echo c;
 echo "\n";
 
 echo "Test b || c => ";
-
 echo b || c;
 echo "\n";
 
@@ -86,5 +84,42 @@ echo True ^ True;
 echo "\n";
 
 
+echo "Test 12 != 3 => ";
+echo 12 != 3;
+echo "\n";
+
+echo "Test 12 != 12.0 => ";
+echo 12 != 12.0;
+echo "\n";
+
+echo "Test 12.0 != 12 => ";
+echo 12.0 != 12;
+echo "\n";
+
+echo "Test xyz != xyz => ";
+echo "xyz" != "xyz";
+echo "\n";
+
+
+echo "Test 5.0 == 7 => ";
+echo 5.0 == 7;
+echo "\n";
+
+echo "Test 5.0 == 5 => ";
+echo 5.0 == 5;
+echo "\n";
+
+echo "Test 5 == 5.0 => ";
+echo 5 == 5.0;
+echo "\n";
+
+
+echo "Test xyz == xyz => ";
+echo "xyz" == "xyz";
+echo "\n";
+
+echo "Test xyz == abc => ";
+echo "xyz" == "abc";
+echo "\n";
 
 

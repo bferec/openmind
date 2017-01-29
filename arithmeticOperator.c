@@ -32,66 +32,72 @@ expression_Value result;
 expression_Value * operandResult ;
 float resultNumber;
 
+
+	if( oneOperatorNode -> OperandsCount < 2 )
+		yyerror( "operands count invalid for * operator\n" );
+
 	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	result.value.integer_value = result.value.float_value = resultNumber = 0;
 	result.type = INTEGER_EXPRESSION;
 
+	operandResult[0] = expression( oneOperatorNode -> operands[0] );
+	operandResult[1] = expression( oneOperatorNode -> operands[1] );
 
-	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
+
+
+	switch( operandResult[0].type )
 	{
-		operandResult[i] = expression( oneOperatorNode -> operands[i] );
-		switch( operandResult[i].type )
-		{
-			case INTEGER_EXPRESSION:
-				if(i == 0 )
-					resultNumber = (float) operandResult[i].value.integer_value;
-				else
-				{
-					if( operandResult[i].value.integer_value == 0 )
-						yyerror("Divide by zero");
-					resultNumber /= (float) operandResult[i].value.integer_value;
-				}
-			break;
+		case INTEGER_EXPRESSION:
+			result.type = INTEGER_EXPRESSION;
+			resultNumber = (float) operandResult[0].value.integer_value;
+		break;
 
-			case FLOAT_EXPRESSION:
-				result.type = FLOAT_EXPRESSION;
-				if(i == 0 )
-					resultNumber = operandResult[i].value.float_value;
-				else
-				{
-					if( operandResult[i].value.float_value == 0 )
-						yyerror("Divide by zero");
+		case FLOAT_EXPRESSION:
+			result.type = FLOAT_EXPRESSION;
+			resultNumber = operandResult[0].value.float_value;
+		break;
 
-					resultNumber /= operandResult[i].value.float_value;
-				}
-			break;
+		case STRING_EXPRESSION:
+		case CHAR_EXPRESSION:
+		case GUID_EXPRESSION:
+		case BOOLEAN_EXPRESSION:
+		case ENTITY_EXPRESSION:
+		case PROPERTY_EXPRESSION:
+			yyerror( "Unable to apply / operator to these operands\n" );
+		break;
 
-			case STRING_EXPRESSION:
-				result.type = INTEGER_EXPRESSION;
-				yyerror( "Unable to multiply String\n" );
-			break;
-
-			case GUID_EXPRESSION:
-				yyerror( "Unable to multiply Guid\n" );
-			break;
-
-			case BOOLEAN_EXPRESSION:
-				yyerror( "Unable to multiply Boolean\n" );
-			break;
-
-			case ENTITY_EXPRESSION:
-				yyerror( "Unable to multiply entity\n" );
-			break;
-
-			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to multiply Property\n" );
-			break;
-
-			default:
-			break;
-		}
+		default:
+		break;
 	}
+
+	switch( operandResult[1].type )
+	{
+		case INTEGER_EXPRESSION:
+			if( operandResult[1].value.integer_value == 0 )
+				yyerror( "Unable to divide by zero\n" );
+			resultNumber /= (float) operandResult[1].value.integer_value;
+		break;
+
+		case FLOAT_EXPRESSION:
+			if( operandResult[1].value.float_value == 0 )
+				yyerror( "Unable tdivide by zero\n" );
+			resultNumber /= operandResult[1].value.float_value;
+		break;
+
+		case STRING_EXPRESSION:
+		case CHAR_EXPRESSION:
+		case GUID_EXPRESSION:
+		case BOOLEAN_EXPRESSION:
+		case ENTITY_EXPRESSION:
+		case PROPERTY_EXPRESSION:
+			yyerror( "Unable to apply / operator to these operands\n" );
+		break;
+
+		default:
+		break;
+	}
+
 	if( result.type == INTEGER_EXPRESSION )	
 	{
 		result.value.integer_value = (int) resultNumber;
@@ -115,57 +121,69 @@ expression_Value result;
 expression_Value * operandResult ;
 float resultNumber;
 
+
+	if( oneOperatorNode -> OperandsCount < 2 )
+		yyerror( "operands count invalid for * operator\n" );
+
 	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
+
 
 	result.value.integer_value = result.value.float_value = resultNumber = 0;
 	result.type = INTEGER_EXPRESSION;
 
+	operandResult[0] = expression( oneOperatorNode -> operands[0] );
+	operandResult[1] = expression( oneOperatorNode -> operands[1] );
 
-	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
+
+	switch( operandResult[0].type )
 	{
-		operandResult[i] = expression( oneOperatorNode -> operands[i] );
-		switch( operandResult[i].type )
-		{
-			case INTEGER_EXPRESSION:
-				if(i == 0 )
-					resultNumber = (float) operandResult[i].value.integer_value;
-				else
-					resultNumber *= (float) operandResult[i].value.integer_value;
-			break;
+		case INTEGER_EXPRESSION:
+			result.type = INTEGER_EXPRESSION;
+			resultNumber = (float) operandResult[0].value.integer_value;
+		break;
 
-			case FLOAT_EXPRESSION:
-				result.type = FLOAT_EXPRESSION;
-				if(i == 0 )
-					resultNumber = operandResult[i].value.float_value;
-				else
-					resultNumber *= operandResult[i].value.float_value;
-			break;
+		case FLOAT_EXPRESSION:
+			result.type = FLOAT_EXPRESSION;
+			resultNumber = operandResult[0].value.float_value;
+		break;
 
-			case STRING_EXPRESSION:
-				result.type = INTEGER_EXPRESSION;
-				yyerror( "Unable to multiply String\n" );
-			break;
 
-			case GUID_EXPRESSION:
-				yyerror( "Unable to multiply Guid\n" );
-			break;
+		case STRING_EXPRESSION:
+		case CHAR_EXPRESSION:
+		case GUID_EXPRESSION:
+		case BOOLEAN_EXPRESSION:
+		case ENTITY_EXPRESSION:
+		case PROPERTY_EXPRESSION:
+			yyerror( "Unable to apply * operator to these operands\n" );
+		break;
 
-			case BOOLEAN_EXPRESSION:
-				yyerror( "Unable to multiply Boolean\n" );
-			break;
-
-			case ENTITY_EXPRESSION:
-				yyerror( "Unable to multiply entity\n" );
-			break;
-
-			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to multiply Property\n" );
-			break;
-
-			default:
-			break;
-		}
+		default:
+		break;
 	}
+
+	switch( operandResult[1].type )
+	{
+		case INTEGER_EXPRESSION:
+			resultNumber *= (float) operandResult[1].value.integer_value;
+		break;
+
+		case FLOAT_EXPRESSION:
+			resultNumber *= operandResult[1].value.float_value;
+		break;
+
+		case STRING_EXPRESSION:
+		case CHAR_EXPRESSION:
+		case GUID_EXPRESSION:
+		case BOOLEAN_EXPRESSION:
+		case ENTITY_EXPRESSION:
+		case PROPERTY_EXPRESSION:
+			yyerror( "Unable to apply * operator to these operands\n" );
+		break;
+
+		default:
+		break;
+	}
+
 	if( result.type == INTEGER_EXPRESSION )	
 	{
 		result.value.integer_value = (int) resultNumber;
@@ -193,40 +211,62 @@ float resultNumber;
 	result.value.integer_value = result.value.float_value = resultNumber = 0;
 	result.type = INTEGER_EXPRESSION;
 
-
-	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
+	operandResult[0] = expression( oneOperatorNode -> operands[0] );
+	if( oneOperatorNode -> OperandsCount > 1 )
 	{
-		operandResult[i] = expression( oneOperatorNode -> operands[i] );
-		switch( operandResult[i].type )
+		operandResult[1] = expression( oneOperatorNode -> operands[1] );
+	}
+
+	switch( operandResult[0].type )
+	{
+		case INTEGER_EXPRESSION:
+			resultNumber =  (float) operandResult[0].value.integer_value;
+		break;
+
+		case FLOAT_EXPRESSION:
+			result.type = FLOAT_EXPRESSION;
+			resultNumber =   operandResult[0].value.float_value;
+		break;
+
+		case STRING_EXPRESSION:
+			if( oneOperatorNode -> OperandsCount < 2 )
+				yyerror( "Unable to apply unary + operator to these operands\n" );
+		break;
+
+		case GUID_EXPRESSION:
+		case BOOLEAN_EXPRESSION:
+		case ENTITY_EXPRESSION:
+		case PROPERTY_EXPRESSION:
+			yyerror( "Unable to apply + operator to these operands\n" );
+		break;
+
+		default:
+		break;
+	}
+	if( oneOperatorNode -> OperandsCount > 1 )
+	{			
+		switch( operandResult[1].type )
 		{
 			case INTEGER_EXPRESSION:
-				resultNumber +=  operandResult[i].value.integer_value;
+				resultNumber +=  (float) operandResult[1].value.integer_value;
 			break;
 
 			case FLOAT_EXPRESSION:
-				result.type = FLOAT_EXPRESSION;
-				resultNumber +=  operandResult[i].value.float_value;
+				resultNumber +=  operandResult[1].value.float_value;
 			break;
 
 			case STRING_EXPRESSION:
-				result.type = INTEGER_EXPRESSION;
-				yyerror( "Unable to Add String\n" );
+				result.value.string_value = (char *) malloc( strlen( operandResult[0].value.string_value ) + strlen( operandResult[1].value.string_value )  + 1 );
+				strcpy( result.value.string_value , operandResult[0].value.string_value );
+				strcat( result.value.string_value , operandResult[1].value.string_value );
+				result.type = STRING_EXPRESSION;
 			break;
 
 			case GUID_EXPRESSION:
-				yyerror( "Unable to Add Guid\n" );
-			break;
-
 			case BOOLEAN_EXPRESSION:
-				yyerror( "Unable to Add Boolean\n" );
-			break;
-
 			case ENTITY_EXPRESSION:
-				yyerror( "Unable to Add entity\n" );
-			break;
-
 			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to Add Property\n" );
+				yyerror( "Unable to apply substract operator to these operands\n" );
 			break;
 
 			default:
@@ -259,10 +299,14 @@ float resultNumber;
 	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	result.value.integer_value = result.value.float_value = resultNumber = 0;
-
 	result.type = INTEGER_EXPRESSION;
 
 	operandResult[0] = expression( oneOperatorNode -> operands[0] );
+	if( oneOperatorNode -> OperandsCount > 1 )
+	{
+		operandResult[1] = expression( oneOperatorNode -> operands[1] );
+	}
+
 	switch( operandResult[0].type )
 	{
 		case INTEGER_EXPRESSION:
@@ -277,69 +321,40 @@ float resultNumber;
 		break;
 
 		case STRING_EXPRESSION:
-			yyerror( "Unable to substract String\n" );
-		break;
-
 		case GUID_EXPRESSION:
-			yyerror( "Unable to substract Guid\n" );
-		break;
-
 		case BOOLEAN_EXPRESSION:
-			yyerror( "Unable to substract Boolean\n" );
-		break;
-
 		case ENTITY_EXPRESSION:
-			yyerror( "Unable to substract entity\n" );
-		break;
-
 		case PROPERTY_EXPRESSION:
-			yyerror( "Unable to Add Property\n" );
+			yyerror( "Unable to apply substract operator to thse operands\n" );
 		break;
 
 		default:
 		break;
 	}
-					
-	for( int i = 1 ; i < oneOperatorNode -> OperandsCount ; i ++ )
-	{
-		operandResult[i] = expression( oneOperatorNode -> operands[i] );
-		switch( operandResult[i].type )
+	if( oneOperatorNode -> OperandsCount > 1 )
+	{			
+		switch( operandResult[1].type )
 		{
 			case INTEGER_EXPRESSION:
-				// fprintf(stderr , "soustraction de %d a %d \n", operandResult[i].value.integer_value , (int) resultNumber );
-				resultNumber -=  (float) operandResult[i].value.integer_value;
+				resultNumber -=  (float) operandResult[1].value.integer_value;
 			break;
 
 			case FLOAT_EXPRESSION:
-				// fprintf(stderr , "soustraction de %f a %f\n", operandResult[i].value.float_value, resultNumber );
-				resultNumber -=  operandResult[i].value.float_value;
+				resultNumber -=  operandResult[1].value.float_value;
 			break;
 
 			case STRING_EXPRESSION:
-				yyerror( "Unable to substract String\n" );
-			break;
-
 			case GUID_EXPRESSION:
-				yyerror( "Unable to substract Guid\n" );
-			break;
-
 			case BOOLEAN_EXPRESSION:
-				yyerror( "Unable to substract Boolean\n" );
-			break;
-
 			case ENTITY_EXPRESSION:
-				yyerror( "Unable to substract entity\n" );
-			break;
-
 			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to substract Property\n" );
+				yyerror( "Unable to apply substract operator to these operands\n" );
 			break;
 
 			default:
 			break;
 		}
 	}
-
 	if( result.type == INTEGER_EXPRESSION )	
 	{
 		result.value.integer_value = (int) resultNumber;

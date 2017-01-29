@@ -9,7 +9,7 @@
 /* -------------------------------------*/
 /* type valeur pour constante ou var	*/
 /* -------------------------------------*/
-typedef	union
+typedef	struct
 {
 	int integer_value;
 	float float_value;
@@ -22,13 +22,11 @@ typedef	union
 }value;
 
 /* -------------------------------------*/
-/* valeur et type d'un nombre		*/
 /* -------------------------------------*/
-typedef	struct 
-	{
-        	float float_value;			/* float value					*/
-	        int   integer_value;			/* integer value				*/
-		numberType number_type;			/* type de nombre, entier ou flottant		*/
-	} numberValue;					/* numeric value				*/
+typedef union 
+{
+	int integer_value;
+	float float_value;
+}number;
 
 

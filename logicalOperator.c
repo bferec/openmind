@@ -22,6 +22,9 @@
 
 #include "openmind.tab.h"
 
+
+
+
 /*--------------------------------------*/
 /* 	^ operator (xor)		*/
 /*--------------------------------------*/
@@ -33,53 +36,32 @@ expression_Value * operandResult ;
 	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	result.type = BOOLEAN_EXPRESSION;
-	result.value.boolean_value = 1;	/* neutral for logical XOR */
 
-	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
+	operandResult[0] = expression( oneOperatorNode -> operands[0] );
+	operandResult[1] = expression( oneOperatorNode -> operands[1] );
+
+	switch( operandResult[0].type )
 	{
-		operandResult[i] = expression( oneOperatorNode -> operands[i] );
+		case INTEGER_EXPRESSION:
+		case FLOAT_EXPRESSION:
+		case BOOLEAN_EXPRESSION:
+		case CHAR_EXPRESSION:
+			result.value.boolean_value = operandResult[0].value.boolean_value ^  operandResult[1].value.boolean_value;
+		break;
 
-		switch( operandResult[i].type )
-		{
-			case INTEGER_EXPRESSION:
-				yyerror( "Unable to apply logical XOR to integer  numbers\n" );
-			break;
+		case STRING_EXPRESSION:
+		case GUID_EXPRESSION:
+		case ENTITY_EXPRESSION:
+		case PROPERTY_EXPRESSION:
+			yyerror( "Unable to apply logical ^  to these operands\n" );
+		break;
 
-			case FLOAT_EXPRESSION:
-				yyerror( "Unable to apply logical XOR to float numbers\n" );
-			break;
-
-			case STRING_EXPRESSION:
-				result.type = INTEGER_EXPRESSION;
-				yyerror( "Unable to apply logical XOR to Strings\n" );
-			break;
-
-			case GUID_EXPRESSION:
-				yyerror( "Unable to apply logical XOR to guids\n" );
-			break;
-
-			case BOOLEAN_EXPRESSION:
-				if( i == 0 )
-					result.value.boolean_value = operandResult[i].value.boolean_value;
-				else
-					result.value.boolean_value = result.value.boolean_value != operandResult[i].value.boolean_value;
-			break;
-
-			case ENTITY_EXPRESSION:
-				yyerror( "Unable to apply logical XOR to entitys\n" );
-			break;
-
-			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to apply logical XOR to Propertys\n" );
-			break;
-
-			default:
-			break;
-		}
+		default:
+		break;
 	}
 
-
 	return result;
+
 }
 
 /*--------------------------------------*/
@@ -93,48 +75,29 @@ expression_Value * operandResult ;
 	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	result.type = BOOLEAN_EXPRESSION;
-	result.value.boolean_value = 0;	/* neutral for logical OR */
 
-	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
+	operandResult[0] = expression( oneOperatorNode -> operands[0] );
+	operandResult[1] = expression( oneOperatorNode -> operands[1] );
+
+	switch( operandResult[0].type )
 	{
-		operandResult[i] = expression( oneOperatorNode -> operands[i] );
+		case INTEGER_EXPRESSION:
+		case FLOAT_EXPRESSION:
+		case BOOLEAN_EXPRESSION:
+		case CHAR_EXPRESSION:
+			result.value.boolean_value = operandResult[0].value.boolean_value || operandResult[1].value.boolean_value;
+		break;
 
-		switch( operandResult[i].type )
-		{
-			case INTEGER_EXPRESSION:
-				yyerror( "Unable to apply logical OR to integer  numbers\n" );
-			break;
+		case STRING_EXPRESSION:
+		case GUID_EXPRESSION:
+		case ENTITY_EXPRESSION:
+		case PROPERTY_EXPRESSION:
+			yyerror( "Unable to apply logical OR to these operands\n" );
+		break;
 
-			case FLOAT_EXPRESSION:
-				yyerror( "Unable to apply logical OR to float numbers\n" );
-			break;
-
-			case STRING_EXPRESSION:
-				result.type = INTEGER_EXPRESSION;
-				yyerror( "Unable to apply logical OR to Strings\n" );
-			break;
-
-			case GUID_EXPRESSION:
-				yyerror( "Unable to apply logical OR to guids\n" );
-			break;
-
-			case BOOLEAN_EXPRESSION:
-				result.value.boolean_value |= operandResult[i].value.boolean_value;
-			break;
-
-			case ENTITY_EXPRESSION:
-				yyerror( "Unable to apply logical OR to entitys\n" );
-			break;
-
-			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to apply logical OR to Propertys\n" );
-			break;
-
-			default:
-			break;
-		}
+		default:
+		break;
 	}
-
 
 	return result;
 }
@@ -149,50 +112,32 @@ expression_Value * operandResult ;
 	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	result.type = BOOLEAN_EXPRESSION;
-	result.value.boolean_value = 1;	/* neutral for logical AND */
 
-	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
+	operandResult[0] = expression( oneOperatorNode -> operands[0] );
+	operandResult[1] = expression( oneOperatorNode -> operands[1] );
+
+	switch( operandResult[0].type )
 	{
-		operandResult[i] = expression( oneOperatorNode -> operands[i] );
+		case INTEGER_EXPRESSION:
+		case FLOAT_EXPRESSION:
+		case BOOLEAN_EXPRESSION:
+		case CHAR_EXPRESSION:
+			result.value.boolean_value = operandResult[0].value.boolean_value && operandResult[1].value.boolean_value;
+		break;
 
-		switch( operandResult[i].type )
-		{
-			case INTEGER_EXPRESSION:
-				yyerror( "Unable to apply logical OR to integer  numbers\n" );
-			break;
+		case STRING_EXPRESSION:
+		case GUID_EXPRESSION:
+		case ENTITY_EXPRESSION:
+		case PROPERTY_EXPRESSION:
+			yyerror( "Unable to apply logical OR to these operands\n" );
+		break;
 
-			case FLOAT_EXPRESSION:
-				yyerror( "Unable to apply logical OR to float numbers\n" );
-			break;
-
-			case STRING_EXPRESSION:
-				result.type = INTEGER_EXPRESSION;
-				yyerror( "Unable to apply logical OR to Strings\n" );
-			break;
-
-			case GUID_EXPRESSION:
-				yyerror( "Unable to apply logical OR to guids\n" );
-			break;
-
-			case BOOLEAN_EXPRESSION:
-				result.value.boolean_value &= operandResult[i].value.boolean_value;
-			break;
-
-			case ENTITY_EXPRESSION:
-				yyerror( "Unable to apply logical OR to entitys\n" );
-			break;
-
-			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to apply logical OR to Propertys\n" );
-			break;
-
-			default:
-			break;
-		}
+		default:
+		break;
 	}
 
-
 	return result;
+
 }
 /*--------------------------------------*/
 /* 	! operator (not)		*/
@@ -207,31 +152,17 @@ expression_Value operandResult ;
 	switch( operandResult.type )
 		{
 			case INTEGER_EXPRESSION:
-				yyerror( "Unable to apply logical NOT to integer  numbers\n" );
-			break;
-
 			case FLOAT_EXPRESSION:
-				yyerror( "Unable to apply logical NOT to float numbers\n" );
-			break;
-
-			case STRING_EXPRESSION:
-				yyerror( "Unable to apply logical NOT to Strings\n" );
-			break;
-
-			case GUID_EXPRESSION:
-				yyerror( "Unable to apply logical NOT to guids\n" );
-			break;
-
+			case CHAR_EXPRESSION:
 			case BOOLEAN_EXPRESSION:
 				result.value.boolean_value = ! operandResult.value.boolean_value;
 			break;
 
+			case STRING_EXPRESSION:
+			case GUID_EXPRESSION:
 			case ENTITY_EXPRESSION:
-				yyerror( "Unable to apply logical NOT to entitys\n" );
-			break;
-
 			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to apply logical NOT to Propertys\n" );
+				yyerror( "Unable to apply logical OR to these operands\n" );
 			break;
 
 			default:

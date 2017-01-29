@@ -53,7 +53,7 @@ extern int yychar;
 /* -------------------- */
 %union 
 {
-	numberValue  number_value;			/* numeric value				*/
+	number number_value;				/* float or integer				*/
 	enum { False, True } boolean_value;		/* boolean value				*/
 	char guid_value[ GUID_LENGTH ];			/* guid value identifier of entity or property	*/
 	char char_value;				/* caracter value				*/
@@ -113,7 +113,6 @@ extern int yychar;
 %token<boolean_value>  T_FALSE
 %token<guid_value>  T_GUID
 %token<string_value> T_CSTE_STRING
-
 %token<char_value> T_CSTE_CHAR
 
 %token<var> T_IDENTIFIER
@@ -153,15 +152,8 @@ extern int yychar;
 /* -------------------- */
 stmtList:
 	stmt T_SEMICOLON 	
-				{
-					expression( $1 ) ; 
-					/* Free_SyntaxTreeNode( $1 ); */
-				}
-	| stmtList stmt T_SEMICOLON	
-				{ 
-					 expression( $2 ) ; 
-					/* Free_SyntaxTreeNode( $1 ); */
-				}
+					{ expression( $1 ) ; Free_SyntaxTreeNode( $1 ); }
+	| stmtList stmt T_SEMICOLON	{ expression( $2 ) ; Free_SyntaxTreeNode( $1 ); }
 
 ;
 
@@ -173,7 +165,7 @@ stmt:
 	| create_stmt		{ $$ = $1 ;}
 	| echo_stmt		{ $$ = $1 ;}
 	| assign_stmt		{ $$ = $1 ;}
-	| T_QUIT		{exit (0) ;}
+	| T_QUIT		{ exit (0) ;}
 ;
 
 /* -------------------- */
@@ -251,11 +243,12 @@ name_defs:
 /* Expression		*/
 /* -------------------- */
 expr:
-	string_expr
+	numeric_expr
+	| string_expr
 	| char_expr					
-	| numeric_expr
 	| boolean_expr
 	| guid_expr
+	| T_LEFT_BRACKET expr T_RIGHT_BRACKET	{ $$ = $2;}
 	| T_IDENTIFIER	{ $$ = Var( $1-> type , $1 ); }
 ;
 /* -------------------- */
@@ -264,22 +257,22 @@ expr:
 guid_expr:
 	T_AUTO		{ $$ = oper( T_AUTO , 0 );  }
 	| T_GUID	{ $$ = Const( GUID_CONSTANT_TYPE , $1 );}
-	| T_IDENTIFIER	{ $$ = Var( $1-> type , $1 ); }
+
+
 ;
 
 /* -------------------- */
 /* Expression numerique	*/
 /* -------------------- */
 numeric_expr:
-	T_INT 						{ $$ = Const( INT_CONSTANT_TYPE   , (void *) & $1.integer_value); }
-	| T_FLOAT					{ $$ = Const( FLOAT_CONSTANT_TYPE , (void *) & $1.float_value );  }
-	| T_IDENTIFIER					{ $$ = Var( $1-> type , $1 ); }
-	| T_LEFT_BRACKET numeric_expr T_RIGHT_BRACKET	{ $$ = $2;}
-	| T_MINUS_SIGN numeric_expr 			{ $$ = oper( T_MINUS_SIGN , 1 , $2 ) ; }
-	| numeric_expr T_PLUS_SIGN numeric_expr		{ $$ = oper( T_PLUS_SIGN  , 2 , $1 , $3 ) ; }	
-	| numeric_expr T_MINUS_SIGN numeric_expr 	{ $$ = oper( T_MINUS_SIGN , 2 , $1 , $3 ) ; }	
-	| numeric_expr T_ASTERISK numeric_expr 		{ $$ = oper( T_ASTERISK   , 2 , $1 , $3 ) ; }		
-	| numeric_expr T_SLASH numeric_expr		{ $$ = oper( T_SLASH 	  , 2 , $1 , $3 ) ; }		
+	T_INT 				{ $$ = Const( INT_CONSTANT_TYPE   , (void *) & $1.integer_value ); }
+	| T_FLOAT			{ $$ = Const( FLOAT_CONSTANT_TYPE , (void *) & $1.float_value); }
+	| T_MINUS_SIGN expr 		{ $$ = oper( T_MINUS_SIGN , 1 , $2 ) ; }
+	| T_PLUS_SIGN expr 		{ $$ = oper( T_PLUS_SIGN , 1 , $2 ) ; }
+	| expr T_PLUS_SIGN expr		{ $$ = oper( T_PLUS_SIGN  , 2 , $1 , $3 ) ; }	
+	| expr T_MINUS_SIGN expr 	{ $$ = oper( T_MINUS_SIGN , 2 , $1 , $3 ) ; }	
+	| expr T_ASTERISK expr 		{ $$ = oper( T_ASTERISK   , 2 , $1 , $3 ) ; }		
+	| expr T_SLASH expr		{ $$ = oper( T_SLASH 	  , 2 , $1 , $3 ) ; }		
 ;
 
 /* -------------------- */
@@ -288,22 +281,18 @@ numeric_expr:
 boolean_expr:	
 	T_TRUE					{ $$ = Const( BOOLEEAN_CONSTANT_TYPE ,  & $1); }
 	|T_FALSE				{ $$ = Const( BOOLEEAN_CONSTANT_TYPE ,  & $1); }
-	| T_IDENTIFIER				{ $$ = Var( $1-> type , $1 ); }
 
-	| T_NOT boolean_expr					{ $$ = oper( T_NOT , 1, $2 ); }
-	| boolean_expr T_OR boolean_expr			{ $$ = oper( T_OR  , 2, $1 , $3 ); }
-	| boolean_expr T_AND boolean_expr			{ $$ = oper( T_AND , 2, $1 , $3 ); }
-	| boolean_expr T_XOR boolean_expr			{ $$ = oper( T_XOR , 2, $1 , $3 ); }
-	| T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET		{ $$ = $2;}
+	| T_NOT expr				{ $$ = oper( T_NOT , 1, $2 ); }
+	| expr T_OR expr			{ $$ = oper( T_OR  , 2, $1 , $3 ); }
+	| expr T_AND expr			{ $$ = oper( T_AND , 2, $1 , $3 ); }
+	| expr T_XOR expr			{ $$ = oper( T_XOR , 2, $1 , $3 ); }
 
-	| boolean_expr T_DIFFERENT  boolean_expr		{ $$ = oper( T_DIFFERENT , 2, $1 , $3 ); }
-	| boolean_expr T_EQUAL      boolean_expr		{ $$ = oper( T_EQUAL 	 , 2, $1 , $3 ); }	
-	| boolean_expr T_LESS_THAN  boolean_expr		{ $$ = oper( T_LESS_THAN , 2, $1 , $3 ); }	
-	| boolean_expr T_MORE_THAN  boolean_expr		{ $$ = oper( T_MORE_THAN , 2, $1 , $3 ); }	
+	| expr T_DIFFERENT  expr		{ $$ = oper( T_DIFFERENT , 2, $1 , $3 ); }
+	| expr T_EQUAL      expr		{ $$ = oper( T_EQUAL 	 , 2, $1 , $3 ); }	
+	| expr T_LESS_THAN  expr		{ $$ = oper( T_LESS_THAN , 2, $1 , $3 ); }	
+	| expr T_MORE_THAN  expr		{ $$ = oper( T_MORE_THAN , 2, $1 , $3 ); }	
 
 ;
-
-
 
 /* -------------------- */
 /* Expression caractere	*/
@@ -318,10 +307,7 @@ char_expr:
 /* -------------------- */
 string_expr:
 	T_CSTE_STRING				{ $$ = Const( STRING_CONSTANT_TYPE , $1 ); }
-	| string_expr T_AMPERSAND  string_expr	{ $$ = oper( T_AMPERSAND , 2, $1 , $3 );}
 ;
-
-
 
 %%
 /* -------------------- */
