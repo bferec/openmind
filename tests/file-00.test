@@ -7,11 +7,10 @@ echo "hello "  + "World\n";
 
 t = "concatenation of two ";
 u = "string is done by + operator\n";
-
 v = t+u;
 echo v;
-
 ECHO "\n";
+
 echo "Test echo 5 => ";
 ECHO 5;
 ECHO "\n";
@@ -75,7 +74,6 @@ E =  - 0.60;
 echo E;
 ECHO "\n";
 
-
 echo "TEST Y= +5 => ";
 Y = +5;
 echo Y;
@@ -102,9 +100,18 @@ echo "7 >= 7 => ";
 echo 7 >= 7;
 ECHO "\n";
 
+echo "Test echo A => ";
+echo 'A';
+ECHO "\n";
 
+echo "Test mycar = x => ";
+mycar = 'x';
+echo mycar;
+ECHO "\n";
+
+/*
 echo "test division par zero";
 echo 5 / 0;
 ECHO "\n";
-
+*/
 

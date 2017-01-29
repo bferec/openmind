@@ -324,7 +324,7 @@ expression_Value * operandResult ;
 			break;
 
 			case CHAR_EXPRESSION:
-				printf( "%c" , operandResult-> value.char_value );
+				putchar( operandResult-> value.char_value );
 			break;
 
 			case GUID_EXPRESSION:

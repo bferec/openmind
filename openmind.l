@@ -34,6 +34,11 @@ char * string_buffer_ptr;
 
 BOOL err_check_ident;
 
+void charCount()
+{
+	charNumber += strlen( yytext);
+}
+
 %}
 
 %option noyywrap
@@ -70,6 +75,7 @@ property		(?i:"property")
 \" 			{ string_buffer_ptr = string_buffer; BEGIN (string ); }	/* debut constante texte	*/
 <string>\"		{ 
 				BEGIN(INITIAL); * string_buffer_ptr = '\0';  	/* fin constante texte		*/
+				charCount();
 				strcpy( yylval.string_value , string_buffer ) ;
 				/* fprintf(stderr, "string lex : [%s]\n",  yylval.string_value); */
 				return T_CSTE_STRING;				
@@ -83,96 +89,92 @@ property		(?i:"property")
 <string>\\\\		{ * string_buffer_ptr ++ = '\\'; }
 
 <string>[^\"\n\r\f\t\\]	{ 
-			  * string_buffer_ptr ++ = * yytext;
+			  	* string_buffer_ptr ++ = * yytext;
 			}
 
-<INITIAL>\n		{ lineNumber ++ ;}
+<INITIAL>\n		{ lineNumber ++ ;charNumber = 0;}
 
 \'			{  string_buffer_ptr = string_buffer;  BEGIN (caracter ); }	/* debut constante caractere	*/
 <caracter>\'		{ 
-				BEGIN(INITIAL); * string_buffer_ptr = '\0';  	/* fin constante caractere		*/
-				yylval.char_value , string_buffer[0] ;
+				BEGIN(INITIAL); string_buffer_ptr[1]= '\0';  	/* fin constante caractere		*/
+				charCount();
+				yylval.char_value = string_buffer[0] ;
 				return T_CSTE_CHAR;				
 			}
-<caracter>\\n		{ * string_buffer_ptr ++ = '\n'; }
-<caracter>\\t		{ * string_buffer_ptr ++ = '\t'; }
-<caracter>\\r		{ * string_buffer_ptr ++ = '\r'; }
-<caracter>\\f		{ * string_buffer_ptr ++ = '\f'; }
-<caracter>\\\\		{ * string_buffer_ptr ++ = '\\'; }
-<caracter>[^\'\n\r\f\t\\]	{ 
-			  * string_buffer_ptr ++ = * yytext;
-			}
+<caracter>[^\'\n\r\f\t\\]	{ string_buffer[0] = * yytext; }
 
 
-<INITIAL>{spacetab}	{ /* nothing */ }
+<INITIAL>{spacetab}	{ charCount(); }
 
 
 
-"+"			{return T_PLUS_SIGN;}
-"-"			{return T_MINUS_SIGN;}
-"*"			{return T_ASTERISK;}
-"/"			{return T_SLASH;}
+"+"			{charCount() ; return T_PLUS_SIGN;}
+"-"			{charCount() ; return T_MINUS_SIGN;}
+"*"			{charCount() ; return T_ASTERISK;}
+"/"			{charCount() ; return T_SLASH;}
 
-"{"			{return T_LEFT_BRACE;}
-"}"			{return T_RIGHT_BRACE;}
+"{"			{charCount() ; return T_LEFT_BRACE;}
+"}"			{charCount() ; return T_RIGHT_BRACE;}
 
-"("			{return T_LEFT_BRACKET;}
-")"			{return T_RIGHT_BRACKET;}
+"("			{charCount() ; return T_LEFT_BRACKET;}
+")"			{charCount() ; return T_RIGHT_BRACKET;}
 
-"["			{return T_LEFT_SQUARE_BRACKET;}
-"]"			{return T_RIGHT_SQUARE_BRACKET;}
+"["			{charCount() ; return T_LEFT_SQUARE_BRACKET;}
+"]"			{charCount() ; return T_RIGHT_SQUARE_BRACKET;}
 
-":"			{return T_COLON;}
-";"			{return T_SEMICOLON;}
-","			{return T_COMMA;}
-"&"			{return T_AMPERSAND;}
-"|"			{return T_VERTICAL_BAR;}
+":"			{charCount() ; return T_COLON;}
+";"			{charCount() ; return T_SEMICOLON;}
+","			{charCount() ; return T_COMMA;}
+"&"			{charCount() ; return T_AMPERSAND;}
+"|"			{charCount() ; return T_VERTICAL_BAR;}
 
 
-"||"			{return T_OR;}
-"&&"			{return T_AND;}
-"!"			{return T_NOT;}
-"^"			{return T_XOR;}
+"||"			{charCount() ; return T_OR;}
+"&&"			{charCount() ; return T_AND;}
+"!"			{charCount() ; return T_NOT;}
+"^"			{charCount() ; return T_XOR;}
 
-"<"			{return T_LESS_THAN;}
-">"			{return T_MORE_THAN;}
-"<="			{return T_LESS_OR_EQUAL_THAN;}
-">="			{return T_MORE_OR_EQUAL_THAN;}
-"!="			{return T_DIFFERENT;}		
-"=="			{return T_EQUAL;}
-"=" 			{return T_ASSIGN;}
+"<"			{charCount() ; return T_LESS_THAN;}
+">"			{charCount() ; return T_MORE_THAN;}
+"<="			{charCount() ; return T_LESS_OR_EQUAL_THAN;}
+">="			{charCount() ; return T_MORE_OR_EQUAL_THAN;}
+"!="			{charCount() ; return T_DIFFERENT;}		
+"=="			{charCount() ; return T_EQUAL;}
+"=" 			{charCount() ; return T_ASSIGN;}
 
 {integer}		{ 
+				charCount() ; 
 				yylval.number_value.integer_value = atoi( yytext ) ; 
 				return T_INT ; 
 			}
 {float}			{
+				charCount() ;
 				yylval.number_value.float_value = atof( yytext ) ; 
 				return T_FLOAT ; 
 			}
 
-{guid}			{ strcpy( yylval.guid_value , yytext ) ; return T_GUID;}
+{guid}			{ strcpy( yylval.guid_value , yytext ) ; charCount() ; return T_GUID;}
 
-(?i:"True")		{yylval.boolean_value = True ;  return T_TRUE ; }
-(?i:"False")		{yylval.boolean_value = False ; return T_FALSE ; }
+(?i:"True")		{yylval.boolean_value = True ;  charCount() ; return T_TRUE ; }
+(?i:"False")		{yylval.boolean_value = False ; charCount() ; return T_FALSE ; }
  
 
-{entity}		{return T_ENTITY;}
-{property}		{return T_PROPERTY;}
+{entity}		{charCount() ; return T_ENTITY;}
+{property}		{charCount() ; return T_PROPERTY;}
 
-(?i:"create")		{return T_CREATE;}
+(?i:"create")		{charCount() ; return T_CREATE;}
 
-(?i:"identity")		{return T_IDENTITY;}
-(?i:"auto")		{return T_AUTO;}
-(?i:"name")		{return T_NAME;}
-(?i:"unique")		{return T_UNIQUE;}
-(?i:"echo")		{return T_ECHO;}
+(?i:"identity")		{charCount() ; return T_IDENTITY;}
+(?i:"auto")		{charCount() ; return T_AUTO;}
+(?i:"name")		{charCount() ; return T_NAME;}
+(?i:"unique")		{charCount() ; return T_UNIQUE;}
+(?i:"echo")		{charCount() ; return T_ECHO;}
 	
-(?i:"exit")		{return T_QUIT;}
-(?i:"quit")		{return T_QUIT;}
+(?i:"exit")		{charCount() ; return T_QUIT;}
+(?i:"quit")		{charCount() ; return T_QUIT;}
 
 {ident}			{
-				/* fprintf(  stderr , "Identifier lex : [%s]\n" , yytext ); */
+				charCount();
 				if( check_ident( yytext ) ) 
 				 {
 					sprintf(msgerror, "utilisation d'un mot reservé comme variable : [%s]\n",yytext);
@@ -180,7 +182,6 @@ property		(?i:"property")
 				 }				
 				else
 				{
-					
 					yylval.var = createVar( yytext );
 					return T_IDENTIFIER;
 				}
@@ -189,5 +190,6 @@ property		(?i:"property")
 .			{ charNumber ++; sprintf( msgerror, "caractere inconnu : [%s] ", yytext  ); yyerror(msgerror) ; return T_UNKNOWN;}
 
 %%
+
 
 

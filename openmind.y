@@ -200,7 +200,7 @@ create_stmt:
 /* Create ENTITY	*/
 /* -------------------- */
 create_entity_stmt:
-	T_CREATE T_ENTITY T_LEFT_BRACE entity_defs T_RIGHT_BRACE	{ }
+	T_CREATE T_ENTITY T_LEFT_BRACE entity_defs T_RIGHT_BRACE	{}
 ;
 /* -------------------- */
 /* corps ENTITY		*/
@@ -212,7 +212,7 @@ entity_defs:
 /* Create Property	*/
 /* -------------------- */
 create_property_stmt:
-	T_CREATE T_PROPERTY T_LEFT_BRACE property_defs T_RIGHT_BRACE	{ }
+	T_CREATE T_PROPERTY T_LEFT_BRACE property_defs T_RIGHT_BRACE	{}
 ;
 /* -------------------- */
 /* corps property	*/
@@ -245,7 +245,7 @@ name_defs:
 expr:
 	numeric_expr
 	| string_expr
-	| char_expr					
+	| char_expr				
 	| boolean_expr
 	| guid_expr
 	| T_LEFT_BRACKET expr T_RIGHT_BRACKET	{ $$ = $2;}

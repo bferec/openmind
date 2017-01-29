@@ -5,10 +5,11 @@ make openmind.tab.o
 make lex.yy.o
 make openmindvarlist.o
 make syntaxtree.o
+make debugTools.o
 make comparaisonOperator.o
 make logicalOperator.o
 make arithmeticOperator.o
 make openmindinterpret.o
 make openmindlib.o
 
-gcc -o openmind openmind.c openmindlib.o openmindvarlist.o syntaxtree.o openmind.tab.o lex.yy.o arithmeticOperator.o logicalOperator.o comparaisonOperator.o openmindinterpret.o -lm
+gcc -o openmind openmind.c openmindlib.o openmindvarlist.o syntaxtree.o debugTools.o openmind.tab.o lex.yy.o arithmeticOperator.o logicalOperator.o comparaisonOperator.o openmindinterpret.o -lm

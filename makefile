@@ -13,7 +13,6 @@ all: $(APPNAME)
 $(APPNAME): $(APPNAME).c $(APPNAME)lib.o $(APPNAME)varlist.o syntaxtree.o arithmeticOperator.o logicalOperator.o  comparaisonOperator.o $(APPNAME)interpret.o lex.yy.o $(APPNAME).tab.o
 	$(CC) $(LDFLAGS) -o fdl.c $(APPNAME)lib.o $(APPNAME)varlist.o syntaxtree.o arithmeticOperator.o logicalOperator.o comparaisonOperator.o  $(APPNAME)interpret.o lex.yy.o $(APPNAME).tab.o
 
-
 $(APPNAME)lib.o: $(APPNAME)lib.c $(APPNAME)lib.h
 	$(CC) -c $(APPNAME)lib.c
  	
@@ -35,6 +34,8 @@ logicalOperator.o: logicalOperator.c $(APPNAME)lib.h entity.h $(APPNAME)value.h 
 syntaxtree.o: syntaxtree.c $(APPNAME)lib.h  entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h	$(APPNAME).tab.h
 	$(CC) -c syntaxtree.c
 
+debugTools.o: debugTools.c 
+	$(CC) -c debugTools.c
 	
 $(APPNAME)varlist.o: $(APPNAME)varlist.c $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h
 	$(CC) -c $(APPNAME)varlist.c
@@ -66,6 +67,7 @@ clean:
 		[ -f "$(APPNAME)lib.o" ] 	&& rm $(APPNAME)lib.o; \
 		[ -f "$(APPNAME)interpret.o" ]	&& rm $(APPNAME)interpret.o; \
 		[ -f "syntaxtree.o" ] 		&& rm syntaxtree.o; \
+		[ -f "debugTools.o" ] 		&& rm debugTools.o; \
 		[ -f "arithmeticOperator.o" ] 	&& rm arithmeticOperator.o; \
 		[ -f "logicalOperator.o" ] 	&& rm logicalOperator.o; \
 		[ -f "comparaisonOperator.o" ] 	&& rm comparaisonOperator.o; \
