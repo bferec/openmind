@@ -86,6 +86,22 @@ Y = Y + +Y;
 echo Y;
 ECHO "\n";
 
+echo "5 < 7 => ";
+echo 5 < 7;
+ECHO "\n";
+
+echo "7 <= 7 => ";
+echo 7 <= 7;
+ECHO "\n";
+
+echo "7 > 5 => ";
+echo 7 > 5 ;
+ECHO "\n";
+
+echo "7 >= 7 => ";
+echo 7 >= 7;
+ECHO "\n";
+
 
 echo "test division par zero";
 echo 5 / 0;

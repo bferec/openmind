@@ -418,6 +418,22 @@ operator * currentOperator;
 			result = expression_Operator_T_EQUAL( currentOperator ) ; 
 		break;
 
+		case T_LESS_THAN:
+			result = expression_Operator_T_LESS_THAN( currentOperator ) ; 
+		break;
+
+		case T_LESS_OR_EQUAL_THAN:
+			result = expression_Operator_T_LESS_OR_EQUAL_THAN( currentOperator ) ; 
+		break;
+
+		case T_MORE_THAN:
+			result = expression_Operator_T_MORE_THAN( currentOperator ) ; 
+		break;
+
+		case T_MORE_OR_EQUAL_THAN:
+			result = expression_Operator_T_MORE_OR_EQUAL_THAN( currentOperator ) ; 
+		break;
+
 		case T_AUTO:
 		result.type = GUID_EXPRESSION;
 		NewGuid( guid); 

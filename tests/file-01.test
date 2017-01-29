@@ -11,3 +11,45 @@ Nom = "Ferec";
 echo "Test nom=Ferec  => ";
 echo nom;
 echo "\n";
+
+echo "hello "  + "World\n";
+
+t = "Test concatenation of two ";
+u = "string is done by + operator\n";
+v = t+u;
+echo v;
+echo "\n";
+
+echo "Test abc < def => ";
+echo "abc" < "def";
+echo "\n";
+
+echo "Test abc < abc => ";
+echo "abc" < "abc";
+echo "\n";
+
+echo "Test abc > abc => ";
+echo "abc" > "abc";
+echo "\n";
+
+echo "Test abc >= abc => ";
+echo "abc" >= "abc";
+echo "\n";
+
+echo "Test t=abc u=def";
+echo "\n";
+t = "abc";
+u = "def";
+
+echo "Test t != u => ";
+echo t != u;
+echo "\n";
+
+echo "Test t > u => ";
+echo t > u;
+echo "\n";
+
+echo "Test t >=abc => ";
+echo t >= "abc";
+echo "\n";
+

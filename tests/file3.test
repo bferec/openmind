@@ -1,8 +1,11 @@
 /* test Boolean	 et compare */
 
+
 b = true;
 c = false;
-
+/* ---------------------*/
+/* test || constants	*/
+/* ---------------------*/
 echo "True || True => ";
 echo True || True;
 echo "\n";
@@ -25,6 +28,9 @@ echo "\n";
 echo "Test c=False => ";
 echo c;
 echo "\n";
+/* ---------------------*/
+/* test || variables	*/
+/* ---------------------*/
 
 echo "Test b || c => ";
 echo b || c;
@@ -34,8 +40,9 @@ echo "Test c || c => ";
 echo c || c;
 echo "\n";
 echo "\n";
-
-
+/* ---------------------*/
+/* test && constants	*/
+/* ---------------------*/
 echo "True && True => ";
 echo True && True;
 echo "\n";
@@ -58,7 +65,9 @@ echo "\n";
 echo "Test c=False => ";
 echo c;
 echo "\n";
-
+/* ---------------------*/
+/* test && variables	*/
+/* ---------------------*/
 echo "Test b && c => ";
 echo b && c;
 echo "\n";
@@ -83,7 +92,9 @@ echo "Test True ^ True => ";
 echo True ^ True;
 echo "\n";
 
-
+/* -------------*/
+/* test != 	*/
+/* -------------*/
 echo "Test 12 != 3 => ";
 echo 12 != 3;
 echo "\n";
@@ -99,8 +110,9 @@ echo "\n";
 echo "Test xyz != xyz => ";
 echo "xyz" != "xyz";
 echo "\n";
-
-
+/* -------------*/
+/* test == 	*/
+/* -------------*/
 echo "Test 5.0 == 7 => ";
 echo 5.0 == 7;
 echo "\n";
@@ -112,7 +124,6 @@ echo "\n";
 echo "Test 5 == 5.0 => ";
 echo 5 == 5.0;
 echo "\n";
-
 
 echo "Test xyz == xyz => ";
 echo "xyz" == "xyz";

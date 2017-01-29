@@ -291,7 +291,8 @@ boolean_expr:
 	| expr T_EQUAL      expr		{ $$ = oper( T_EQUAL 	 , 2, $1 , $3 ); }	
 	| expr T_LESS_THAN  expr		{ $$ = oper( T_LESS_THAN , 2, $1 , $3 ); }	
 	| expr T_MORE_THAN  expr		{ $$ = oper( T_MORE_THAN , 2, $1 , $3 ); }	
-
+	| expr T_LESS_OR_EQUAL_THAN  expr	{ $$ = oper( T_LESS_OR_EQUAL_THAN , 2, $1 , $3 ); }	
+	| expr T_MORE_OR_EQUAL_THAN  expr	{ $$ = oper( T_MORE_OR_EQUAL_THAN , 2, $1 , $3 ); }		
 ;
 
 /* -------------------- */
@@ -299,7 +300,6 @@ boolean_expr:
 /* -------------------- */
 char_expr:
 	T_CSTE_CHAR				{ $$ = Const( CHAR_CONSTANT_TYPE , & $1 ); }
-
 ;
 
 /* -------------------- */
