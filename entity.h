@@ -48,6 +48,15 @@ typedef struct property_
 }property;
 
 /* -----------------------------------------------------*/
+/* -----------------------------------------------------*/
+typedef struct obj_defs_
+{
+	char guid[GUID_LENGTH + 1];
+	char name[ MAXLENGTH_STRING  + 1 ];
+	BOOL unique_name;	
+}obj_defs;
+
+/* -----------------------------------------------------*/
 /* noeud propriete					*/
 /* -----------------------------------------------------*/
 typedef struct property_node_

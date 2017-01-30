@@ -14,7 +14,9 @@ typedef enum
 {
 	CONSTANT_SYNTAXTREE_NODETYPE, 
 	IDENTIFIER_SYNTAXTREE_NODETYPE, 
-	OPERATOR_SYNTAXTREE_NODETYPE 
+	OPERATOR_SYNTAXTREE_NODETYPE ,
+	OBJDEFS_SYNTAXTREE_NODETYPE,
+
 } syntaxTreeNodeType;
 
 /* -----------------------------------------------------*/
@@ -27,6 +29,9 @@ typedef struct syntaxTreeNode_
 	{
 		constant cste;
 		variable * var;
+		entity * ent;
+		property * prop;
+		obj_defs objdefs;
 		operator oper;
 	};	
 } syntaxTreeNode;
@@ -35,5 +40,8 @@ void  dumpSyntaxTreeNode(syntaxTreeNode * oneNode );
 syntaxTreeNode * oper( int oneOper, int OperandsCount, ...);
 syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr );
 syntaxTreeNode * Var( VarType oneType, variable * oneVarPtr );
+
+syntaxTreeNode * ObjDefs( char * oneGuid , char * oneName , BOOL oneUniqueFlag );
+
 void Free_SyntaxTreeNode( syntaxTreeNode * oneNode );
 

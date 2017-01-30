@@ -43,6 +43,23 @@ syntaxTreeNode * resultNode;
 	return resultNode;
 }
 
+/* -----------------------------------------------------*/
+/* creation de noeud defintion objet entity et property	*/
+/* -----------------------------------------------------*/
+syntaxTreeNode * ObjDefs( syntaxTreeNode * oneGuidNode , syntaxTreeNode * oneNameNode , BOOL oneUniqueFlag )
+{
+
+syntaxTreeNode * resultNode;
+
+	resultNode = syntaxTreeNodeAlloc();
+	resultNode -> type = OBJDEFS_SYNTAXTREE_NODETYPE;
+
+	strcpy( resultNode -> objdefs.guid , oneGuidNode ->);
+	strcpy( resultNode -> objdefs.name , oneName );
+
+	resultNode -> unique_name = oneUniqueFlag;
+	return resultNode;
+}
 
 /* -----------------------------------------------------*/
 /* creation de noeud constante				*/
