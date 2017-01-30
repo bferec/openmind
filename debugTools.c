@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <time.h>
 
 #include "openmindlib.h"
 #include "entity.h"
@@ -25,6 +26,39 @@
 #include "openmind.tab.h"
 
 char buffer[MAXLENGTH_STRING + 1 ];
+
+extern variable_node * var_list ;
+
+
+/* -----------------------------------------------------*/
+/* -----------------------------------------------------*/
+void dumpvarNode( variable_node * oneVariableNode) 
+{
+	if( oneVariableNode )
+	{
+		fprintf( stderr , "variable node %s\n" , oneVariableNode-> v -> ident );
+	}
+}
+
+/* -----------------------------------------------------*/
+/* affichage de toutes les variables			*/
+/* -----------------------------------------------------*/
+void DumpVarList( )
+{
+	fprintf( stderr , "\nDUMP:\n");
+
+
+variable_node * n;
+	n = var_list;
+	while( n )
+	{
+		dumpvarNode( n );
+		n= n -> next;	
+	}
+	fprintf( stderr , "\nFIN DU DUMP:\n");
+}
+
+
 
 
 char * getOperandeTypeLibelle( syntaxTreeNode * oneNode )

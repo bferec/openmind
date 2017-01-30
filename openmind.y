@@ -57,8 +57,10 @@ extern int yychar;
 	enum { False, True } boolean_value;		/* boolean value				*/
 	char guid_value[ GUID_LENGTH ];			/* guid value identifier of entity or property	*/
 	char char_value;				/* caracter value				*/
-	char string_value[ MAXLENGTH_STRING + 1 ] ;	/* string constant and vars.			*/
-	variable * var;
+	char string_value[ MAXLENGTH_STRING + 1 ] ;	/* string constant 				*/
+	variable * var;					/* variable					*/
+	entity * entity;				/* entity					*/
+	property * property;				/* property					*/
 	syntaxTreeNode * node;
 } 
 
@@ -162,7 +164,7 @@ stmtList:
 /* -------------------- */
 stmt:
 	expr 			{ $$ = $1 ;}
-	| create_stmt		{ $$ = $1 ;}
+	| create_stmt		{ }
 	| echo_stmt		{ $$ = $1 ;}
 	| assign_stmt		{ $$ = $1 ;}
 	| T_QUIT		{ exit (0) ;}
@@ -200,7 +202,7 @@ create_stmt:
 /* Create ENTITY	*/
 /* -------------------- */
 create_entity_stmt:
-	T_CREATE T_ENTITY T_LEFT_BRACE entity_defs T_RIGHT_BRACE	{}
+	T_CREATE T_ENTITY T_LEFT_BRACE entity_defs T_RIGHT_BRACE	{/* $$  = oper( T_CREATE , 2 , $2, $4 ); */}
 ;
 /* -------------------- */
 /* corps ENTITY		*/

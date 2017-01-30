@@ -8,9 +8,13 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+
 #include "openmindlib.h"
+
 #include "entity.h"
 #include "openmindvalue.h"
+
 #include "openmindvarlist.h"
 
 

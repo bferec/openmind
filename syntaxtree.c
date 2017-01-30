@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <time.h>
 
 #include "openmindlib.h"
 #include "entity.h"

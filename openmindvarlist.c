@@ -10,47 +10,35 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 
 
 #include "openmindlib.h"
 #include "entity.h"
 #include "openmindvalue.h"
+
+
+#include "openmindconstant.h"
+#include "operator.h"
+
 #include "openmindvarlist.h"
+#include "syntaxtree.h"
+#include "debugTools.h"
+
 
 /* -----------------------------------------------------*/
 /* liste des variables					*/
 /* -----------------------------------------------------*/
 variable_node * var_list ;
 
-
-
 /* -----------------------------------------------------*/
+/* liste des entites					*/
 /* -----------------------------------------------------*/
-void dumpvarNode( variable_node * oneVariableNode) 
-{
-	if( oneVariableNode )
-	{
-		fprintf( stderr , "variable node %s\n" , oneVariableNode-> v -> ident );
-	}
-}
-
+entity_node * entity_list;
 /* -----------------------------------------------------*/
-/* affichage de toutes les variables			*/
+/* liste des proprites					*/
 /* -----------------------------------------------------*/
-void DumpVarList( )
-{
-	fprintf( stderr , "\nDUMP:\n");
-
-
-variable_node * n;
-	n = var_list;
-	while( n )
-	{
-		dumpvarNode( n );
-		n= n -> next;	
-	}
-	fprintf( stderr , "\nFIN DU DUMP:\n");
-}
+property_node * property_list;
 
 /* -----------------------------------------------------*/
 /* parcours recursif de l'arbre	des variables		*/
@@ -136,7 +124,6 @@ void addVarNodeToList( variable_node * oneVariableNode )
 {
 	if( var_list !=  (variable_node *) NULL )
 	{	
-		/* fprintf( stderr , "insertion de [%s] dans liste variable contenant [%s] ...\n" , oneVariableNode->v->ident , var_list->v->ident );  */
 		var_list-> previous = oneVariableNode;
 		oneVariableNode -> next = var_list ;
 		var_list = oneVariableNode;
@@ -177,7 +164,7 @@ void FreeMemVar(variable * oneVariable)
 }
 
 /* -----------------------------------------------------*/
-/* affichage de toutes les variables			*/
+/* Delete all vars.					*/
 /* -----------------------------------------------------*/
 void ClearVarList( )
 {
@@ -185,8 +172,6 @@ void ClearVarList( )
 variable_node * n;
 variable_node * previous;
 
-
-	// fprintf( stderr , "liberation de toutes les Variables\n" ); 
 
 	previous = (variable_node *) NULL;
 	n = var_list;

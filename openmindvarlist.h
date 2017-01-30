@@ -36,7 +36,9 @@ typedef struct variable
 	value val;
 }variable;
 
+
 /* -----------------------------------------------------*/
+/* variable list item					*/
 /* -----------------------------------------------------*/
 typedef struct variable_node
 {
@@ -46,10 +48,11 @@ typedef struct variable_node
 }variable_node;
 
 
+
 variable * createVar( char * oneIdent );
 variable * find_variable( char * oneIdent );
 void ClearVarList( );
 
 BOOL  check_ident( char * oneident );
-void DumpVarList();
+
 
