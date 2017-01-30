@@ -123,11 +123,11 @@ extern int yychar;
 /* keywords				*/
 /* -------------------------------------*/
 %token T_CREATE
-%token T_ENTITY
-%token T_PROPERTY
-%token T_IDENTITY
-%token T_AUTO
-%token T_NAME
+%token<entity> T_ENTITY
+%token<property> T_PROPERTY
+%token<guid_value> T_IDENTITY
+%token<guid_value> T_AUTO
+%token<string_value> T_NAME
 %token T_UNIQUE
 %token T_ECHO
 %token T_QUIT
@@ -156,20 +156,17 @@ stmtList:
 	stmt T_SEMICOLON 	
 					{ expression( $1 ) ; Free_SyntaxTreeNode( $1 ); }
 	| stmtList stmt T_SEMICOLON	{ expression( $2 ) ; Free_SyntaxTreeNode( $1 ); }
-
 ;
-
 /* -------------------- */
 /* instruction		*/
 /* -------------------- */
 stmt:
-	expr 			{ $$ = $1 ;}
-	| create_stmt		{ }
-	| echo_stmt		{ $$ = $1 ;}
-	| assign_stmt		{ $$ = $1 ;}
-	| T_QUIT		{ exit (0) ;}
+	expr 			{ $$ = $1; }
+	| create_stmt		{ $$ = $1; }
+	| echo_stmt		{ $$ = $1; }
+	| assign_stmt		{ $$ = $1; }
+	| T_QUIT		{ exit (0);}
 ;
-
 /* -------------------- */
 /* affichage		*/
 /* -------------------- */
@@ -195,51 +192,51 @@ lvalue:
 /* Create		*/
 /* -------------------- */
 create_stmt:
-	create_entity_stmt		{}
-	| create_property_stmt		{}
+	create_entity_stmt		{$$=$1; }
+	| create_property_stmt		{$$=$1; }
 ;
 /* -------------------- */
 /* Create ENTITY	*/
 /* -------------------- */
 create_entity_stmt:
-	T_CREATE T_ENTITY T_LEFT_BRACE entity_defs T_RIGHT_BRACE	{/* $$  = oper( T_CREATE , 2 , $2, $4 ); */}
+	T_CREATE T_ENTITY T_LEFT_BRACE entity_defs T_RIGHT_BRACE	{$$  = oper( T_CREATE , 1 , $4 ); }
 ;
 /* -------------------- */
 /* corps ENTITY		*/
 /* -------------------- */
 entity_defs:
-	obj_defs
+	obj_defs	{ $$=$1; }
 ;
 /* -------------------- */
 /* Create Property	*/
 /* -------------------- */
 create_property_stmt:
-	T_CREATE T_PROPERTY T_LEFT_BRACE property_defs T_RIGHT_BRACE	{}
+	T_CREATE T_PROPERTY T_LEFT_BRACE property_defs T_RIGHT_BRACE	{$$  = oper( T_CREATE , 1 , $4 ); }
 ;
 /* -------------------- */
 /* corps property	*/
 /* -------------------- */
 property_defs:
-	obj_defs
+	obj_defs	{ $$=$1; }
 ;
 /* -------------------- */
 /* corps property	*/
 /* -------------------- */
 obj_defs:
-	 guid_defs T_SEMICOLON name_defs T_SEMICOLON
+	 guid_defs T_SEMICOLON name_defs T_SEMICOLON		{}
 	| guid_defs T_SEMICOLON name_defs T_UNIQUE T_SEMICOLON	{}
 ;
 /* -------------------- */
 /* identity		*/
 /* -------------------- */
 guid_defs:
-	T_IDENTITY T_LEFT_BRACE guid_expr T_RIGHT_BRACE
+	T_IDENTITY T_LEFT_BRACE guid_expr T_RIGHT_BRACE	{ $$ = oper( T_IDENTITY , $3 ); } 
 ;
 /* -------------------- */
 /* name			*/
 /* -------------------- */
 name_defs:
-	T_NAME T_LEFT_BRACE string_expr T_RIGHT_BRACE 
+	T_NAME T_LEFT_BRACE string_expr T_RIGHT_BRACE 	{ $$ = oper( T_NAME , $3 ); } 
 ;
 /* -------------------- */
 /* Expression		*/
@@ -251,7 +248,7 @@ expr:
 	| boolean_expr
 	| guid_expr
 	| T_LEFT_BRACKET expr T_RIGHT_BRACKET	{ $$ = $2;}
-	| T_IDENTIFIER	{ $$ = Var( $1-> type , $1 ); }
+	| T_IDENTIFIER	{ $$ = Var( $1 -> type , $1 ); }
 ;
 /* -------------------- */
 /* Expression	Guid	*/
@@ -259,10 +256,7 @@ expr:
 guid_expr:
 	T_AUTO		{ $$ = oper( T_AUTO , 0 );  }
 	| T_GUID	{ $$ = Const( GUID_CONSTANT_TYPE , $1 );}
-
-
 ;
-
 /* -------------------- */
 /* Expression numerique	*/
 /* -------------------- */
@@ -276,7 +270,6 @@ numeric_expr:
 	| expr T_ASTERISK expr 		{ $$ = oper( T_ASTERISK   , 2 , $1 , $3 ) ; }		
 	| expr T_SLASH expr		{ $$ = oper( T_SLASH 	  , 2 , $1 , $3 ) ; }		
 ;
-
 /* -------------------- */
 /* Expression booleeene	*/
 /* -------------------- */
@@ -296,14 +289,12 @@ boolean_expr:
 	| expr T_LESS_OR_EQUAL_THAN  expr	{ $$ = oper( T_LESS_OR_EQUAL_THAN , 2, $1 , $3 ); }	
 	| expr T_MORE_OR_EQUAL_THAN  expr	{ $$ = oper( T_MORE_OR_EQUAL_THAN , 2, $1 , $3 ); }		
 ;
-
 /* -------------------- */
 /* Expression caractere	*/
 /* -------------------- */
 char_expr:
 	T_CSTE_CHAR				{ $$ = Const( CHAR_CONSTANT_TYPE , & $1 ); }
 ;
-
 /* -------------------- */
 /* Expression chaine	*/
 /* -------------------- */

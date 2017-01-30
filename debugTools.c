@@ -22,6 +22,7 @@
 #include "operator.h"
 
 #include "syntaxtree.h"
+#include "expressions.h"
 
 #include "openmind.tab.h"
 
@@ -29,6 +30,57 @@ char buffer[MAXLENGTH_STRING + 1 ];
 
 extern variable_node * var_list ;
 
+
+/* -------------------------------------*/
+/* dump contenu  expression		*/
+/* -------------------------------------*/
+void dumpExpressionValue( expression_Value ev )
+{
+	fprintf( stderr , "\ndebut DUMP expression\n" );
+	switch( ev.type )
+	{
+		case INTEGER_EXPRESSION:
+			fprintf( stderr , "value integer: \n" );
+			fprintf( stderr , "value integer: [%d]\n" , ev.value.integer_value  );
+		break;
+
+		case FLOAT_EXPRESSION:
+			fprintf( stderr , "value float: \n");
+			fprintf( stderr , "value float: [%f]\n" , ev.value.float_value  );
+		break;
+
+		case BOOLEAN_EXPRESSION:
+			fprintf( stderr , "value boolan: \n");
+			fprintf( stderr, "value boolean [%d]\n" , ev.value.boolean_value ? "True" : "False" );
+		break;
+
+		case GUID_EXPRESSION:
+			fprintf( stderr , "value Guid: \n");
+			if( ev.value.guid_value != NULL )
+				fprintf( stderr, "value guid [%s]\n" , ev.value.guid_value );
+			else
+				fprintf( stderr, "value guid non presente]\n" );
+		break;
+
+		case STRING_EXPRESSION:
+			fprintf( stderr , "value string: \n");
+			if( ev.value.string_value != NULL )
+				fprintf( stderr, "value string [%s]\n" , ev.value.string_value );
+			else
+				fprintf( stderr, "value string non presente \n" );
+		break;
+
+		case VOID_EXPRESSION:
+			fprintf( stderr, "Void expression\n" );
+		break;
+
+		default:
+		fprintf( stderr, "Type expression inconnu\n");
+		break;
+	}
+	fprintf( stderr , "fin DUMP expression\n" );
+
+}
 
 /* -----------------------------------------------------*/
 /* -----------------------------------------------------*/
