@@ -14,6 +14,7 @@
 #include "openmindlib.h"
 
 #include "entity.h"
+#include "openmindEntityList.h"
 #include "openmindvalue.h"
 
 
@@ -331,15 +332,21 @@ syntaxTreeNode * operand;
 	switch( operand -> type )
 	{
 		case ENTITY_SYNTAXTREE_NODETYPE:
-			//fprintf(stderr , "Creation entité:\nGuid:%s\nName:%s\n",guidResult.value.guid_value ,nameResult.value.string_value );
+			
 
 			result.value.entity_value = createEntity( guidResult.value.guid_value , nameResult.value.string_value , operand -> unique_name );
 			if( result.value.entity_value == NULL )
 				yyerror( "unable to create Entity, existing !\n" );
+			result.type = ENTITY_EXPRESSION;
+			fprintf(stderr , "Entity created :\nGuid:%s\nName:%s\n",result.value.entity_value -> guid ,result.value.entity_value -> name );
 		break;
 
 		case PROPERTY_SYNTAXTREE_NODETYPE:
-			fprintf(stderr , "Creation Propriété:\nGuid:%s\nName:%s\n",guidResult.value.guid_value ,nameResult.value.string_value );
+			//result.value.property_value = createProperty( guidResult.value.guid_value, nameResult.value.string_value , operand -> unique_name);
+			//if( result.value.property_value == NULL )
+				//yyerror( "unable to create Property, existing !\n" );
+			result.type = PROPERTY_EXPRESSION;
+			// fprintf(stderr , "Property created crée :\nGuid:%s\nName:%s\n",result.value.property_value -> guid ,result.value.property_value -> name );
 		break;
 
 		default:

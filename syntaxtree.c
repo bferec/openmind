@@ -182,7 +182,7 @@ syntaxTreeNode * operandeNode;
 				yyerror("operands n of operator vector allocation : Out of Memory");
 
 			operandeNode = va_arg( listOperands , syntaxTreeNode * );
-			 fprintf( stderr, "operande No %d :  %s\n" , i , getOperandeTypeLibelle( operandeNode )  );  
+			 // fprintf( stderr, "operande No %d :  %s\n" , i , getOperandeTypeLibelle( operandeNode )  );  
 
 			resultNode -> oper.operands[i] =  operandeNode;
 		}
