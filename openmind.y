@@ -256,6 +256,7 @@ expr:
 guid_expr:
 	T_AUTO		{ $$ = oper( T_AUTO , 0 );  }
 	| T_GUID	{ $$ = Const( GUID_CONSTANT_TYPE , $1 );}
+	| T_IDENTIFIER	{ $$ = Var( $1 -> type , $1 ); }
 ;
 /* -------------------- */
 /* Expression numerique	*/
@@ -300,6 +301,7 @@ char_expr:
 /* -------------------- */
 string_expr:
 	T_CSTE_STRING				{ $$ = Const( STRING_CONSTANT_TYPE , $1 ); }
+	| T_IDENTIFIER				{ $$ = Var( $1 -> type , $1 ); }
 ;
 
 %%
