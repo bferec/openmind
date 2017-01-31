@@ -44,21 +44,33 @@ syntaxTreeNode * resultNode;
 }
 
 /* -----------------------------------------------------*/
-/* creation de noeud defintion objet entity et property	*/
 /* -----------------------------------------------------*/
-syntaxTreeNode * ObjDefs( syntaxTreeNode * oneGuidNode , syntaxTreeNode * oneNameNode , BOOL oneUniqueFlag )
+syntaxTreeNode * Property( syntaxTreeNode * oneGuidNode ,  syntaxTreeNode * oneNameNode , BOOL oneUniqueName )
 {
-
 syntaxTreeNode * resultNode;
 
 	resultNode = syntaxTreeNodeAlloc();
-	resultNode -> type = OBJDEFS_SYNTAXTREE_NODETYPE;
-
-	strcpy( resultNode -> objdefs.guid , oneGuidNode ->);
-	strcpy( resultNode -> objdefs.name , oneName );
-
-	resultNode -> unique_name = oneUniqueFlag;
+	resultNode -> type = PROPERTY_SYNTAXTREE_NODETYPE;
+	resultNode -> guidNode = oneGuidNode;
+	resultNode -> nameNode = oneNameNode;
+	resultNode -> uniqueName = oneUniqueName;
 	return resultNode;
+
+}
+
+/* -----------------------------------------------------*/
+/* -----------------------------------------------------*/
+syntaxTreeNode * Entity( syntaxTreeNode * oneGuidNode ,  syntaxTreeNode * oneNameNode , BOOL oneUniqueName )
+{
+syntaxTreeNode * resultNode;
+
+	resultNode = syntaxTreeNodeAlloc();
+	resultNode -> type = ENTITY_SYNTAXTREE_NODETYPE;
+	resultNode -> guidNode = oneGuidNode;
+	resultNode -> nameNode = oneNameNode;
+	resultNode -> uniqueName = oneUniqueName;
+	return resultNode;
+
 }
 
 /* -----------------------------------------------------*/
@@ -133,7 +145,6 @@ syntaxTreeNode * resultNode;
 	}
 	resultNode-> var = oneVarPtr ;
 	resultNode-> var -> type = oneType;
-	// printf( stderr , "var() %s\n" , resultNode->var-> ident);  
 
 	return resultNode;
 }

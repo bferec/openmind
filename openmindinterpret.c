@@ -323,6 +323,7 @@ expression_Value expression_Operator( syntaxTreeNode * oneNode )
 {
 
 operator * currentOperator;
+expression_Value result;
 	
 	currentOperator = & oneNode-> oper;
 

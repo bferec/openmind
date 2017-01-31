@@ -16,8 +16,11 @@ typedef enum
 	IDENTIFIER_SYNTAXTREE_NODETYPE, 
 	OPERATOR_SYNTAXTREE_NODETYPE ,
 	OBJDEFS_SYNTAXTREE_NODETYPE,
+	ENTITY_SYNTAXTREE_NODETYPE ,
+	PROPERTY_SYNTAXTREE_NODETYPE
 
 } syntaxTreeNodeType;
+
 
 /* -----------------------------------------------------*/
 /* noeud de l'arbre syntaxique				*/
@@ -25,23 +28,28 @@ typedef enum
 typedef struct syntaxTreeNode_
 {
 	syntaxTreeNodeType type;
-	union
+	struct
 	{
 		constant cste;
 		variable * var;
+		operator oper;
 		entity * ent;
 		property * prop;
-		obj_defs objdefs;
-		operator oper;
+		struct syntaxTreeNode_ * guidNode;
+		struct syntaxTreeNode_ * nameNode;
+		BOOL uniqueName;
 	};	
 } syntaxTreeNode;
+
+
 
 void  dumpSyntaxTreeNode(syntaxTreeNode * oneNode );
 syntaxTreeNode * oper( int oneOper, int OperandsCount, ...);
 syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr );
 syntaxTreeNode * Var( VarType oneType, variable * oneVarPtr );
 
-syntaxTreeNode * ObjDefs( char * oneGuid , char * oneName , BOOL oneUniqueFlag );
+syntaxTreeNode * Property( syntaxTreeNode * oneGuidNode ,  syntaxTreeNode * oneNameNode , BOOL oneUniqueName );
+syntaxTreeNode * Entity( syntaxTreeNode * oneGuidNode ,  syntaxTreeNode * oneNameNode , BOOL oneUniqueName );
 
 void Free_SyntaxTreeNode( syntaxTreeNode * oneNode );
 

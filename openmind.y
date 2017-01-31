@@ -59,7 +59,6 @@ extern int yychar;
 	char char_value;				/* caracter value				*/
 	char string_value[ MAXLENGTH_STRING + 1 ] ;	/* string constant 				*/
 	variable * var;					/* variable					*/
-	obj_defs obj_base;
 	entity * entity;				/* entity					*/
 	property * property;				/* property					*/
 	syntaxTreeNode * node;
@@ -136,10 +135,10 @@ extern int yychar;
 %token T_UNKNOWN
 
 %type<node> stmtList stmt create_stmt echo_stmt assign_stmt create_entity_stmt create_property_stmt
-%type<node> expr char_expr string_expr numeric_expr boolean_expr guid_expr lvalue obj_defs property_defs entity_defs
+%type<node> expr char_expr string_expr numeric_expr boolean_expr guid_expr lvalue 
 
-%type<node>  name_defs
-%type<node>  guid_defs
+%type<node>  name_defs guid_defs property_defs entity_defs
+  
 
 /* -------------------- */
 /* -------------------- */
@@ -209,7 +208,9 @@ create_entity_stmt:
 /* corps ENTITY		*/
 /* -------------------- */
 entity_defs:
-	T_ENTITY T_LEFT_BRACE obj_defs	T_RIGHT_BRACE	{$$  = oper( T_ENTITY , 1 , & $3 );   }
+	 T_ENTITY T_LEFT_BRACE guid_defs T_SEMICOLON name_defs T_SEMICOLON T_RIGHT_BRACE 		{ $$  = Entity( $3,$5,0 ); }
+	|T_ENTITY T_LEFT_BRACE guid_defs T_SEMICOLON name_defs T_UNIQUE T_SEMICOLON T_RIGHT_BRACE 	{ $$  = Entity( $3,$5,1 ); }
+
 ;
 /* -------------------- */
 /* Create Property	*/
@@ -221,14 +222,9 @@ create_property_stmt:
 /* corps property	*/
 /* -------------------- */
 property_defs:
-	T_PROPERTY T_LEFT_BRACE obj_defs T_RIGHT_BRACE 	{ $$  = oper( T_PROPERTY , 1 , & $3 ); }
+	 T_PROPERTY T_LEFT_BRACE guid_defs T_SEMICOLON name_defs T_SEMICOLON T_RIGHT_BRACE 		{ $$  = Property( $3,$5,0 ); }
+	|T_PROPERTY T_LEFT_BRACE guid_defs T_SEMICOLON name_defs T_UNIQUE T_SEMICOLON T_RIGHT_BRACE 	{ $$  = Property( $3,$5,1 ); }
 ;
-/* -------------------- */
-/* corps property	*/
-/* -------------------- */
-obj_defs:
-	 guid_defs T_SEMICOLON name_defs T_SEMICOLON			{ $$ = ObjDefs( $1 , $3 , 0 ); }
-	| guid_defs T_SEMICOLON name_defs T_UNIQUE T_SEMICOLON		{ $$ = ObjDefs( $1 , $3 , 1 ); } 
 ;
 /* -------------------- */
 /* identity		*/
