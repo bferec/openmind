@@ -64,7 +64,60 @@ void addpropertyNodeToList( property_node * onePropertyNode )
 	}
 }
 
+/*------------------------------------------------------*/
+/*------------------------------------------------------*/
+property_node * find_property_Node(char * oneguid , char * oneName , BOOL oneUniqueFlag )
+{
+int compare;
 
+property_node * currentNode;
+
+	currentNode = property_list;
+	while( currentNode != NULL )
+	{
+		compare = strcmp( strupr(oneguid) , strupr(currentNode-> p -> guid) );
+		if( ! compare )  
+		{
+			break;
+		}
+
+		if( oneUniqueFlag )
+		{
+			compare = strcmp( strupr(oneName) , strupr(currentNode-> p -> name) );
+			if( ! compare )  
+			{
+				break;
+			}			
+		}
+			
+		currentNode = currentNode -> next;
+	}
+	return currentNode;
+
+}
+/*------------------------------------------------------*/
+/*------------------------------------------------------*/
+property * createProperty( char * oneguid , char * oneName , BOOL oneUniqueFlag )
+{
+property_node * new_propertyNode;
+	
+	new_propertyNode = find_property_Node(oneguid , oneName , oneUniqueFlag);
+
+	if( new_propertyNode == (property_node *) NULL )
+	{
+		new_propertyNode  = (property_node *) malloc( sizeof( property_node ) );
+		if( new_propertyNode == (property_node *) NULL )
+			yyerror( "Memory allocation for property_node impossible\n");
+
+		new_propertyNode -> next = new_propertyNode -> previous = NULL;
+		new_propertyNode -> p = allocMemProperty();
+		strcpy( new_propertyNode -> p -> guid , oneguid );
+		strcpy( new_propertyNode -> p -> name , oneName );
+		new_propertyNode -> p -> unique_name = oneUniqueFlag;
+		addpropertyNodeToList( new_propertyNode );
+	}
+	return new_propertyNode -> p;
+}
 /*------------------------------------------------------*/
 /* free memory of a given property			*/
 /*------------------------------------------------------*/
@@ -85,7 +138,7 @@ void FreeMemProperty( property  * oneProperty )
 
 
 /*------------------------------------------------------*/
-/* free all properties of an entity			*/
+/* free all properties of an property			*/
 /*------------------------------------------------------*/
 void FreeAllProperties( property_node * rootProperty )
 {

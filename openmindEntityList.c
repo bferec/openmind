@@ -101,11 +101,8 @@ entity_node * currentNode;
 /*------------------------------------------------------*/
 entity * createEntity( char * oneguid , char * oneName , BOOL oneUniqueFlag )
 {
-entity * result ;
 entity_node * new_entityNode;
 	
-	result = NULL;
-
 	new_entityNode = find_Entity_Node(oneguid , oneName , oneUniqueFlag);
 
 	if( new_entityNode == (entity_node *) NULL )
@@ -123,9 +120,9 @@ entity_node * new_entityNode;
 		new_entityNode -> e  -> content = NULL;
 		new_entityNode -> e  -> properties = NULL;
 		addEntityNodeToList( new_entityNode );
-		result = new_entityNode -> e;
+
 	}
-	return result;
+	return new_entityNode -> e;
 }
 /*------------------------------------------------------*/
 /* free all  content of a given entity			*/

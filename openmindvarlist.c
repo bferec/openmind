@@ -145,12 +145,12 @@ void FreeMemVar(variable * oneVariable)
 		if( oneVariable -> ident != NULL )
 			free( oneVariable -> ident  );
 
-		if( oneVariable -> type == GUID_IDENTIFIER_TYPE )
-		{
+		//if( oneVariable -> type == GUID_IDENTIFIER_TYPE )
+		//{
 			// fprintf( stderr , "Free guid var space\n" );
-			if( oneVariable -> val.guid_value != NULL )
-				free( oneVariable -> val.guid_value  );
-		}
+			//if( oneVariable -> val.guid_value != NULL )
+				//free( oneVariable -> val.guid_value  );
+		//}
 		if( oneVariable -> type == STRING_IDENTIFIER_TYPE )
 		{
 			// fprintf( stderr , "Free string var space\n" );
@@ -198,10 +198,8 @@ variable_node * previous;
 /* -----------------------------------------------------*/
 variable * createVar( char * oneIdent )
 {
-variable * result ;
 variable_node * new_VarNode;
 
-	result = NULL;
 
 	new_VarNode = find_variable_node( oneIdent );
 
@@ -228,10 +226,9 @@ variable_node * new_VarNode;
 
 		/* fprintf( stderr , "ajout du noeud dans la liste...\n"); */
 		addVarNodeToList( new_VarNode );
-		result = new_VarNode -> v;
 	}
 
-return result;		
+return new_VarNode -> v;		
 }
 
 

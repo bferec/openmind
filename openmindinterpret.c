@@ -15,6 +15,7 @@
 
 #include "entity.h"
 #include "openmindEntityList.h"
+#include "openmindPropertyList.h"
 #include "openmindvalue.h"
 
 
@@ -208,18 +209,17 @@ expression_Value operandResult ;
 		break;
 
 		case GUID_EXPRESSION:
-			currentVar -> type = GUID_IDENTIFIER_TYPE;
 			strcpy( currentVar -> val.guid_value , operandResult.value.guid_value );
 			currentVar -> type = GUID_IDENTIFIER_TYPE;
-			result.type = GUID_EXPRESSION;
 			strcpy( result.value.guid_value , currentVar -> val.guid_value );
+			result.type = GUID_EXPRESSION;
 		break;
 
 		case BOOLEAN_EXPRESSION:
 			currentVar -> val.boolean_value = operandResult.value.boolean_value;	
 			currentVar -> type = BOOLEAN_IDENTIFIER_TYPE;		
-			result.type = BOOLEAN_EXPRESSION;
 			result.value.boolean_value = currentVar -> val.boolean_value;
+			result.type = BOOLEAN_EXPRESSION;
 		break;
 
 		case ENTITY_EXPRESSION:
@@ -285,6 +285,7 @@ expression_Value * operandResult ;
 			break;
 
 			case ENTITY_EXPRESSION:
+				printf( "name :%s guid %s" , operandResult -> value.entity_value-> name , operandResult -> value.entity_value-> guid);
 			case PROPERTY_EXPRESSION:
 			break;
 
@@ -342,11 +343,11 @@ syntaxTreeNode * operand;
 		break;
 
 		case PROPERTY_SYNTAXTREE_NODETYPE:
-			//result.value.property_value = createProperty( guidResult.value.guid_value, nameResult.value.string_value , operand -> unique_name);
-			//if( result.value.property_value == NULL )
-				//yyerror( "unable to create Property, existing !\n" );
+			result.value.property_value = createProperty( guidResult.value.guid_value, nameResult.value.string_value , operand -> unique_name);
+			if( result.value.property_value == NULL )
+				yyerror( "unable to create Property, existing !\n" );
 			result.type = PROPERTY_EXPRESSION;
-			// fprintf(stderr , "Property created crée :\nGuid:%s\nName:%s\n",result.value.property_value -> guid ,result.value.property_value -> name );
+			 fprintf(stderr , "Property created crée :\nGuid:%s\nName:%s\n",result.value.property_value -> guid ,result.value.property_value -> name );
 		break;
 
 		default:

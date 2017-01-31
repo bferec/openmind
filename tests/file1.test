@@ -13,5 +13,13 @@ Create Property
 	Name {"Type"} Unique ;
 };
 
+
+Create Property
+{
+	Identity {Auto};	
+	Name {"Type"} Unique ;
+};
+
+
 quit;
 

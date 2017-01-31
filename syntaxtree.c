@@ -202,7 +202,7 @@ void Free_ConstantSyntaxTreeNode( syntaxTreeNode * oneNode  )
 	switch( oneNode-> cste.type )
 	{
 		case 	GUID_CONSTANT_TYPE:
-			free( oneNode -> cste.val.guid_value );
+			//free( oneNode -> cste.val.guid_value );
 		break;
 
 		case	STRING_CONSTANT_TYPE:
