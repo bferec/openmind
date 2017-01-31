@@ -1,0 +1,12 @@
+Y = entity_expr ;
+y.Property( string_expr|guid_expr ) = exp;
+
+
+entity_expr:
+	Entity( guid_expr )
+	| Entity( string_expr )
+	[ T_IDENTIFIER
+
+
+
+

@@ -113,6 +113,12 @@ property		(?i:"property")
 "*"			{charCount() ; return T_ASTERISK;}
 "/"			{charCount() ; return T_SLASH;}
 
+"+="			{charCount() ; return T_PLUS_EGAL_SIGN;}
+"-="			{charCount() ; return T_MINUS_EGAL_SIGN;}
+"*="			{charCount() ; return T_ASTERISK_EGAL;}
+"/="			{charCount() ; return T_SLASH_EGAL;}
+
+
 "{"			{charCount() ; return T_LEFT_BRACE;}
 "}"			{charCount() ; return T_RIGHT_BRACE;}
 
