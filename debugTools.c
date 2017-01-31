@@ -110,9 +110,6 @@ variable_node * n;
 	fprintf( stderr , "\nFIN DU DUMP:\n");
 }
 
-
-
-
 char * getOperandeTypeLibelle( syntaxTreeNode * oneNode )
 {
 	switch( oneNode -> type )
@@ -125,6 +122,12 @@ char * getOperandeTypeLibelle( syntaxTreeNode * oneNode )
 		break;
 		case OPERATOR_SYNTAXTREE_NODETYPE:
 		strcpy( buffer , "operator Type" );
+		break;
+		case ENTITY_SYNTAXTREE_NODETYPE:
+		strcpy( buffer , "Entity Type" );
+		break;
+		case PROPERTY_SYNTAXTREE_NODETYPE:
+		strcpy( buffer , "Property Type" );
 		break;
 	}
 	return buffer;

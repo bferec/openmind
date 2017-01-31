@@ -8,5 +8,6 @@
 
 extern entity_node * entity_list;
 
+entity * createEntity( char * oneguid , char * oneName , BOOL oneUniqueFlag );
 void addEntityNodeToList( entity_node * oneEntityNode );
 void ClearEntityList();

@@ -44,6 +44,7 @@ syntaxTreeNode * resultNode;
 }
 
 /* -----------------------------------------------------*/
+/* property creation Node				*/
 /* -----------------------------------------------------*/
 syntaxTreeNode * Property( syntaxTreeNode * oneGuidNode ,  syntaxTreeNode * oneNameNode , BOOL oneUniqueName )
 {
@@ -53,12 +54,12 @@ syntaxTreeNode * resultNode;
 	resultNode -> type = PROPERTY_SYNTAXTREE_NODETYPE;
 	resultNode -> guidNode = oneGuidNode;
 	resultNode -> nameNode = oneNameNode;
-	resultNode -> uniqueName = oneUniqueName;
+	resultNode -> unique_name = oneUniqueName;
 	return resultNode;
-
 }
 
 /* -----------------------------------------------------*/
+/* entity creation Node					*/
 /* -----------------------------------------------------*/
 syntaxTreeNode * Entity( syntaxTreeNode * oneGuidNode ,  syntaxTreeNode * oneNameNode , BOOL oneUniqueName )
 {
@@ -68,7 +69,7 @@ syntaxTreeNode * resultNode;
 	resultNode -> type = ENTITY_SYNTAXTREE_NODETYPE;
 	resultNode -> guidNode = oneGuidNode;
 	resultNode -> nameNode = oneNameNode;
-	resultNode -> uniqueName = oneUniqueName;
+	resultNode -> unique_name = oneUniqueName;
 	return resultNode;
 
 }
@@ -104,9 +105,6 @@ syntaxTreeNode * resultNode;
 		break;
 
 		case 	GUID_CONSTANT_TYPE:
-			resultNode -> cste.val.guid_value =  (char *) malloc( GUID_LENGTH + 1 );
-			if( resultNode -> cste.val.guid_value == NULL )
-				yyerror("Guid value of constant allocation : Out of Memory" );
 			strcpy( resultNode -> cste.val.guid_value , (char *) oneconstantPtr );
 			// fprintf( stderr , "Const()  guid : [%s]\n" , resultNode -> cste.val.guid_value); 
 		break;
@@ -184,7 +182,7 @@ syntaxTreeNode * operandeNode;
 				yyerror("operands n of operator vector allocation : Out of Memory");
 
 			operandeNode = va_arg( listOperands , syntaxTreeNode * );
-			// fprintf( stderr, "operande No %d :  %s\n" , i , getOperandeTypeLibelle( operandeNode )  );  
+			 fprintf( stderr, "operande No %d :  %s\n" , i , getOperandeTypeLibelle( operandeNode )  );  
 
 			resultNode -> oper.operands[i] =  operandeNode;
 		}
@@ -194,7 +192,6 @@ syntaxTreeNode * operandeNode;
 
 	return resultNode;
 }
-
 
 /* -----------------------------------------------------*/
 /* suppression d'un noeud constante 			*/ 

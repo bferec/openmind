@@ -46,7 +46,6 @@ property_node * property_list;
 variable_node * find_variable_node( char * oneIdent )
 {
 int compare;
-
 variable_node * currentNode;
 
 	currentNode = var_list;
@@ -202,6 +201,7 @@ variable * createVar( char * oneIdent )
 variable * result ;
 variable_node * new_VarNode;
 
+	result = NULL;
 
 	new_VarNode = find_variable_node( oneIdent );
 
@@ -225,13 +225,12 @@ variable_node * new_VarNode;
 		new_VarNode -> v -> type =  UNKNOWN_IDENTIFIER_TYPE;
 
 		new_VarNode -> v -> val.string_value = (char * ) NULL;
-		new_VarNode -> v -> val.guid_value = (char * ) NULL;
 
 		/* fprintf( stderr , "ajout du noeud dans la liste...\n"); */
 		addVarNodeToList( new_VarNode );
+		result = new_VarNode -> v;
 	}
-	result = new_VarNode -> v;
-	/* fprintf( stderr , "variable crée...\n"); */
+
 return result;		
 }
 

@@ -46,6 +46,7 @@ entity * result;
 	return result;
 }
 
+
 /* -----------------------------------------------------*/
 /* Add entity to list					*/
 /* -----------------------------------------------------*/
@@ -64,7 +65,68 @@ void addEntityNodeToList( entity_node * oneEntityNode )
 	}
 }
 
+/*------------------------------------------------------*/
+/*------------------------------------------------------*/
+entity_node * find_Entity_Node(char * oneguid , char * oneName , BOOL oneUniqueFlag )
+{
+int compare;
 
+entity_node * currentNode;
+
+	currentNode = entity_list;
+	while( currentNode != NULL )
+	{
+		compare = strcmp( strupr(oneguid) , strupr(currentNode-> e -> guid) );
+		if( ! compare )  
+		{
+			break;
+		}
+
+		if( oneUniqueFlag )
+		{
+			compare = strcmp( strupr(oneName) , strupr(currentNode-> e -> name) );
+			if( ! compare )  
+			{
+				break;
+			}			
+		}
+			
+		currentNode = currentNode -> next;
+	}
+	return currentNode;
+
+}
+
+/*------------------------------------------------------*/
+/*------------------------------------------------------*/
+entity * createEntity( char * oneguid , char * oneName , BOOL oneUniqueFlag )
+{
+entity * result ;
+entity_node * new_entityNode;
+	
+	result = NULL;
+
+	new_entityNode = find_Entity_Node(oneguid , oneName , oneUniqueFlag);
+
+	if( new_entityNode == (entity_node *) NULL )
+	{
+		new_entityNode  = (entity_node *) malloc( sizeof( entity_node ) );
+		if( new_entityNode == (entity_node *) NULL )
+			yyerror( "Memory allocation for entity_node impossible\n");
+
+		new_entityNode -> next = new_entityNode -> previous = NULL;
+		new_entityNode -> e = allocMemEntity();
+		strcpy( new_entityNode -> e -> guid , oneguid );
+		strcpy( new_entityNode -> e -> name , oneName );
+		new_entityNode -> e -> unique_name = oneUniqueFlag;
+		new_entityNode -> e -> state = UNKNOWN;
+		new_entityNode -> e  -> content = NULL;
+		new_entityNode -> e  -> properties = NULL;
+		addEntityNodeToList( new_entityNode );
+		result = new_entityNode -> e;
+	}
+	return result;
+}
 /*------------------------------------------------------*/
 /* free all  content of a given entity			*/
 /*------------------------------------------------------*/

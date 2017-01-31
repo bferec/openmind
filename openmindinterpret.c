@@ -66,7 +66,7 @@ constant * oneConstante;
 
 		case GUID_CONSTANT_TYPE:
 			result.type = GUID_EXPRESSION;
-			result.value.guid_value = oneConstante -> val.guid_value  ;
+			strcpy( result.value.guid_value , oneConstante -> val.guid_value  );
 			// fprintf( stderr, "retour expression constante ,  type guid : [%s]\n" , result.value.guid_value ); 
 		break;
 
@@ -124,7 +124,7 @@ variable * oneVariable;
 
 		case GUID_IDENTIFIER_TYPE:
 			result.type = GUID_EXPRESSION;
-			result.value.guid_value = oneVariable -> val.guid_value;
+			strcpy( result.value.guid_value , oneVariable -> val.guid_value );
 		break;
 
 		case CHAR_IDENTIFIER_TYPE:
@@ -208,16 +208,10 @@ expression_Value operandResult ;
 
 		case GUID_EXPRESSION:
 			currentVar -> type = GUID_IDENTIFIER_TYPE;
-			if( currentVar -> val.guid_value == NULL );
-			currentVar -> val.guid_value = (char *) malloc( GUID_LENGTH + 1 );
-
-			if( currentVar -> val.guid_value == NULL )
-				yyerror( "Memory allocation for variable Guid content impossible\n");
-
 			strcpy( currentVar -> val.guid_value , operandResult.value.guid_value );
 			currentVar -> type = GUID_IDENTIFIER_TYPE;
 			result.type = GUID_EXPRESSION;
-			result.value.guid_value = currentVar -> val.guid_value;
+			strcpy( result.value.guid_value , currentVar -> val.guid_value );
 		break;
 
 		case BOOLEAN_EXPRESSION:
@@ -308,10 +302,50 @@ expression_Value  expression_Operator_T_AUTO()
 {
 expression_Value result;
 
-
 	result.type = GUID_EXPRESSION;
+
 	NewGuid(guid); 
 	strcpy( result.value.guid_value , guid );
+
+	return result;
+}
+
+
+/*--------------------------------------*/
+/* CREATE operator			*/
+/*--------------------------------------*/
+expression_Value  expression_Operator_T_CREATE( operator * oneOperatorNode )
+{
+expression_Value result;
+expression_Value guidResult ;
+expression_Value nameResult ;
+syntaxTreeNode * operand;
+
+
+	// fprintf(stderr , "Operator T_CREATE\n");
+	operand = oneOperatorNode -> operands[0];
+
+	guidResult = expression( operand -> guidNode );
+	nameResult = expression( operand -> nameNode );
+
+	switch( operand -> type )
+	{
+		case ENTITY_SYNTAXTREE_NODETYPE:
+			//fprintf(stderr , "Creation entité:\nGuid:%s\nName:%s\n",guidResult.value.guid_value ,nameResult.value.string_value );
+
+			result.value.entity_value = createEntity( guidResult.value.guid_value , nameResult.value.string_value , operand -> unique_name );
+			if( result.value.entity_value == NULL )
+				yyerror( "unable to create Entity, existing !\n" );
+		break;
+
+		case PROPERTY_SYNTAXTREE_NODETYPE:
+			fprintf(stderr , "Creation Propriété:\nGuid:%s\nName:%s\n",guidResult.value.guid_value ,nameResult.value.string_value );
+		break;
+
+		default:
+		break;
+	}
+
 
 	return result;
 }
@@ -397,6 +431,10 @@ expression_Value result;
 		case T_AUTO:
 			result = expression_Operator_T_AUTO();		
 		break;
+
+		case T_CREATE:
+			result = expression_Operator_T_CREATE(currentOperator);
+		break;
 	}
 
 	return result;
@@ -435,6 +473,11 @@ expression_Value result;
 			result = expression_Operator( oneNode  );
 			/* fprintf( stderr, "FIN expression_Operator()\n" );  */
 		break;
+
+		case ENTITY_SYNTAXTREE_NODETYPE:
+		case PROPERTY_SYNTAXTREE_NODETYPE:
+		break;
+
 	}
 
 	/* DumpVarList( ); */

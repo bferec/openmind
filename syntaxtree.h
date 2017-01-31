@@ -15,7 +15,6 @@ typedef enum
 	CONSTANT_SYNTAXTREE_NODETYPE, 
 	IDENTIFIER_SYNTAXTREE_NODETYPE, 
 	OPERATOR_SYNTAXTREE_NODETYPE ,
-	OBJDEFS_SYNTAXTREE_NODETYPE,
 	ENTITY_SYNTAXTREE_NODETYPE ,
 	PROPERTY_SYNTAXTREE_NODETYPE
 
@@ -37,7 +36,7 @@ typedef struct syntaxTreeNode_
 		property * prop;
 		struct syntaxTreeNode_ * guidNode;
 		struct syntaxTreeNode_ * nameNode;
-		BOOL uniqueName;
+		BOOL unique_name;
 	};	
 } syntaxTreeNode;
 

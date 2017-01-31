@@ -13,12 +13,13 @@ typedef	struct
 {
 	int integer_value;
 	float float_value;
-	char * string_value;
-	char char_value;
-	char * guid_value;
 	int boolean_value;
+	char char_value;
+	char * string_value;
+	char guid_value[ GUID_LENGTH + 1 ];
 	entity  * entity_value;
 	property * property_value;
+	
 }value;
 
 /* -------------------------------------*/
