@@ -218,23 +218,48 @@ expression_Value  expression_Operator_T_ASTERISK_EGAL(operator * oneOperatorNode
 variable  * currentVar;
 expression_Value result ;
 expression_Value operandResult ;
+float actualValue;
 
 	currentVar = oneOperatorNode -> operands[0]-> var;
 	operandResult = expression( oneOperatorNode -> operands[1] );
+
+	if( currentVar -> type == FLOAT_IDENTIFIER_TYPE )
+	{
+		actualValue = currentVar -> val.float_value;
+	}
+	if( currentVar -> type == INTEGER_IDENTIFIER_TYPE )
+	{
+		actualValue =  (float) currentVar -> val.integer_value;
+	}
+	if( currentVar -> type != operandResult.type )
+	{
+		result.type = FLOAT_EXPRESSION;
+		currentVar -> type = FLOAT_IDENTIFIER_TYPE;
+	}
+	else
+	{	
+		result.type = (currentVar -> type == INTEGER_IDENTIFIER_TYPE ? INTEGER_EXPRESSION : FLOAT_EXPRESSION) ;
+		currentVar -> type = (currentVar -> type == INTEGER_IDENTIFIER_TYPE ? INTEGER_IDENTIFIER_TYPE : FLOAT_IDENTIFIER_TYPE) ;
+	}
+
 	switch( operandResult.type )
 	{
 		case INTEGER_EXPRESSION:
-			currentVar -> val.integer_value  *= operandResult.value.integer_value;
-			currentVar -> type = INTEGER_IDENTIFIER_TYPE;
-			result.value.integer_value =  currentVar -> val.integer_value;
-			result.type = INTEGER_EXPRESSION;
+			actualValue  *= (float) operandResult.value.integer_value;
+			if( currentVar -> type == FLOAT_IDENTIFIER_TYPE ) 	currentVar -> val.float_value = actualValue;
+			if( currentVar -> type == INTEGER_IDENTIFIER_TYPE ) 	currentVar -> val.integer_value = (int) actualValue;
+
+			if( result.type == INTEGER_EXPRESSION )	result.value.integer_value = (int) actualValue;
+			if( result.type == FLOAT_EXPRESSION ) 	result.value.float_value =  actualValue;
 		break;
 
 		case FLOAT_EXPRESSION:
-			currentVar -> val.float_value  *= operandResult.value.float_value;
-			currentVar -> type = FLOAT_IDENTIFIER_TYPE;
-			result.value.integer_value =  currentVar -> val.float_value;
-			result.type = FLOAT_EXPRESSION;
+			actualValue  *=  operandResult.value.float_value;
+			if( currentVar -> type == FLOAT_IDENTIFIER_TYPE ) 	currentVar -> val.float_value = actualValue;
+			if( currentVar -> type == INTEGER_IDENTIFIER_TYPE ) 	currentVar -> val.integer_value = (int) actualValue;
+
+			if( result.type == INTEGER_EXPRESSION )	result.value.integer_value = (int) actualValue;
+			if( result.type == FLOAT_EXPRESSION ) 	result.value.float_value =  actualValue;
 		break;
 
 		case STRING_EXPRESSION:
@@ -242,10 +267,7 @@ expression_Value operandResult ;
 		break;
 
 		case CHAR_EXPRESSION:
-			currentVar -> val.char_value  *= (int) operandResult.value.char_value;
-			currentVar -> type = CHAR_IDENTIFIER_TYPE;
-			result.value.char_value =  currentVar -> val.char_value;
-			result.type = CHAR_EXPRESSION;
+			yyerror( "*= operator can't be applied to string type\n" );
 		break;
 
 		case GUID_EXPRESSION:
@@ -269,6 +291,7 @@ expression_Value operandResult ;
 		break;
 	}
 	return result;	
+
 }
 /* -------------------------------------*/
 /* /= interpretation			*/
@@ -278,27 +301,52 @@ expression_Value  expression_Operator_T_SLASH_EGAL(operator * oneOperatorNode)
 variable  * currentVar;
 expression_Value result ;
 expression_Value operandResult ;
+float actualValue;
 
 	currentVar = oneOperatorNode -> operands[0]-> var;
 	operandResult = expression( oneOperatorNode -> operands[1] );
+
+	if( currentVar -> type == FLOAT_IDENTIFIER_TYPE )
+	{
+		actualValue = currentVar -> val.float_value;
+	}
+	if( currentVar -> type == INTEGER_IDENTIFIER_TYPE )
+	{
+		actualValue =  (float) currentVar -> val.integer_value;
+	}
+	if( currentVar -> type != operandResult.type )
+	{
+		result.type = FLOAT_EXPRESSION;
+		currentVar -> type = FLOAT_IDENTIFIER_TYPE;
+	}
+	else
+	{	
+		result.type = (currentVar -> type == INTEGER_IDENTIFIER_TYPE ? INTEGER_EXPRESSION : FLOAT_EXPRESSION) ;
+		currentVar -> type = (currentVar -> type == INTEGER_IDENTIFIER_TYPE ? INTEGER_IDENTIFIER_TYPE : FLOAT_IDENTIFIER_TYPE) ;
+	}
+
 	switch( operandResult.type )
 	{
 		case INTEGER_EXPRESSION:
 			if( operandResult.value.integer_value == 0 )
-				yyerror( "Unable to divide by zero\n" );
-			currentVar -> val.integer_value  /= operandResult.value.integer_value;
-			currentVar -> type = INTEGER_IDENTIFIER_TYPE;
-			result.value.integer_value =  currentVar -> val.integer_value;
-			result.type = INTEGER_EXPRESSION;
+				yyerror( "Unable to divide by zero\n");
+			actualValue  /= (float) operandResult.value.integer_value;
+			if( currentVar -> type == FLOAT_IDENTIFIER_TYPE ) 	currentVar -> val.float_value = actualValue;
+			if( currentVar -> type == INTEGER_IDENTIFIER_TYPE ) 	currentVar -> val.integer_value = (int) actualValue;
+
+			if( result.type == INTEGER_EXPRESSION )	result.value.integer_value = (int) actualValue;
+			if( result.type == FLOAT_EXPRESSION ) 	result.value.float_value =  actualValue;
 		break;
 
 		case FLOAT_EXPRESSION:
-			if( operandResult.value.integer_value == 0 )
-				yyerror( "Unable to divide by zero\n" );
-			currentVar -> val.float_value  /= operandResult.value.float_value;
-			currentVar -> type = FLOAT_IDENTIFIER_TYPE;
-			result.value.integer_value =  currentVar -> val.float_value;
-			result.type = FLOAT_EXPRESSION;
+			if( operandResult.value.float_value == 0 )		
+				yyerror( "Unable to divide by zero\n"); 
+			actualValue  /=  operandResult.value.float_value;
+			if( currentVar -> type == FLOAT_IDENTIFIER_TYPE ) 	currentVar -> val.float_value = actualValue;
+			if( currentVar -> type == INTEGER_IDENTIFIER_TYPE ) 	currentVar -> val.integer_value = (int) actualValue;
+
+			if( result.type == INTEGER_EXPRESSION )	result.value.integer_value = (int) actualValue;
+			if( result.type == FLOAT_EXPRESSION ) 	result.value.float_value =  actualValue;
 		break;
 
 		case STRING_EXPRESSION:
@@ -306,10 +354,7 @@ expression_Value operandResult ;
 		break;
 
 		case CHAR_EXPRESSION:
-			currentVar -> val.char_value  /= (int) operandResult.value.char_value;
-			currentVar -> type = CHAR_IDENTIFIER_TYPE;
-			result.value.char_value =  currentVar -> val.char_value;
-			result.type = CHAR_EXPRESSION;
+			yyerror( "/= operator can't be applied to string type\n" );
 		break;
 
 		case GUID_EXPRESSION:
@@ -325,7 +370,7 @@ expression_Value operandResult ;
 		break;
 
 		case PROPERTY_EXPRESSION:
-			yyerror( "/= operator can't be applied to Property type\n" );
+			yyerror( "*= operator can't be applied to Property type\n" );
 
 		break;
 
