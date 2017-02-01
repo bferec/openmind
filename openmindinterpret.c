@@ -27,6 +27,8 @@
 #include "arithmeticOperator.h"
 #include "logicalOperator.h"
 #include "comparaisonOperator.h"
+#include "assignationOperator.h"
+
 
 #include "openmind.tab.h"
 
@@ -151,91 +153,6 @@ variable * oneVariable;
 }
 
 
-/* -------------------------------------*/
-/* interpretation d'une assignation	*/
-/* -------------------------------------*/
-expression_Value  expression_Operator_T_ASSIGN(operator * oneOperatorNode) 
-{
-variable  * currentVar;
-expression_Value result ;
-expression_Value operandResult ;
-
-	currentVar = oneOperatorNode -> operands[0]-> var;
-
-	operandResult = expression( oneOperatorNode -> operands[1] );
-
-	switch( operandResult.type )
-	{
-		case INTEGER_EXPRESSION:
-			currentVar -> val.integer_value  = operandResult.value.integer_value;
-			currentVar -> type = INTEGER_IDENTIFIER_TYPE;
-			result.type = INTEGER_EXPRESSION;
-			result.value.integer_value =  currentVar -> val.integer_value;
-		break;
-
-		case FLOAT_EXPRESSION:
-			currentVar -> val.float_value  = operandResult.value.float_value;
-			currentVar -> type = FLOAT_IDENTIFIER_TYPE;
-			result.type = FLOAT_EXPRESSION;
-			result.value.integer_value =  currentVar -> val.float_value;
-		break;
-
-		case STRING_EXPRESSION:
-			// fprintf(stderr , "old string value for %s  is %d\n" , currentVar ->ident , ! currentVar -> val.string_value ? 1 : 0  );
-			if( currentVar -> val.string_value != (char *) NULL );	/* reallocation	*/
-			{
-				// fprintf(stderr , "free old string value %s\n" , currentVar -> val.string_value  );
-				free( currentVar -> val.string_value );
-			}
-			// fprintf(stderr , "allocating new space for string value \n"  );
-			currentVar -> val.string_value = (char *) malloc( strlen( operandResult.value.string_value) + 1 );
-			if( currentVar -> val.string_value == NULL )
-				yyerror( "Memory allocation for variable string content impossible\n");
-
-			// fprintf(stderr , "copy new string value\n" );
-			strcpy( currentVar -> val.string_value ,  operandResult.value.string_value );
-			currentVar -> type = STRING_IDENTIFIER_TYPE;
-			result.type = STRING_EXPRESSION;
-			// fprintf(stderr , "copy string value in expression result;\n" );
-			result.value.string_value =  currentVar -> val.string_value ;
-			// fprintf(stderr , "copied !\n" );
-		break;
-
-		case CHAR_EXPRESSION:
-			currentVar -> val.char_value  = operandResult.value.char_value;
-			currentVar -> type = CHAR_IDENTIFIER_TYPE;
-			result.value.char_value =  currentVar -> val.char_value;
-			result.type = CHAR_EXPRESSION;
-		break;
-
-		case GUID_EXPRESSION:
-			strcpy( currentVar -> val.guid_value , operandResult.value.guid_value );
-			currentVar -> type = GUID_IDENTIFIER_TYPE;
-			strcpy( result.value.guid_value , currentVar -> val.guid_value );
-			result.type = GUID_EXPRESSION;
-		break;
-
-		case BOOLEAN_EXPRESSION:
-			currentVar -> val.boolean_value = operandResult.value.boolean_value;	
-			currentVar -> type = BOOLEAN_IDENTIFIER_TYPE;		
-			result.value.boolean_value = currentVar -> val.boolean_value;
-			result.type = BOOLEAN_EXPRESSION;
-		break;
-
-		case ENTITY_EXPRESSION:
-			result.type = ENTITY_EXPRESSION;
-		break;
-
-		case PROPERTY_EXPRESSION:
-			result.type = PROPERTY_EXPRESSION;
-		break;
-
-		default:
-		break;
-	}
-
-	return result;	
-}
 
 /* -------------------------------------*/
 /* echo operator			*/
@@ -387,6 +304,22 @@ expression_Value result;
 			result =  expression_Operator_T_SLASH( currentOperator ) ; 
 		break;
 
+		case T_PLUS_EGAL_SIGN:
+			result =  expression_Operator_T_PLUS_EGAL_SIGN( currentOperator );
+		break;
+
+		case T_MINUS_EGAL_SIGN:
+			result =  expression_Operator_T_MINUS_EGAL_SIGN( currentOperator );
+		break;
+
+		case T_ASTERISK_EGAL:
+			result =  expression_Operator_T_ASTERISK_EGAL( currentOperator );
+		break;
+
+		case T_SLASH_EGAL:
+			result =  expression_Operator_T_SLASH_EGAL( currentOperator );
+		break;
+
 		case T_ECHO:
 			result.type = VOID_EXPRESSION;
 			expression_Operator_ECHO( currentOperator );
@@ -465,21 +398,15 @@ expression_Value result;
 	switch( oneNode -> type )
 	{
 		case CONSTANT_SYNTAXTREE_NODETYPE:
-			/* fprintf( stderr, "expression_Constante()\n" ); */
 			result = expression_Constante( oneNode );
-			/* fprintf( stderr, "Fin expression_Constante()\n" );  */
 		break;
 
 		case IDENTIFIER_SYNTAXTREE_NODETYPE:
-			/* fprintf( stderr, "expression variable()\n" );  */
 			result =  expression_Variable( oneNode );
-			/* fprintf( stderr, "fin expression variable()\n" );  */
 		break;
 
 		case OPERATOR_SYNTAXTREE_NODETYPE:
-			/* fprintf( stderr, "\nexpression_Operator()\n" );  */
 			result = expression_Operator( oneNode  );
-			/* fprintf( stderr, "FIN expression_Operator()\n" );  */
 		break;
 
 		case ENTITY_SYNTAXTREE_NODETYPE:

@@ -1,55 +1,13 @@
-/* test assignation de variable texte et creation */
+/* test assignation de variable *= /= += -= */
 
-
-Prenom = "Bruno";
-
-echo "Test Prenom=bruno  => ";
-echo Prenom;
+echo "test x = 5 => ";
+x = 5;
+echo x;
 echo "\n";
 
-Nom = "Ferec"; 
-echo "Test nom=Ferec  => ";
-echo nom;
-echo "\n";
 
-echo "hello "  + "World\n";
-
-t = "Test concatenation of two ";
-u = "string is done by + operator\n";
-v = t+u;
-echo v;
-echo "\n";
-
-echo "Test abc < def => ";
-echo "abc" < "def";
-echo "\n";
-
-echo "Test abc < abc => ";
-echo "abc" < "abc";
-echo "\n";
-
-echo "Test abc > abc => ";
-echo "abc" > "abc";
-echo "\n";
-
-echo "Test abc >= abc => ";
-echo "abc" >= "abc";
-echo "\n";
-
-echo "Test t=abc u=def";
-echo "\n";
-t = "abc";
-u = "def";
-
-echo "Test t != u => ";
-echo t != u;
-echo "\n";
-
-echo "Test t > u => ";
-echo t > u;
-echo "\n";
-
-echo "Test t >=abc => ";
-echo t >= "abc";
+echo "test x += 3 => ";
+x += 3;
+echo x;
 echo "\n";
 

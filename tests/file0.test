@@ -1,4 +1,4 @@
-/* test operations numeriques */
+/* test operations numeriques sur constantes */
 
 echo "(2 * (2+3) ) /7 => ";
 echo (2 * (2+3) ) /7;

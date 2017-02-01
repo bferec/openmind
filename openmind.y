@@ -55,7 +55,7 @@ extern int yychar;
 {
 	number number_value;				/* float or integer				*/
 	enum { False, True } boolean_value;		/* boolean value				*/
-	char guid_value[ GUID_LENGTH ];			/* guid value identifier of entity or property	*/
+	char guid_value[ GUID_LENGTH +1 ];		/* guid value identifier of entity or property	*/
 	char char_value;				/* caracter value				*/
 	char string_value[ MAXLENGTH_STRING + 1 ] ;	/* string constant 				*/
 	variable * var;					/* variable					*/
@@ -132,6 +132,8 @@ extern int yychar;
 
 %token T_UNKNOWN
 
+
+
 %type<node> stmtList stmt create_stmt echo_stmt assign_stmt create_entity_stmt create_property_stmt
 %type<node> expr char_expr string_expr numeric_expr boolean_expr guid_expr lvalue 
 
@@ -154,8 +156,7 @@ extern int yychar;
 /* liste instructions	*/
 /* -------------------- */
 stmtList:
-	stmt T_SEMICOLON 	
-					{ expression( $1 ) ; Free_SyntaxTreeNode( $1 ); }
+	stmt T_SEMICOLON 		{ expression( $1 ) ; Free_SyntaxTreeNode( $1 ); }	
 	| stmtList stmt T_SEMICOLON	{ expression( $2 ) ; Free_SyntaxTreeNode( $1 ); }
 ;
 /* -------------------- */
@@ -178,13 +179,13 @@ echo_stmt:
 /* affectation		*/
 /* -------------------- */
 assign_stmt:
-	  lvalue T_ASSIGN expr		{ $$  = oper( T_ASSIGN , 2 , $1, $3 );}
+	  lvalue T_ASSIGN expr		{ $$  = oper( T_ASSIGN, 2 , $1, $3 );}
 	| lvalue T_PLUS_EGAL_SIGN expr	{ $$ = oper( T_PLUS_EGAL_SIGN  , 2 , $1 , $3 ) ; }	
 	| lvalue T_MINUS_EGAL_SIGN expr { $$ = oper( T_MINUS_EGAL_SIGN , 2 , $1 , $3 ) ; }	
 	| lvalue T_ASTERISK_EGAL expr 	{ $$ = oper( T_ASTERISK_EGAL   , 2 , $1 , $3 ) ; }		
 	| lvalue T_SLASH_EGAL expr	{ $$ = oper( T_SLASH_EGAL  , 2 , $1 , $3 ) ; }	
-
 ;
+
 /* -------------------- */
 /* ce qui peut être à	*/
 /* gauche de =		*/

@@ -10,15 +10,18 @@ LDFLAGS = -lm
 
 all: $(APPNAME)
 
-$(APPNAME): $(APPNAME).c $(APPNAME)lib.o $(APPNAME)varlist.o $(APPNAME)EntityList.o $(APPNAME)propertyList.o syntaxtree.o arithmeticOperator.o logicalOperator.o  comparaisonOperator.o $(APPNAME)interpret.o lex.yy.o $(APPNAME).tab.o
-	$(CC) $(LDFLAGS) -o fdl.c $(APPNAME)lib.o $(APPNAME)varlist.o $(APPNAME)EntityList.o syntaxtree.o arithmeticOperator.o logicalOperator.o comparaisonOperator.o  $(APPNAME)interpret.o lex.yy.o $(APPNAME).tab.o
+$(APPNAME): $(APPNAME).c $(APPNAME)lib.o $(APPNAME)varlist.o $(APPNAME)EntityList.o $(APPNAME)propertyList.o syntaxtree.o arithmeticOperator.o logicalOperator.o  comparaisonOperator.o assignationOperator.o $(APPNAME)interpret.o lex.yy.o $(APPNAME).tab.o 
+	$(CC) $(LDFLAGS) -o fdl.c $(APPNAME)lib.o $(APPNAME)varlist.o $(APPNAME)EntityList.o syntaxtree.o arithmeticOperator.o logicalOperator.o comparaisonOperator.o assignationOperator.o $(APPNAME)interpret.o lex.yy.o $(APPNAME).tab.o
 
 $(APPNAME)lib.o: $(APPNAME)lib.c $(APPNAME)lib.h
 	$(CC) -c $(APPNAME)lib.c
  	
-$(APPNAME)interpret.o: $(APPNAME)interpret.c $(APPNAME).tab.h $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h logicalOperator.h arithmeticOperator.h comparaisonOperator.h syntaxtree.h expressions.h
+$(APPNAME)interpret.o: $(APPNAME)interpret.c $(APPNAME).tab.h $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h logicalOperator.h arithmeticOperator.h comparaisonOperator.h assignationOperator.h syntaxtree.h expressions.h
 	$(CC) -c $(APPNAME)interpret.c 
 
+
+assignationOperator.o: assignationOperator.c $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h expressions.h $(APPNAME).tab.h
+	$(CC) -c assignationOperator.c 
 	
 arithmeticOperator.o: arithmeticOperator.c $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h expressions.h $(APPNAME).tab.h
 	$(CC) -c arithmeticOperator.c 
@@ -74,6 +77,7 @@ clean:
 		[ -f "arithmeticOperator.o" ] 		&& rm arithmeticOperator.o; \
 		[ -f "logicalOperator.o" ] 		&& rm logicalOperator.o; \
 		[ -f "comparaisonOperator.o" ] 		&& rm comparaisonOperator.o; \
+		[ -f "assignationOperator.o" ] 		&& rm assignationOperator.o; \
 		[ -f "$(APPNAME)varlist.o" ]		&& rm $(APPNAME)varlist.o; \
 		[ -f "$(APPNAME)EntityList.o" ]		&& rm $(APPNAME)EntityList.o; \
 		[ -f "$(APPNAME)PropertyList.o" ]	&& rm $(APPNAME)PropertyList.o; \
