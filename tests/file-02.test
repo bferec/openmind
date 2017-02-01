@@ -18,7 +18,6 @@ echo "test y -= 3 => "; y -= 3; echo y; echo "\n";
 echo "test y -= 64.50 => "; y -= 64.50; echo y; echo "\n";
 echo "\n";
 echo "\n";
-
 echo "test *= heterogene\n";echo "\n";
 echo "test x = 5 => "; x = 5; echo x; echo "\n";
 echo "test x *= 3 => "; x *= 3; echo x; echo "\n";
@@ -28,7 +27,6 @@ echo "test y *= 3 => "; y *= 3; echo y; echo "\n";
 echo "test y *= 64.50 => "; y *= 64.50; echo y; echo "\n";
 echo "\n";
 echo "\n";
-
 echo "test /= heterogene\n";echo "\n";
 echo "test x = 5 => "; x = 5; echo x; echo "\n";
 echo "test x /= 3 => "; x /= 3; echo x; echo "\n";
@@ -36,4 +34,11 @@ echo "test x /= 64.50 => "; x /= 64.50; echo x; echo "\n";
 echo "test y = 5.0 => "; y = 5.0; echo y; echo "\n";
 echo "test y /= 3 => "; y /= 3; echo y; echo "\n";
 echo "test y /= 64.50 => "; y /= 64.50; echo y; echo "\n";
+echo "\n";
+echo "\n";
+echo "test += chaine de caractere\n";echo "\n";
+echo "test x = bonjour => "; x = "bonjour "; echo x; echo "\n";
+echo "test x += le monde => "; x += "le monde"; echo x; echo "\n";
+echo "\n";
+echo "\n";
 

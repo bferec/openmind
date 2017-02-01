@@ -1,13 +1,16 @@
-/* test assignation de variable *= /= += -= */
+/* ---------------------------- */
+/* test liste expression	*/
+/* ---------------------------- */
 
-echo "test x = 5 => ";
-x = 5;
-echo x;
-echo "\n";
+echo 5;
 
 
-echo "test x += 3 => ";
-x += 3;
-echo x;
-echo "\n";
+
+echo 10 , 20 , 30 , 40, "\n";
+
+
+x = 5; 
+y = 7;
+echo x , y , "\n";
+
 

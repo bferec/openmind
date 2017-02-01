@@ -163,7 +163,7 @@ stmtList:
 /* instruction		*/
 /* -------------------- */
 stmt:
-	expr 			{ $$ = $1; }
+	expr 			{ $$ = $1; }	
 	| create_stmt		{ $$ = $1; }
 	| echo_stmt		{ $$ = $1; }
 	| assign_stmt		{ $$ = $1; }
@@ -173,7 +173,8 @@ stmt:
 /* affichage		*/
 /* -------------------- */
 echo_stmt:
-	T_ECHO expr		{$$  = oper( T_ECHO , 1 , $2 ); }
+	T_ECHO expr		{ $$  = oper( T_ECHO , 1 , $2 );  }
+	| T_ECHO expr_list	{ }
 ;
 /* -------------------- */
 /* affectation		*/
@@ -242,6 +243,12 @@ guid_defs:
 name_defs:
 	T_NAME T_LEFT_BRACE string_expr T_RIGHT_BRACE 	{ $$ = $3 ; } 
 ;
+
+expr_list:
+	 expr  				{ expression( $1 ) ; }
+	| expr_list T_COMMA expr    	{ expression( $3 ) ; }
+;
+
 /* -------------------- */
 /* Expression		*/
 /* -------------------- */
@@ -254,6 +261,8 @@ expr:
 	| T_LEFT_BRACKET expr T_RIGHT_BRACKET	{ $$ = $2;}
 	| T_IDENTIFIER	{ $$ = Var( $1 -> type , $1 ); }
 ;
+
+
 /* -------------------- */
 /* Expression	Guid	*/
 /* -------------------- */
