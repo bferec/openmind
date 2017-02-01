@@ -178,7 +178,12 @@ echo_stmt:
 /* affectation		*/
 /* -------------------- */
 assign_stmt:
-	  lvalue T_ASSIGN expr	{$$  = oper( T_ASSIGN , 2 , $1, $3 );}
+	  lvalue T_ASSIGN expr		{ $$  = oper( T_ASSIGN , 2 , $1, $3 );}
+	| lvalue T_PLUS_EGAL_SIGN expr	{ $$ = oper( T_PLUS_EGAL_SIGN  , 2 , $1 , $3 ) ; }	
+	| lvalue T_MINUS_EGAL_SIGN expr { $$ = oper( T_MINUS_EGAL_SIGN , 2 , $1 , $3 ) ; }	
+	| lvalue T_ASTERISK_EGAL expr 	{ $$ = oper( T_ASTERISK_EGAL   , 2 , $1 , $3 ) ; }		
+	| lvalue T_SLASH_EGAL expr	{ $$ = oper( T_SLASH_EGAL  , 2 , $1 , $3 ) ; }	
+
 ;
 /* -------------------- */
 /* ce qui peut être à	*/
@@ -267,7 +272,7 @@ numeric_expr:
 	| expr T_PLUS_SIGN expr		{ $$ = oper( T_PLUS_SIGN  , 2 , $1 , $3 ) ; }	
 	| expr T_MINUS_SIGN expr 	{ $$ = oper( T_MINUS_SIGN , 2 , $1 , $3 ) ; }	
 	| expr T_ASTERISK expr 		{ $$ = oper( T_ASTERISK   , 2 , $1 , $3 ) ; }		
-	| expr T_SLASH expr		{ $$ = oper( T_SLASH 	  , 2 , $1 , $3 ) ; }		
+	| expr T_SLASH expr		{ $$ = oper( T_SLASH 	  , 2 , $1 , $3 ) ; }	
 ;
 /* -------------------- */
 /* Expression booleeene	*/

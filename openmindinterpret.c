@@ -347,7 +347,7 @@ syntaxTreeNode * operand;
 			if( result.value.property_value == NULL )
 				yyerror( "unable to create Property, existing !\n" );
 			result.type = PROPERTY_EXPRESSION;
-			 fprintf(stderr , "Property created crée :\nGuid:%s\nName:%s\n",result.value.property_value -> guid ,result.value.property_value -> name );
+			 fprintf(stderr , "Property created  :\nGuid:%s\nName:%s\n",result.value.property_value -> guid ,result.value.property_value -> name );
 		break;
 
 		default:
