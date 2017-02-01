@@ -170,7 +170,7 @@ expression_Value * operandResult ;
 
 	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
 	{
-		// fprintf( stderr, "OPERATOR=ECHO - eval de  l'operande %d/%d\n" , i+1, oneOperatorNode -> OperandsCount ); 
+		// fprintf( stderr, "OPERATOR=ECHO - eval de  l'operande %d/%d\n" , i+1 , oneOperatorNode -> OperandsCount ); 
 		// dumpSyntaxTreeNode( oneOperatorNode -> operands[i] ); 
 
 		operandResult[i] = expression( oneOperatorNode -> operands[i] );
@@ -202,7 +202,9 @@ expression_Value * operandResult ;
 			break;
 
 			case ENTITY_EXPRESSION:
-				printf( "name :%s guid %s" , operandResult -> value.entity_value-> name , operandResult -> value.entity_value-> guid);
+				//printf( "name :%s guid %s" , operandResult -> value.entity_value-> name , operandResult -> value.entity_value-> guid);
+			break;
+
 			case PROPERTY_EXPRESSION:
 			break;
 

@@ -135,7 +135,7 @@ extern int yychar;
 
 
 %type<node> stmtList stmt create_stmt echo_stmt assign_stmt create_entity_stmt create_property_stmt
-%type<node> expr char_expr string_expr numeric_expr boolean_expr guid_expr lvalue 
+%type<node> exprlist expr char_expr string_expr numeric_expr boolean_expr guid_expr lvalue 
 
 %type<node>  name_defs guid_defs property_defs entity_defs
   
@@ -173,8 +173,8 @@ stmt:
 /* affichage		*/
 /* -------------------- */
 echo_stmt:
-	T_ECHO expr		{ $$  = oper( T_ECHO , 1 , $2 );  }
-	| T_ECHO expr_list	{ }
+	  T_ECHO expr		{ $$  = oper( T_ECHO , 1 , $2 );  }
+	| T_ECHO exprlist	
 ;
 /* -------------------- */
 /* affectation		*/
@@ -244,9 +244,12 @@ name_defs:
 	T_NAME T_LEFT_BRACE string_expr T_RIGHT_BRACE 	{ $$ = $3 ; } 
 ;
 
-expr_list:
-	 expr  				{ expression( $1 ) ; }
-	| expr_list T_COMMA expr    	{ expression( $3 ) ; }
+/* -------------------- */
+/* Expression list	*/
+/* -------------------- */
+exprlist:
+	 expr  				{ $$ =  $1 ; }
+	| exprlist T_COMMA expr    	{ }
 ;
 
 /* -------------------- */
