@@ -69,6 +69,7 @@ property		(?i:"property")
 <comment>"*"+[^*/\n]*	{}			/* ignore tout ce qui n'est pas * suivi de /	*/
 
 <comment>\n		{++ lineNumber  ; charNumber = 0; }
+<comment><<EOF>>	{ yyerror("Unclosed Comment\n"); }
 <comment>"*"+"/"	BEGIN( INITIAL );	/* fin de commentaire				*/
 		
 

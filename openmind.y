@@ -157,7 +157,7 @@ extern int yychar;
 /* -------------------- */
 stmtList:
 	stmt T_SEMICOLON 		{ expression( $1 ) ; Free_SyntaxTreeNode( $1 ); }	
-	| stmtList stmt T_SEMICOLON	{ expression( $2 ) ; Free_SyntaxTreeNode( $1 ); }
+	| stmtList stmt T_SEMICOLON	{ expression( $2 ) ; Free_SyntaxTreeNode( $2 ); }
 ;
 /* -------------------- */
 /* instruction		*/
@@ -173,14 +173,14 @@ stmt:
 /* affichage		*/
 /* -------------------- */
 echo_stmt:
-	  T_ECHO expr		{ $$  = oper( T_ECHO , 1 , $2 );  }
-	| T_ECHO exprlist	
+/*	  T_ECHO expr| */
+	 T_ECHO exprlist	{ $$  = oper( T_ECHO , 1 , $2 );  }
 ;
 /* -------------------- */
 /* affectation		*/
 /* -------------------- */
 assign_stmt:
-	  lvalue T_ASSIGN expr		{ $$  = oper( T_ASSIGN, 2 , $1, $3 );}
+	  lvalue T_ASSIGN expr		{ $$ = oper( T_ASSIGN, 2 , $1, $3 );}
 	| lvalue T_PLUS_EGAL_SIGN expr	{ $$ = oper( T_PLUS_EGAL_SIGN  , 2 , $1 , $3 ) ; }	
 	| lvalue T_MINUS_EGAL_SIGN expr { $$ = oper( T_MINUS_EGAL_SIGN , 2 , $1 , $3 ) ; }	
 	| lvalue T_ASTERISK_EGAL expr 	{ $$ = oper( T_ASTERISK_EGAL   , 2 , $1 , $3 ) ; }		
@@ -192,7 +192,7 @@ assign_stmt:
 /* gauche de =		*/
 /* -------------------- */
 lvalue:
-	T_IDENTIFIER			{ $$ = Var( $1 -> type , $1 ); }
+	T_IDENTIFIER	{ $$ = Var( $1 -> type , $1 ); }
 	| T_IDENTIFIER T_LEFT_SQUARE_BRACKET expr T_RIGHT_SQUARE_BRACKET	{ /* variable tableau */ }
 	| error T_SEMICOLON 		{YYABORT;}
 ;
@@ -248,8 +248,8 @@ name_defs:
 /* Expression list	*/
 /* -------------------- */
 exprlist:
-	 expr  				{ $$ =  $1 ; }
-	| exprlist T_COMMA expr    	{ }
+	 expr  				{$$ = NodeList( $1 );}
+	| exprlist T_COMMA expr    	{$$ = NodeAdd($1, $3); }
 ;
 
 /* -------------------- */

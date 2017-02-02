@@ -16,7 +16,8 @@ typedef enum
 	IDENTIFIER_SYNTAXTREE_NODETYPE, 
 	OPERATOR_SYNTAXTREE_NODETYPE ,
 	ENTITY_SYNTAXTREE_NODETYPE ,
-	PROPERTY_SYNTAXTREE_NODETYPE
+	PROPERTY_SYNTAXTREE_NODETYPE , 
+	LIST_SYNTAXTREE_NODETYPE
 
 } syntaxTreeNodeType;
 
@@ -36,6 +37,8 @@ typedef struct syntaxTreeNode_
 		property * prop;
 		struct syntaxTreeNode_ * guidNode;
 		struct syntaxTreeNode_ * nameNode;
+		struct syntaxTreeNode_ * * nodeList;
+		int nodeListCount;
 		BOOL unique_name;
 	};	
 } syntaxTreeNode;
@@ -46,9 +49,11 @@ void  dumpSyntaxTreeNode(syntaxTreeNode * oneNode );
 syntaxTreeNode * oper( int oneOper, int OperandsCount, ...);
 syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr );
 syntaxTreeNode * Var( VarType oneType, variable * oneVarPtr );
-
 syntaxTreeNode * Property( syntaxTreeNode * oneGuidNode ,  syntaxTreeNode * oneNameNode , BOOL oneUniqueName );
 syntaxTreeNode * Entity( syntaxTreeNode * oneGuidNode ,  syntaxTreeNode * oneNameNode , BOOL oneUniqueName );
+syntaxTreeNode * NodeList( syntaxTreeNode * oneFirstNode );
+syntaxTreeNode * NodeAdd( syntaxTreeNode * oneListNode  ,syntaxTreeNode * oneNewNode );
+
 
 void Free_SyntaxTreeNode( syntaxTreeNode * oneNode );
 

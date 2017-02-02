@@ -4,13 +4,9 @@
 echo "test echo 5\n";
 echo 5;
 echo "\n";
+
+
 echo "test echo 10 , 20 , 30 , 40\n";
-echo 10 , 20 , 30 , 40, "\n";
-
-
-x = 5; 
-y = 7;
-echo "test echo x , y\n";
-echo x , y , "\n";
+echo 10 , "\t" , 20, "\t"  , 30, "\t"  , 40 ,  "\n";
 
 

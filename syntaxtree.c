@@ -43,6 +43,46 @@ syntaxTreeNode * resultNode;
 	return resultNode;
 }
 
+
+/* -----------------------------------------------------*/
+/* expression list create first element			*/
+/* -----------------------------------------------------*/
+
+syntaxTreeNode * NodeList( syntaxTreeNode * oneFirstNode )
+{
+syntaxTreeNode * resultNode;
+
+	resultNode = syntaxTreeNodeAlloc();
+	if( resultNode == (syntaxTreeNode *) NULL )
+		yyerror("SyntaxtreeNode allocation : Out of Memory" );
+
+	resultNode -> nodeList = (syntaxTreeNode * *) malloc( sizeof( syntaxTreeNode * ) );
+	if( resultNode == (syntaxTreeNode *) NULL )
+		yyerror("SyntaxtreeNode nodeList allocation : Out of Memory" );
+
+	resultNode ->  type = LIST_SYNTAXTREE_NODETYPE;
+
+	resultNode -> nodeList[ 0 ] = oneFirstNode;
+	resultNode -> nodeListCount = 1;
+	// fprintf(stderr , "Nodelist() :  %d\n" , resultNode -> nodeListCount );
+	return resultNode;
+}
+
+/* -----------------------------------------------------*/
+/* expression list add element				*/
+/* -----------------------------------------------------*/
+syntaxTreeNode * NodeAdd( syntaxTreeNode * oneListNode  ,syntaxTreeNode * oneNewNode )
+{
+	oneListNode -> nodeList = (syntaxTreeNode * *) realloc( oneListNode -> nodeList , (oneListNode -> nodeListCount + 1) * sizeof( syntaxTreeNode * ) );
+	if( oneListNode -> nodeList == (syntaxTreeNode * *) NULL )
+		yyerror("SyntaxtreeNode nodeList reallocation : Out of Memory" );
+
+	oneListNode -> nodeList[ oneListNode -> nodeListCount ] = oneNewNode;
+	oneListNode -> nodeListCount ++;
+	// fprintf(stderr , "NodeAdd() :  %d\n" , oneListNode -> nodeListCount );
+	return oneListNode;
+}
+
 /* -----------------------------------------------------*/
 /* property creation Node				*/
 /* -----------------------------------------------------*/
@@ -51,10 +91,13 @@ syntaxTreeNode * Property( syntaxTreeNode * oneGuidNode ,  syntaxTreeNode * oneN
 syntaxTreeNode * resultNode;
 
 	resultNode = syntaxTreeNodeAlloc();
+	if( resultNode == (syntaxTreeNode *) NULL )
+		yyerror("SyntaxtreeNode allocation : Out of Memory" );
 	resultNode -> type = PROPERTY_SYNTAXTREE_NODETYPE;
 	resultNode -> guidNode = oneGuidNode;
 	resultNode -> nameNode = oneNameNode;
 	resultNode -> unique_name = oneUniqueName;
+
 	return resultNode;
 }
 
@@ -148,7 +191,7 @@ syntaxTreeNode * resultNode;
 }
 
 /* -----------------------------------------------------*/
-/* creation de noeud operateur				*/
+/* creation de noeud operator				*/
 /* -----------------------------------------------------*/
 syntaxTreeNode * oper( int oneOperType, int OperandsCount, ...)
 {
@@ -159,7 +202,6 @@ syntaxTreeNode * operandeNode;
 	resultNode = syntaxTreeNodeAlloc();
 	va_list listOperands;
 	
-	// fprintf( stderr , "oper() type %d\n" , oneOper ); 
 	resultNode = syntaxTreeNodeAlloc();
 	resultNode -> type = OPERATOR_SYNTAXTREE_NODETYPE;
 	resultNode -> oper.type = oneOperType;
@@ -182,7 +224,7 @@ syntaxTreeNode * operandeNode;
 				yyerror("operands n of operator vector allocation : Out of Memory");
 
 			operandeNode = va_arg( listOperands , syntaxTreeNode * );
-			 // fprintf( stderr, "operande No %d :  %s\n" , i , getOperandeTypeLibelle( operandeNode )  );  
+			// fprintf( stderr, "operande No %d :  %s\n" , i , getOperandeTypeLibelle( operandeNode )  );  
 
 			resultNode -> oper.operands[i] =  operandeNode;
 		}
@@ -243,6 +285,7 @@ void Free_OperSyntaxTreeNode( syntaxTreeNode * oneNode  )
 				}
 			}
 		}
+
 		if( oneNode -> oper.operands != NULL )
 			free( oneNode -> oper.operands );
 

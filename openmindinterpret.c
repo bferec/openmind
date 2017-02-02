@@ -155,65 +155,75 @@ variable * oneVariable;
 
 
 /* -------------------------------------*/
+/* -------------------------------------*/
+void DoEcho( syntaxTreeNode * oneListNode )
+{
+expression_Value operandResult ;
+
+	operandResult = expression( oneListNode );
+
+	switch( operandResult.type )
+	{
+		case INTEGER_EXPRESSION:
+			printf( "%d" , operandResult.value.integer_value );
+		break;
+
+		case FLOAT_EXPRESSION:
+			printf( "%f" , operandResult.value.float_value );
+		break;
+
+		case STRING_EXPRESSION:
+			printf( "%s" , operandResult.value.string_value );
+		break;
+
+		case CHAR_EXPRESSION:
+			putchar( operandResult.value.char_value );
+		break;
+
+		case GUID_EXPRESSION:
+			printf( "%s" , operandResult.value.guid_value );
+		break;
+
+		case BOOLEAN_EXPRESSION:
+			printf( "%s" , operandResult.value.boolean_value ? "True" : "False" );
+		break;
+
+		case ENTITY_EXPRESSION:
+			//fprintf( stderr , "name :%s guid %s" , operandResult.value.entity_value-> name , operandResult.value.entity_value-> guid);
+		break;
+
+		case PROPERTY_EXPRESSION:
+		break;
+
+		default:
+			fprintf( stderr , "Unknown expression !\n" );
+		break;
+	}
+}
+
+
+/* -------------------------------------*/
 /* echo operator			*/
 /* -------------------------------------*/
 void  expression_Operator_ECHO(operator * oneOperatorNode ) 
 {
-constant * constante;
-variable  * currentVar;
+
 expression_Value * operandResult ;
+syntaxTreeNode * operand;
 
 
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value  ) );
+	operand = oneOperatorNode -> operands[0];
 
-	// fprintf( stderr , "echo %d operandes\n" , oneOperatorNode -> OperandsCount);
-
-	for( int i = 0 ; i < oneOperatorNode -> OperandsCount ; i ++ )
+	if( operand -> type ==  LIST_SYNTAXTREE_NODETYPE )
 	{
-		// fprintf( stderr, "OPERATOR=ECHO - eval de  l'operande %d/%d\n" , i+1 , oneOperatorNode -> OperandsCount ); 
-		// dumpSyntaxTreeNode( oneOperatorNode -> operands[i] ); 
-
-		operandResult[i] = expression( oneOperatorNode -> operands[i] );
-
-		switch( operandResult[i].type )
+		// fprintf(stderr , "elements dans liste : %d\n" , operand -> nodeListCount );
+		for( int x = 0 ; x < operand -> nodeListCount ; x ++ )
 		{
-			case INTEGER_EXPRESSION:
-				printf( "%d" , operandResult-> value.integer_value );
-			break;
-
-			case FLOAT_EXPRESSION:
-				printf( "%f" , operandResult-> value.float_value );
-			break;
-
-			case STRING_EXPRESSION:
-				printf( "%s" , operandResult-> value.string_value );
-			break;
-
-			case CHAR_EXPRESSION:
-				putchar( operandResult-> value.char_value );
-			break;
-
-			case GUID_EXPRESSION:
-				printf( "%s" , operandResult-> value.guid_value );
-			break;
-
-			case BOOLEAN_EXPRESSION:
-				printf( "%s" , operandResult -> value.boolean_value ? "True" : "False" );
-			break;
-
-			case ENTITY_EXPRESSION:
-				//printf( "name :%s guid %s" , operandResult -> value.entity_value-> name , operandResult -> value.entity_value-> guid);
-			break;
-
-			case PROPERTY_EXPRESSION:
-			break;
-
-			default:
-			break;
+			DoEcho( operand -> nodeList[ x ]   );
 		}
 	}
-
-	free( operandResult );
+	else
+		DoEcho( operand );
 }
 
 /*--------------------------------------*/
@@ -411,8 +421,12 @@ expression_Value result;
 			result = expression_Operator( oneNode  );
 		break;
 
+
 		case ENTITY_SYNTAXTREE_NODETYPE:
 		case PROPERTY_SYNTAXTREE_NODETYPE:
+		break;
+
+		default:
 		break;
 
 	}
