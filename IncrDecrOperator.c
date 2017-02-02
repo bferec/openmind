@@ -1,7 +1,7 @@
 /* -------------------------------------*/
 /* -------------------------------------*/
 /* 					*/
-/* IncrDecrOperator.c		*/
+/* IncrDecrOperator.c			*/
 /* 					*/
 /* -------------------------------------*/
 /* -------------------------------------*/
@@ -21,6 +21,7 @@
 #include "expressions.h"
 
 #include "openmind.tab.h"
+
 /* -------------------------------------*/
 /* -- interpretation			*/
 /* -------------------------------------*/
@@ -31,8 +32,7 @@ expression_Value result ;
 
 
 	currentVar = oneOperatorNode -> operands[0]-> var;
-	result = expression( oneOperatorNode -> operands[1] );
-
+	result = expression( oneOperatorNode -> operands[0] );
 	switch( result.type )
 	{
 		case INTEGER_EXPRESSION:
@@ -88,17 +88,17 @@ expression_Value result ;
 
 
 	currentVar = oneOperatorNode -> operands[0]-> var;
-	result = expression( oneOperatorNode -> operands[1] );
-
+	result = expression( oneOperatorNode -> operands[0] );
 	switch( result.type )
 	{
 		case INTEGER_EXPRESSION:
-			currentVar -> val.integer_value ++;
+			
+			(currentVar -> val.integer_value) ++;			
 			result.value.integer_value = currentVar -> val.integer_value;
 		break;
 
 		case FLOAT_EXPRESSION:
-			currentVar -> val.float_value +=1;
+			(currentVar -> val.float_value) +=1.0 ;
 			result.value.float_value = currentVar -> val.float_value;
 		break;
 
@@ -124,7 +124,6 @@ expression_Value result ;
 
 		case PROPERTY_EXPRESSION:
 			yyerror( "++ operator can't be applied to Property type\n" );
-
 		break;
 
 		default:

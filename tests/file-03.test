@@ -1,0 +1,24 @@
+/* -----------------------------------------------------*/
+/* test opérateurs de décrémentation/incrémentation	*/
+/* -----------------------------------------------------*/
+
+echo "test y = 10 =>";
+y = 10;
+echo y , "\n" ;
+
+echo "test y ++  =>";
+y ++;
+echo y , "\n";
+
+echo "test -- y   =>";
+-- y ;
+echo y , "\n";
+
+echo "test z = 10.50 =>";
+z = 10.50;
+echo z , "\n" ;
+
+echo "test -- z  =>";
+-- z ;
+echo --z , "\n";
+

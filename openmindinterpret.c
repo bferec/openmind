@@ -342,6 +342,7 @@ expression_Value result;
 		break;
 
 		case T_INCR:
+			fprintf( stderr , "expression_Operator_T_INCR()\n" );
 			result =  expression_Operator_T_INCR( currentOperator );
 		break;
 
