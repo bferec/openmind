@@ -70,6 +70,9 @@ extern int yychar;
 %token T_PLUS_SIGN T_MINUS_SIGN T_ASTERISK T_SLASH
 %left T_PLUS_SIGN T_MINUS_SIGN T_ASTERISK T_SLASH
 
+%token  T_INCR T_DECR
+%left T_INCR T_DECR
+
 %token T_PLUS_EGAL_SIGN T_MINUS_EGAL_SIGN T_ASTERISK_EGAL T_SLASH_EGAL
 %left T_PLUS_EGAL_SIGN T_MINUS_EGAL_SIGN T_ASTERISK_EGAL T_SLASH_EGAL
 
@@ -134,7 +137,7 @@ extern int yychar;
 
 
 
-%type<node> stmtList stmt create_stmt echo_stmt assign_stmt create_entity_stmt create_property_stmt
+%type<node> stmtList stmt create_stmt echo_stmt assign_stmt create_entity_stmt create_property_stmt incr_stmt
 %type<node> exprlist expr char_expr string_expr numeric_expr boolean_expr guid_expr lvalue 
 
 %type<node>  name_defs guid_defs property_defs entity_defs
@@ -167,13 +170,13 @@ stmt:
 	| create_stmt		{ $$ = $1; }
 	| echo_stmt		{ $$ = $1; }
 	| assign_stmt		{ $$ = $1; }
+	| incr_stmt		{ $$ = $1; }
 	| T_QUIT		{ exit (0);}
 ;
 /* -------------------- */
 /* affichage		*/
 /* -------------------- */
 echo_stmt:
-/*	  T_ECHO expr| */
 	 T_ECHO exprlist	{ $$  = oper( T_ECHO , 1 , $2 );  }
 ;
 /* -------------------- */
@@ -185,6 +188,13 @@ assign_stmt:
 	| lvalue T_MINUS_EGAL_SIGN expr { $$ = oper( T_MINUS_EGAL_SIGN , 2 , $1 , $3 ) ; }	
 	| lvalue T_ASTERISK_EGAL expr 	{ $$ = oper( T_ASTERISK_EGAL   , 2 , $1 , $3 ) ; }		
 	| lvalue T_SLASH_EGAL expr	{ $$ = oper( T_SLASH_EGAL  , 2 , $1 , $3 ) ; }	
+;
+
+incr_stmt:
+	  T_INCR lvalue 	{ $$ = oper( T_INCR, 1 , $2 );}
+	| T_DECR lvalue  	{ $$ = oper( T_DECR, 1 , $2 );}
+	| lvalue T_INCR		{ $$ = oper( T_INCR, 1 , $1 );}
+	| lvalue T_DECR		{ $$ = oper( T_DECR, 1 , $1 );}
 ;
 
 /* -------------------- */

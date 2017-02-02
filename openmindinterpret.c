@@ -28,7 +28,7 @@
 #include "logicalOperator.h"
 #include "comparaisonOperator.h"
 #include "assignationOperator.h"
-
+#include "IncrDecrOperator.h"
 
 #include "openmind.tab.h"
 
@@ -300,6 +300,11 @@ expression_Value result;
 
 	switch( currentOperator -> type )
 	{
+		case T_ECHO:
+			result.type = VOID_EXPRESSION;
+			expression_Operator_ECHO( currentOperator );
+		break;
+
 		case T_PLUS_SIGN:
 			result =  expression_Operator_T_PLUS_SIGN( currentOperator ) ; 
 		break;
@@ -332,13 +337,16 @@ expression_Value result;
 			result =  expression_Operator_T_SLASH_EGAL( currentOperator );
 		break;
 
-		case T_ECHO:
-			result.type = VOID_EXPRESSION;
-			expression_Operator_ECHO( currentOperator );
-		break;
-
 		case T_ASSIGN:
 			result =  expression_Operator_T_ASSIGN( currentOperator );
+		break;
+
+		case T_INCR:
+			result =  expression_Operator_T_INCR( currentOperator );
+		break;
+
+		case T_DECR:
+			result =  expression_Operator_T_DECR( currentOperator );
 		break;
 
 		case T_OR:

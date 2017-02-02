@@ -114,6 +114,9 @@ property		(?i:"property")
 "*"			{charCount() ; return T_ASTERISK;}
 "/"			{charCount() ; return T_SLASH;}
 
+"++"			{charCount() ; return T_INCR;}
+"--"			{charCount() ; return T_DECR;}
+
 "+="			{charCount() ; return T_PLUS_EGAL_SIGN;}
 "-="			{charCount() ; return T_MINUS_EGAL_SIGN;}
 "*="			{charCount() ; return T_ASTERISK_EGAL;}
