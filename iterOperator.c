@@ -22,8 +22,57 @@
 
 #include "openmind.tab.h"
 
+/* -----------------------------*/
+/* for( ; ; ) interpretation	*/
+/* -----------------------------*/
+void expression_Operator_T_FOR(operator * oneOperatorNode )
+{
+expression_Value conditionalResult ;
+expression_Value statementResult ;
+syntaxTreeNode * conditionNode;
+syntaxTreeNode * statementNode;
+
+}
+
+
+
 /* -------------------------------------*/
-/* -- interpretation			*/
+/* DO WHILE interpretation		*/
+/* -------------------------------------*/
+void  expression_Operator_T_DO(operator * oneOperatorNode)
+{
+expression_Value conditionalResult ;
+expression_Value statementResult ;
+syntaxTreeNode * conditionNode;
+syntaxTreeNode * statementNode;
+
+	conditionNode = oneOperatorNode -> operands[1];
+	 //fprintf( stderr , "type noeud condition : %d\n\r" , conditionNode -> type );
+
+	statementNode = oneOperatorNode -> operands[0];
+	 //fprintf( stderr , "type noeud instructions : %d\n\r" , statementNode -> type );
+
+	do{
+		//fprintf(stderr , "iteration %d\n" , iter ++ );
+		if( statementNode -> type == LIST_SYNTAXTREE_NODETYPE )
+		{
+			for( int x = 0 ;x < statementNode -> nodeListCount ; x ++ )
+			{
+				statementResult = expression( statementNode -> nodeList[x] );
+				conditionalResult = expression( conditionNode );
+			}
+		}
+		else
+		{
+			statementResult = expression( statementNode  );
+			conditionalResult = expression( conditionNode );
+		}
+		//fprintf(stderr , "conditionalResult (fin boucle) %d\n" , conditionalResult.value.boolean_value );
+	}while( conditionalResult.value.boolean_value );
+}
+
+/* -------------------------------------*/
+/* WHILE interpretation			*/
 /* -------------------------------------*/
 void  expression_Operator_T_WHILE(operator * oneOperatorNode)
 {
@@ -31,7 +80,6 @@ expression_Value conditionalResult ;
 expression_Value statementResult ;
 syntaxTreeNode * conditionNode;
 syntaxTreeNode * statementNode;
-
 
 	conditionNode = oneOperatorNode -> operands[0];
 	 //fprintf( stderr , "type noeud condition : %d\n\r" , conditionNode -> type );

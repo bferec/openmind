@@ -177,6 +177,9 @@ property		(?i:"property")
 {property}		{charCount() ; return T_PROPERTY;}
 
 (?i:"while")		{charCount() ; return T_WHILE;}
+(?i:"do")		{charCount() ; return T_DO;}
+(?i:"for")		{charCount() ; return T_FOR;}
+
 (?i:"create")		{charCount() ; return T_CREATE;}
 
 (?i:"identity")		{charCount() ; return T_IDENTITY;}

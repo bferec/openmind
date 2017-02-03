@@ -30,4 +30,23 @@ while( x < 7 )
 }
 
 
+echo "test do ... while < 5 \n";
+x = 0;
+echo "x = 0 => ",x,"\n";
+do
+{
+	echo "x = ", x , "\n";
+	x ++;
+}while( x < 5 );
 
+echo "test do ... while < 5  concatenation\n";
+x = 0;
+msg = " * ";
+echo "x = 0 => ",x,"\n";
+do
+{
+	msg += " * ";
+	echo msg;
+	echo "x = ", x , "\n";
+	x ++;
+}while( x < 5 );

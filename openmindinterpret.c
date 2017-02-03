@@ -400,6 +400,16 @@ expression_Value result;
 			result.type = VOID_EXPRESSION;
 			expression_Operator_T_WHILE(currentOperator);
 		break;
+
+		case T_DO:
+			result.type = VOID_EXPRESSION;
+			expression_Operator_T_DO(currentOperator);
+		break;
+
+		case T_FOR:
+			result.type = VOID_EXPRESSION;
+			expression_Operator_T_FOR(currentOperator);
+		break;
 	}
 
 	return result;
