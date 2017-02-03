@@ -1,0 +1,33 @@
+/* -----------------------------*/
+/* file-04.test  while		*/
+/* -----------------------------*/
+
+
+x = 8;
+echo "x = 8 => ",x,"\n";
+
+
+echo "test while >= 0 x -- sans accolade\n";
+ while( x > 0 ) x --;
+
+echo "x =  => ", x , "\n";
+
+x = 8;
+echo "x = 8 => ",x,"\n";
+
+echo "test while >= 0 -- x  sans accolade\n";
+ while( x > 0 ) --x ;
+
+echo "x =  => ", x , "\n";
+
+
+echo "test while < 7 avec accolade\n";
+
+while( x < 7 )
+{
+	x ++;
+	echo "x =  => ", x , "\n";
+}
+
+
+

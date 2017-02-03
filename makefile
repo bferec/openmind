@@ -8,14 +8,17 @@ LDFLAGS = -lm
 
 all: $(APPNAME)
 
-$(APPNAME): $(APPNAME).c $(APPNAME)lib.o $(APPNAME)varlist.o $(APPNAME)EntityList.o $(APPNAME)propertyList.o syntaxtree.o arithmeticOperator.o logicalOperator.o  comparaisonOperator.o assignationOperator.o $(APPNAME)interpret.o lex.yy.o $(APPNAME).tab.o 
-	$(CC) $(LDFLAGS) -o fdl.c $(APPNAME)lib.o $(APPNAME)varlist.o $(APPNAME)EntityList.o syntaxtree.o arithmeticOperator.o logicalOperator.o comparaisonOperator.o assignationOperator.o IncrDecrOperator.o $(APPNAME)interpret.o lex.yy.o $(APPNAME).tab.o
+$(APPNAME): $(APPNAME).c $(APPNAME)lib.o $(APPNAME)interpret.o iterOperator.o IncrDecrOperator.o assignationOperator.o arithmeticOperator.o comparaisonOperator.o logicalOperator.o syntaxtree.o $(APPNAME)varlist.o $(APPNAME)EntityList.o $(APPNAME)PropertyList.o lex.yy.o $(APPNAME).tab.o 
+	$(CC) -o $(APPNAME) $(APPNAME).c $(APPNAME)lib.o $(APPNAME)varlist.o $(APPNAME)EntityList.o  $(APPNAME)PropertyList.o syntaxtree.o debugTools.o $(APPNAME).tab.o lex.yy.o arithmeticOperator.o logicalOperator.o comparaisonOperator.o assignationOperator.o IncrDecrOperator.o iterOperator.o $(APPNAME)interpret.o  -lm
 
 $(APPNAME)lib.o: $(APPNAME)lib.c $(APPNAME)lib.h
 	$(CC) -c $(APPNAME)lib.c
  	
-$(APPNAME)interpret.o: $(APPNAME)interpret.c $(APPNAME).tab.h $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h logicalOperator.h arithmeticOperator.h comparaisonOperator.h assignationOperator.h IncrDecrOperator.h syntaxtree.h expressions.h
+$(APPNAME)interpret.o: $(APPNAME)interpret.c $(APPNAME).tab.h $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h logicalOperator.h arithmeticOperator.h comparaisonOperator.h assignationOperator.h IncrDecrOperator.h iterOperator.h syntaxtree.h expressions.h
 	$(CC) -c $(APPNAME)interpret.c 
+
+iterOperator.o: iterOperator.c $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h expressions.h $(APPNAME).tab.h
+	$(CC) -c iterOperator.c 
 
 IncrDecrOperator.o: IncrDecrOperator.c $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h expressions.h $(APPNAME).tab.h
 	$(CC) -c IncrDecrOperator.c 
@@ -50,14 +53,11 @@ $(APPNAME)PropertyList.o: $(APPNAME)PropertyList.c $(APPNAME)lib.h entity.h $(AP
 lex.yy.o: lex.yy.c $(APPNAME).tab.h
 	$(CC) -c lex.yy.c
 
-	
 $(APPNAME).tab.o: $(APPNAME).tab.c
 	$(CC) -c $(APPNAME).tab.c
 
-	
 $(APPNAME).tab.c $(APPNAME).tab.h: $(APPNAME).y $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h  expressions.h 
 	$(YACC) $(APPNAME).y 
-
 	
 lex.yy.c: $(APPNAME).l  $(APPNAME)lib.h entity.h $(APPNAME)value.h $(APPNAME)varlist.h $(APPNAME)constant.h operator.h syntaxtree.h expressions.h
 	$(LEX) $(APPNAME).l
@@ -79,6 +79,7 @@ clean:
 		[ -f "comparaisonOperator.o" ] 		&& rm comparaisonOperator.o; \
 		[ -f "assignationOperator.o" ] 		&& rm assignationOperator.o; \
 		[ -f "IncrDecrOperator.o" ] 		&& rm IncrDecrOperator.o; \
+		[ -f "iterOperator.o" ] 		&& rm iterOperator.o; \
 		[ -f "$(APPNAME)varlist.o" ]		&& rm $(APPNAME)varlist.o; \
 		[ -f "$(APPNAME)EntityList.o" ]		&& rm $(APPNAME)EntityList.o; \
 		[ -f "$(APPNAME)PropertyList.o" ]	&& rm $(APPNAME)PropertyList.o; \

@@ -29,6 +29,7 @@
 #include "comparaisonOperator.h"
 #include "assignationOperator.h"
 #include "IncrDecrOperator.h"
+#include "iterOperator.h"
 
 #include "openmind.tab.h"
 
@@ -152,8 +153,6 @@ variable * oneVariable;
 	return result;
 }
 
-
-
 /* -------------------------------------*/
 /* -------------------------------------*/
 void DoEcho( syntaxTreeNode * oneListNode )
@@ -268,7 +267,7 @@ syntaxTreeNode * operand;
 			if( result.value.entity_value == NULL )
 				yyerror( "unable to create Entity, existing !\n" );
 			result.type = ENTITY_EXPRESSION;
-			fprintf(stderr , "Entity created :\nGuid:%s\nName:%s\n",result.value.entity_value -> guid ,result.value.entity_value -> name );
+			//fprintf(stderr , "Entity created :\nGuid:%s\nName:%s\n",result.value.entity_value -> guid ,result.value.entity_value -> name );
 		break;
 
 		case PROPERTY_SYNTAXTREE_NODETYPE:
@@ -276,7 +275,7 @@ syntaxTreeNode * operand;
 			if( result.value.property_value == NULL )
 				yyerror( "unable to create Property, existing !\n" );
 			result.type = PROPERTY_EXPRESSION;
-			 fprintf(stderr , "Property created  :\nGuid:%s\nName:%s\n",result.value.property_value -> guid ,result.value.property_value -> name );
+			 //fprintf(stderr , "Property created  :\nGuid:%s\nName:%s\n",result.value.property_value -> guid ,result.value.property_value -> name );
 		break;
 
 		default:
@@ -342,7 +341,6 @@ expression_Value result;
 		break;
 
 		case T_INCR:
-			fprintf( stderr , "expression_Operator_T_INCR()\n" );
 			result =  expression_Operator_T_INCR( currentOperator );
 		break;
 
@@ -396,6 +394,11 @@ expression_Value result;
 
 		case T_CREATE:
 			result = expression_Operator_T_CREATE(currentOperator);
+		break;
+
+		case T_WHILE:
+			result.type = VOID_EXPRESSION;
+			expression_Operator_T_WHILE(currentOperator);
 		break;
 	}
 

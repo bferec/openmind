@@ -198,7 +198,7 @@ syntaxTreeNode * oper( int oneOperType, int OperandsCount, ...)
 syntaxTreeNode * resultNode;
 syntaxTreeNode * operandeNode;
 
-	// fprintf( stderr , "oper() type :[%s] \n" , getOperatorLibelle( oneOperType ) );  
+	//fprintf( stderr , "oper() type :[%s] \n" , getOperatorLibelle( oneOperType ) );  
 	resultNode = syntaxTreeNodeAlloc();
 	va_list listOperands;
 	

@@ -57,14 +57,18 @@ entity			(?i:"entity")
 property		(?i:"property")
 
 %x comment
+%x linecomment
 %x string
 %x caracter
 %%
 
 				
+"//"			BEGIN (linecomment) ;	/* debut de commentaire	 ligne			*/
+<linecomment>[^\n]*	{}			/* ignore tout jusqu'à fin de ligne 		*/
+<linecomment>\n		{++ lineNumber  ; charNumber = 0; BEGIN( INITIAL );}
 
 
-"/*"			BEGIN (comment) ;	/* debut de commentaire				*/
+"/*"			BEGIN (comment) ;	/* debut de commentaire	multiligne		*/
 <comment>[^*\n]*	{}			/* ignore tout ce qui n'est pas * 		*/
 <comment>"*"+[^*/\n]*	{}			/* ignore tout ce qui n'est pas * suivi de /	*/
 
@@ -172,6 +176,7 @@ property		(?i:"property")
 {entity}		{charCount() ; return T_ENTITY;}
 {property}		{charCount() ; return T_PROPERTY;}
 
+(?i:"while")		{charCount() ; return T_WHILE;}
 (?i:"create")		{charCount() ; return T_CREATE;}
 
 (?i:"identity")		{charCount() ; return T_IDENTITY;}

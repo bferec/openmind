@@ -20,5 +20,5 @@ echo z , "\n" ;
 
 echo "test -- z  =>";
 -- z ;
-echo --z , "\n";
+echo z , "\n";
 

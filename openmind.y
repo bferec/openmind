@@ -76,6 +76,8 @@ extern int yychar;
 %token T_PLUS_EGAL_SIGN T_MINUS_EGAL_SIGN T_ASTERISK_EGAL T_SLASH_EGAL
 %left T_PLUS_EGAL_SIGN T_MINUS_EGAL_SIGN T_ASTERISK_EGAL T_SLASH_EGAL
 
+%token T_WHILE
+
 %token T_LEFT_BRACE T_RIGHT_BRACE
 %token T_LEFT_BRACKET T_RIGHT_BRACKET
 %token T_LEFT_SQUARE_BRACKET T_RIGHT_SQUARE_BRACKET
@@ -135,11 +137,9 @@ extern int yychar;
 
 %token T_UNKNOWN
 
-
-
-%type<node> stmtList stmt create_stmt echo_stmt assign_stmt create_entity_stmt create_property_stmt incr_stmt
+%type<node> stmtList stmt create_stmt echo_stmt assign_stmt create_entity_stmt create_property_stmt incr_stmt iteration_stmt 
+%type<node> compound_stmt compound_stmt_element
 %type<node> exprlist expr char_expr string_expr numeric_expr boolean_expr guid_expr lvalue 
-
 %type<node>  name_defs guid_defs property_defs entity_defs
   
 
@@ -159,20 +159,41 @@ extern int yychar;
 /* liste instructions	*/
 /* -------------------- */
 stmtList:
-	stmt T_SEMICOLON 		{ expression( $1 ) ; Free_SyntaxTreeNode( $1 ); }	
-	| stmtList stmt T_SEMICOLON	{ expression( $2 ) ; Free_SyntaxTreeNode( $2 ); }
+	stmt  			{ expression( $1 ) ; Free_SyntaxTreeNode( $1 ); }	
+	| stmtList stmt  	{ expression( $2 ) ; Free_SyntaxTreeNode( $2 ); }
 ;
 /* -------------------- */
-/* instruction		*/
 /* -------------------- */
 stmt:
-	expr 			{ $$ = $1; }	
-	| create_stmt		{ $$ = $1; }
-	| echo_stmt		{ $$ = $1; }
-	| assign_stmt		{ $$ = $1; }
-	| incr_stmt		{ $$ = $1; }
-	| T_QUIT		{ exit (0);}
+	create_stmt	T_SEMICOLON	{ $$ = $1; }
+	| echo_stmt	T_SEMICOLON	{ $$ = $1; }
+	| assign_stmt	T_SEMICOLON	{ $$ = $1; }
+	| incr_stmt	T_SEMICOLON	{ $$ = $1; }
+	| iteration_stmt		{ $$ = $1; }
+	| T_QUIT	T_SEMICOLON	{ exit (0);}
 ;
+
+
+/* -------------------- */
+/* -------------------- */
+iteration_stmt:
+	T_WHILE T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET stmt 			{ $$  = oper( T_WHILE , 2 , $3, $5 );  }
+	| T_WHILE T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET compound_stmt 		{ $$  = oper( T_WHILE , 2 , $3, $5 );  }
+;
+
+/* -------------------- */
+/* -------------------- */
+compound_stmt:
+	T_LEFT_BRACE compound_stmt_element T_RIGHT_BRACE 	{$$=$2;}
+;
+/* -------------------- */
+/* -------------------- */
+compound_stmt_element:
+	stmt  				{$$ = NodeList($1);    }	
+	| compound_stmt_element  stmt  	{$$ = NodeAdd($1, $2); }  
+;
+
+
 /* -------------------- */
 /* affichage		*/
 /* -------------------- */
@@ -183,7 +204,7 @@ echo_stmt:
 /* affectation		*/
 /* -------------------- */
 assign_stmt:
-	  lvalue T_ASSIGN expr		{ $$ = oper( T_ASSIGN, 2 , $1, $3 );}
+	  lvalue T_ASSIGN expr	{ $$ = oper( T_ASSIGN , 2 , $1, $3 );}
 	| lvalue T_PLUS_EGAL_SIGN expr	{ $$ = oper( T_PLUS_EGAL_SIGN  , 2 , $1 , $3 ) ; }	
 	| lvalue T_MINUS_EGAL_SIGN expr { $$ = oper( T_MINUS_EGAL_SIGN , 2 , $1 , $3 ) ; }	
 	| lvalue T_ASTERISK_EGAL expr 	{ $$ = oper( T_ASTERISK_EGAL   , 2 , $1 , $3 ) ; }		
@@ -198,7 +219,6 @@ incr_stmt:
 	| lvalue T_INCR		{ $$ = oper( T_INCR, 1 , $1 );}
 	| lvalue T_DECR		{ $$ = oper( T_DECR, 1 , $1 );}
 ;
-
 /* -------------------- */
 /* ce qui peut être à	*/
 /* gauche de =		*/
