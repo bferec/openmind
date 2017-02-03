@@ -140,12 +140,12 @@ extern int yychar;
 %type<node> stmtList stmt create_stmt echo_stmt assign_stmt create_entity_stmt create_property_stmt incr_stmt iteration_stmt 
 %type<node> compound_stmt compound_stmt_element assign_list boolean_expr_list assign_list_stmt
 %type<node> exprlist expr char_expr string_expr numeric_expr boolean_expr guid_expr lvalue 
-%type<node>  name_defs guid_defs property_defs entity_defs
+%type<node> name_defs guid_defs property_defs entity_defs
   
 
 /* -------------------- */
 /* -------------------- */
-/* Axiome		*/
+/* Axiom		*/
 /* -------------------- */
 /* -------------------- */
 %start stmtList
@@ -156,13 +156,14 @@ extern int yychar;
 %%
 
 /* -------------------- */
-/* liste instructions	*/
+/* instructions list	*/
 /* -------------------- */
 stmtList:
 	stmt  			{ expression( $1 ) ; Free_SyntaxTreeNode( $1 ); }	
 	| stmtList stmt  	{ expression( $2 ) ; Free_SyntaxTreeNode( $2 ); }
 ;
 /* -------------------- */
+/* instruction		*/
 /* -------------------- */
 stmt:
 	create_stmt	T_SEMICOLON	{ $$ = $1; }
@@ -170,38 +171,44 @@ stmt:
 	| assign_stmt	T_SEMICOLON	{ $$ = $1; }
 	| incr_stmt	T_SEMICOLON	{ $$ = $1; }
 	| iteration_stmt		{ $$ = $1; }
-	| T_QUIT	T_SEMICOLON	{ exit (0);}
+	| T_QUIT	T_SEMICOLON	{ exit (0); }
 ;
 /* -------------------- */
 /* iteration		*/
 /* -------------------- */
 iteration_stmt:
-	T_WHILE T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET stmt 				{ $$  = oper( T_WHILE , 2 , $3, $5 );  }
-	| T_WHILE T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET compound_stmt 			{ $$  = oper( T_WHILE , 2 , $3, $5 );  }
-	| T_DO compound_stmt T_WHILE T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET T_SEMICOLON	{ $$  = oper( T_DO , 2 , $2, $5 );  }
+	T_WHILE T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET stmt 				{ $$  = oper( T_WHILE , 2 , $3, $5 ); }
+	| T_WHILE T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET compound_stmt 			{ $$  = oper( T_WHILE , 2 , $3, $5 ); }
+	| T_DO compound_stmt T_WHILE T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET T_SEMICOLON	{ $$  = oper( T_DO , 2 , $2, $5 ); }
 	| T_FOR T_LEFT_BRACKET assign_list T_SEMICOLON boolean_expr_list T_SEMICOLON  assign_list_stmt T_RIGHT_BRACKET compound_stmt	{ $$  = oper( T_FOR , 4 , $3, $5 ,$7 , $9 ); }
 ;
 
+/* -------------------- */
+/* assignation list	*/
+/* -------------------- */
 assign_list:
-	lvalue T_ASSIGN expr				{ $$ = oper( T_ASSIGN , 2 , $1, $3 );}
-	| assign_list T_COMMA lvalue T_ASSIGN expr	{ $$ = oper( T_ASSIGN , 2 , $3, $5 );}
+	lvalue T_ASSIGN expr				{ $$ = oper( T_ASSIGN , 2 , $1, $3 ); }
+	| assign_list T_COMMA lvalue T_ASSIGN expr	{ $$ = oper( T_ASSIGN , 2 , $3, $5 ); }
 ;
-
+/* ---------------------------- */
+/* boolean expressions list	*/
+/* ---------------------------- */
 boolean_expr_list:
-	boolean_expr					{$$ = NodeList($1); }
-	| boolean_expr_list T_COMMA boolean_expr	{$$ = NodeAdd($1, $3); }
+	boolean_expr					{ $$ = NodeList($1); }
+	| boolean_expr_list T_COMMA boolean_expr	{ $$ = NodeAdd($1, $3); }
 ;
-
+/* ---------------------------- */
+/* simple assignation list	*/
+/* ---------------------------- */
 assign_list_stmt:
-	assign_stmt					{$$ = NodeList($1); }
-	| assign_list_stmt T_COMMA assign_stmt		{$$ = NodeAdd($1, $3); }
+	assign_stmt					{ $$ = NodeList($1); }
+	| assign_list_stmt T_COMMA assign_stmt		{ $$ = NodeAdd($1, $3); }
 ;
-
 /* -------------------- */
 /* block instruction	*/
 /* -------------------- */
 compound_stmt:
-	T_LEFT_BRACE compound_stmt_element T_RIGHT_BRACE	{$$=$2;}
+	T_LEFT_BRACE compound_stmt_element T_RIGHT_BRACE	{ $$ = $2; }
 ;
 /* ------------------------------------ */
 /* element de block d'instruction	*/
@@ -220,7 +227,7 @@ echo_stmt:
 /* affectation		*/
 /* -------------------- */
 assign_stmt:
-	  lvalue T_ASSIGN expr		{ $$ = oper( T_ASSIGN , 2 , $1, $3 );}
+	  lvalue T_ASSIGN expr		{ $$ = oper( T_ASSIGN , 2 , $1, $3 ); }
 	| lvalue T_PLUS_EGAL_SIGN expr	{ $$ = oper( T_PLUS_EGAL_SIGN  , 2 , $1 , $3 ) ; }	
 	| lvalue T_MINUS_EGAL_SIGN expr { $$ = oper( T_MINUS_EGAL_SIGN , 2 , $1 , $3 ) ; }	
 	| lvalue T_ASTERISK_EGAL expr 	{ $$ = oper( T_ASTERISK_EGAL   , 2 , $1 , $3 ) ; }		
@@ -230,10 +237,10 @@ assign_stmt:
 /* incrementation/decrementation	*/
 /* ------------------------------------ */
 incr_stmt:
-	  T_INCR lvalue 	{ $$ = oper( T_INCR, 1 , $2 );}
-	| T_DECR lvalue  	{ $$ = oper( T_DECR, 1 , $2 );}
-	| lvalue T_INCR		{ $$ = oper( T_INCR, 1 , $1 );}
-	| lvalue T_DECR		{ $$ = oper( T_DECR, 1 , $1 );}
+	  T_INCR lvalue 	{ $$ = oper( T_INCR, 1 , $2 ); }
+	| T_DECR lvalue  	{ $$ = oper( T_DECR, 1 , $2 ); }
+	| lvalue T_INCR		{ $$ = oper( T_INCR, 1 , $1 ); }
+	| lvalue T_DECR		{ $$ = oper( T_DECR, 1 , $1 ); }
 ;
 /* -------------------- */
 /* ce qui peut être à	*/
@@ -242,7 +249,7 @@ incr_stmt:
 lvalue:
 	T_IDENTIFIER	{ $$ = Var( $1 -> type , $1 ); }
 	| T_IDENTIFIER T_LEFT_SQUARE_BRACKET expr T_RIGHT_SQUARE_BRACKET	{ /* variable tableau */ }
-	| error T_SEMICOLON 		{YYABORT;}
+	| error T_SEMICOLON 		{YYABORT; }
 ;
 /* -------------------- */
 /* Create		*/
@@ -255,7 +262,7 @@ create_stmt:
 /* Create ENTITY	*/
 /* -------------------- */
 create_entity_stmt:
-	T_CREATE entity_defs	{$$  = oper( T_CREATE , 1 , $2 ); }
+	T_CREATE entity_defs	{ $$  = oper( T_CREATE , 1 , $2 ); }
 ;
 /* -------------------- */
 /* corps ENTITY		*/
@@ -269,7 +276,7 @@ entity_defs:
 /* Create Property	*/
 /* -------------------- */
 create_property_stmt:
-	T_CREATE property_defs	{$$  = oper( T_CREATE , 1 , $2 ); }
+	T_CREATE property_defs	{ $$  = oper( T_CREATE , 1 , $2 ); }
 ;
 /* -------------------- */
 /* corps property	*/
@@ -296,8 +303,8 @@ name_defs:
 /* Expression list	*/
 /* -------------------- */
 exprlist:
-	 expr  				{$$ = NodeList( $1 );}
-	| exprlist T_COMMA expr    	{$$ = NodeAdd($1, $3); }
+	 expr  				{ $$ = NodeList( $1 ); }
+	| exprlist T_COMMA expr    	{ $$ = NodeAdd($1, $3); }
 ;
 
 /* -------------------- */
@@ -309,21 +316,21 @@ expr:
 	| char_expr				
 	| boolean_expr
 	| guid_expr
-	| T_LEFT_BRACKET expr T_RIGHT_BRACKET	{ $$ = $2;}
+	| T_LEFT_BRACKET expr T_RIGHT_BRACKET	{ $$ = $2; }
 	| T_IDENTIFIER	{ $$ = Var( $1 -> type , $1 ); }
 ;
 
 
 /* -------------------- */
-/* Expression	Guid	*/
+/* Guid Expression	*/
 /* -------------------- */
 guid_expr:
 	T_AUTO		{ $$ = oper( T_AUTO , 0 );  }
-	| T_GUID	{ $$ = Const( GUID_CONSTANT_TYPE , $1 );}
+	| T_GUID	{ $$ = Const( GUID_CONSTANT_TYPE , $1 ); }
 	| T_IDENTIFIER	{ $$ = Var( $1 -> type , $1 ); }
 ;
 /* -------------------- */
-/* Expression numerique	*/
+/* numeric expression 	*/
 /* -------------------- */
 numeric_expr:
 	T_INT 				{ $$ = Const( INT_CONSTANT_TYPE   , (void *) & $1.integer_value ); }
@@ -336,7 +343,7 @@ numeric_expr:
 	| expr T_SLASH expr		{ $$ = oper( T_SLASH 	  , 2 , $1 , $3 ) ; }	
 ;
 /* -------------------- */
-/* Expression booleeene	*/
+/* boolean expression 	*/
 /* -------------------- */
 boolean_expr:	
 	T_TRUE					{ $$ = Const( BOOLEEAN_CONSTANT_TYPE ,  & $1); }
@@ -355,13 +362,13 @@ boolean_expr:
 	| expr T_MORE_OR_EQUAL_THAN  expr	{ $$ = oper( T_MORE_OR_EQUAL_THAN , 2, $1 , $3 ); }		
 ;
 /* -------------------- */
-/* Expression caractere	*/
+/* char expression 	*/
 /* -------------------- */
 char_expr:
 	T_CSTE_CHAR				{ $$ = Const( CHAR_CONSTANT_TYPE , & $1 ); }
 ;
 /* -------------------- */
-/* Expression chaine	*/
+/* string expression 	*/
 /* -------------------- */
 string_expr:
 	T_CSTE_STRING				{ $$ = Const( STRING_CONSTANT_TYPE , $1 ); }
