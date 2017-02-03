@@ -189,7 +189,9 @@ assign_stmt:
 	| lvalue T_ASTERISK_EGAL expr 	{ $$ = oper( T_ASTERISK_EGAL   , 2 , $1 , $3 ) ; }		
 	| lvalue T_SLASH_EGAL expr	{ $$ = oper( T_SLASH_EGAL  , 2 , $1 , $3 ) ; }	
 ;
-
+/* ------------------------------------ */
+/* incrementation/decrementation	*/
+/* ------------------------------------ */
 incr_stmt:
 	  T_INCR lvalue 	{ $$ = oper( T_INCR, 1 , $2 );}
 	| T_DECR lvalue  	{ $$ = oper( T_DECR, 1 , $2 );}
