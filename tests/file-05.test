@@ -3,15 +3,20 @@
 /* -----------------------------*/
 
 
+echo "test for( ;;) sans accolades et instruction composite\n";
+for( z = 0 ; z < 10 ; z ++ )
+	echo "Z = " , z , "\n";
+
+
 echo "test for( ;;)  de base\n";
 
-for( x = 0 ; x < 10 ; x++ )
+for( x = 0 ; x < 10 ; x ++ )
 {
 	echo "X = " , x ;
 	echo "\n";
 }
 
-echo " a =>", a , " b =>" , b , "\n";
+
 
 echo "test avec double initialisation et double assignation\n";
 
@@ -20,4 +25,5 @@ for( a = 0 , b = 10 ; a < 10 ; a ++ , b = b + 10 )
 	echo "A = " , a ," B= ", b;
 	echo "\n";
 }
+
 

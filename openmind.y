@@ -180,6 +180,7 @@ iteration_stmt:
 	T_WHILE T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET stmt 				{ $$  = oper( T_WHILE , 2 , $3, $5 ); }
 	| T_WHILE T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET compound_stmt 			{ $$  = oper( T_WHILE , 2 , $3, $5 ); }
 	| T_DO compound_stmt T_WHILE T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET T_SEMICOLON	{ $$  = oper( T_DO , 2 , $2, $5 ); }
+	| T_FOR T_LEFT_BRACKET for_initial_assign T_SEMICOLON boolean_expr_list T_SEMICOLON  for_assign_stmt T_RIGHT_BRACKET stmt		{ $$  = oper( T_FOR , 4 , $3, $5 ,$7 , $9 ); }
 	| T_FOR T_LEFT_BRACKET for_initial_assign T_SEMICOLON boolean_expr_list T_SEMICOLON  for_assign_stmt T_RIGHT_BRACKET compound_stmt	{ $$  = oper( T_FOR , 4 , $3, $5 ,$7 , $9 ); }
 ;
 
@@ -187,24 +188,24 @@ iteration_stmt:
 /* assignation list	*/
 /* -------------------- */
 for_initial_assign:
-	lvalue T_ASSIGN expr					{ $$ = oper( T_ASSIGN , 2 , $1, $3 ); }
-	| for_initial_assign T_COMMA lvalue T_ASSIGN expr	{ $$ = oper( T_ASSIGN , 2 , $3, $5 ); }
+	assign_stmt					{ $$ = NodeList( $1 ); }
+	| for_initial_assign T_COMMA assign_stmt	{ $$ = NodeAdd( $1, $3 ); }
 ;
 /* ---------------------------- */
 /* boolean expressions list	*/
 /* ---------------------------- */
 boolean_expr_list:
-	boolean_expr					{ $$ = NodeList($1); }
-	| boolean_expr_list T_COMMA boolean_expr	{ $$ = NodeAdd($1, $3); }
+	boolean_expr					{ $$ = NodeList( $1 ); }
+	| boolean_expr_list T_COMMA boolean_expr	{ $$ = NodeAdd( $1, $3 ); }
 ;
 /* ---------------------------- */
 /* simple assignation list	*/
 /* ---------------------------- */
 for_assign_stmt:
-	assign_stmt					{ $$ = NodeList($1); }
-	| incr_stmt					{ $$ = NodeList($1); }
-	| for_assign_stmt T_COMMA assign_stmt		{ $$ = NodeAdd($1, $3); }
-	| for_assign_stmt T_COMMA incr_stmt		{ $$ = NodeAdd($1, $3); }
+	assign_stmt					{ $$ = NodeList( $1); }
+	| incr_stmt					{ $$ = NodeList( $1); }
+	| for_assign_stmt T_COMMA assign_stmt		{ $$ = NodeAdd( $1, $3); }
+	| for_assign_stmt T_COMMA incr_stmt		{ $$ = NodeAdd( $1, $3); }
 ;
 /* -------------------- */
 /* block instruction	*/
@@ -216,8 +217,8 @@ compound_stmt:
 /* element de block d'instruction	*/
 /* ------------------------------------ */
 compound_stmt_element:
-	stmt  				{ $$ = NodeList($1);    }	
-	| compound_stmt_element  stmt  	{ $$ = NodeAdd($1, $2); }  
+	stmt  				{ $$ = NodeList( $1 );    }	
+	| compound_stmt_element  stmt  	{ $$ = NodeAdd( $1, $2 ); }  
 ;
 /* -------------------- */
 /* affichage		*/
@@ -306,7 +307,7 @@ name_defs:
 /* -------------------- */
 exprlist:
 	 expr  				{ $$ = NodeList( $1 ); }
-	| exprlist T_COMMA expr    	{ $$ = NodeAdd($1, $3); }
+	| exprlist T_COMMA expr    	{ $$ = NodeAdd( $1, $3); }
 ;
 
 /* -------------------- */

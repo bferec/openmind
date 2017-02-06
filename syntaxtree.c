@@ -47,7 +47,6 @@ syntaxTreeNode * resultNode;
 /* -----------------------------------------------------*/
 /* expression list create first element			*/
 /* -----------------------------------------------------*/
-
 syntaxTreeNode * NodeList( syntaxTreeNode * oneFirstNode )
 {
 syntaxTreeNode * resultNode;
