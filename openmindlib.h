@@ -11,6 +11,8 @@
 #define KEYWORDS_COUNT 12		/* nombre de mots cles du langage			*/
 #define GUID_LENGTH 33			/* longueur xhaine guid hors zero final			*/
 #define BOOL int			/* type booleen						*/
+#define TRUE	1
+#define FALSE	0
 #define MAXLENGTH_STRING 255		/* longueur maxi identificateurs et constantes texte	*/
 
 /* -------------------------------------*/
