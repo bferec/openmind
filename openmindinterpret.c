@@ -30,6 +30,7 @@
 #include "assignationOperator.h"
 #include "IncrDecrOperator.h"
 #include "iterOperator.h"
+#include "binaryOperator.h"
 
 #include "openmind.tab.h"
 
@@ -200,7 +201,6 @@ expression_Value operandResult ;
 	}
 }
 
-
 /* -------------------------------------*/
 /* echo operator			*/
 /* -------------------------------------*/
@@ -362,6 +362,27 @@ expression_Value result;
 
 		case T_XOR:
 			result = expression_Operator_T_XOR( currentOperator ) ; 
+		break;
+
+		case T_BINARY_OR:
+			result = expression_Operator_T_BINARY_OR( currentOperator ) ; 
+		break;
+
+		case T_BINARY_AND:
+			result = expression_Operator_T_BINARY_AND( currentOperator ) ; 
+		break;
+
+		case T_BINARY_COMPLEMENT:
+			result = expression_Operator_T_BINARY_COMPLEMENT( currentOperator ) ; 
+		break;
+
+		case T_LEFT_SHIFT:
+			result = expression_Operator_T_LEFT_SHIFT( currentOperator ) ; 
+		break;
+
+
+		case T_RIGHT_SHIFT:
+			result = expression_Operator_T_RIGHT_SHIFT( currentOperator ) ; 
 		break;
 
 		case T_DIFFERENT:

@@ -85,24 +85,21 @@ extern int yychar;
 %token T_ASSIGN
 %right T_ASSIGN
 
-%token T_AMPERSAND
-%token T_VERTICAL_BAR
-%token T_DOT
+%token T_DOT 
 %token T_COMMA
 %token T_COLON
 %token T_SEMICOLON
 
 %token T_OR
 %left T_OR
-
 %token T_AND
 %left T_AND
-
-%token T_XOR
-%left T_XOR
-
 %token T_NOT 
 %right T_NOT
+
+%token T_XOR T_BINARY_AND  T_BINARY_OR T_BINARY_COMPLEMENT T_LEFT_SHIFT T_RIGHT_SHIFT
+%left T_XOR T_BINARY_AND  T_BINARY_OR  T_LEFT_SHIFT T_RIGHT_SHIFT
+%right T_BINARY_COMPLEMENT
 
 %token T_LESS_THAN
 %token T_MORE_THAN
@@ -139,7 +136,7 @@ extern int yychar;
 
 %type<node> stmtList stmt create_stmt echo_stmt assign_stmt create_entity_stmt create_property_stmt incr_stmt iteration_stmt 
 %type<node> compound_stmt compound_stmt_element for_assign_stmt boolean_expr_list for_initial_assign
-%type<node> exprlist expr char_expr string_expr numeric_expr boolean_expr guid_expr lvalue 
+%type<node> exprlist expr char_expr string_expr numeric_expr boolean_expr binary_expr guid_expr lvalue 
 %type<node> name_defs guid_defs property_defs entity_defs
   
 
@@ -318,6 +315,7 @@ expr:
 	| string_expr
 	| char_expr				
 	| boolean_expr
+	| binary_expr
 	| guid_expr
 	| T_LEFT_BRACKET expr T_RIGHT_BRACKET	{ $$ = $2; }
 	| T_IDENTIFIER	{ $$ = Var( $1 -> type , $1 ); }
@@ -363,6 +361,16 @@ boolean_expr:
 	| expr T_MORE_THAN  expr		{ $$ = oper( T_MORE_THAN , 2, $1 , $3 ); }	
 	| expr T_LESS_OR_EQUAL_THAN  expr	{ $$ = oper( T_LESS_OR_EQUAL_THAN , 2, $1 , $3 ); }	
 	| expr T_MORE_OR_EQUAL_THAN  expr	{ $$ = oper( T_MORE_OR_EQUAL_THAN , 2, $1 , $3 ); }		
+;
+/* -------------------- */
+/* binary expression	*/
+/* -------------------- */
+binary_expr:
+	expr T_BINARY_OR expr			{ $$ = oper( T_BINARY_OR  , 2, $1 , $3 ); }
+	| expr T_BINARY_AND expr		{ $$ = oper( T_BINARY_AND , 2, $1 , $3 ); }
+	| T_BINARY_COMPLEMENT expr		{ $$ = oper( T_BINARY_COMPLEMENT , 1, $2 ); }
+	| expr T_LEFT_SHIFT expr		{ $$ = oper( T_LEFT_SHIFT , 2, $1 , $3 ); }
+	| expr T_RIGHT_SHIFT expr		{ $$ = oper( T_RIGHT_SHIFT , 2, $1 , $3 ); }
 ;
 /* -------------------- */
 /* char expression 	*/

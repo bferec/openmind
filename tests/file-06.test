@@ -1,0 +1,19 @@
+/* -------------------------------------*/
+/* file-06.test  binary operator	*/
+/* -------------------------------------*/
+
+
+echo "test  | binary or\n";
+a = 32 | 1;
+echo a, "\n";
+
+echo "test  & binary and\n";
+b = 62 & 32;
+echo b, "\n";
+
+
+echo "test  ~ complement a 1\n";
+c = ~ (1 << 5);
+echo c, "\n";
+
+

@@ -139,14 +139,19 @@ property		(?i:"property")
 ":"			{charCount() ; return T_COLON;}
 ";"			{charCount() ; return T_SEMICOLON;}
 ","			{charCount() ; return T_COMMA;}
-"&"			{charCount() ; return T_AMPERSAND;}
-"|"			{charCount() ; return T_VERTICAL_BAR;}
+
+"&"			{charCount() ; return T_BINARY_AND;}
+"|"			{charCount() ; return T_BINARY_OR;}
+"~"			{charCount() ; return T_BINARY_COMPLEMENT;}
+"<<"			{charCount() ; return T_LEFT_SHIFT;}
+">>"			{charCount() ; return T_RIGHT_SHIFT;}
+"^"			{charCount() ; return T_XOR;}
 
 
 "||"			{charCount() ; return T_OR;}
 "&&"			{charCount() ; return T_AND;}
 "!"			{charCount() ; return T_NOT;}
-"^"			{charCount() ; return T_XOR;}
+
 
 "<"			{charCount() ; return T_LESS_THAN;}
 ">"			{charCount() ; return T_MORE_THAN;}

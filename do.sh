@@ -17,8 +17,9 @@ make assignationOperator.o
 make arithmeticOperator.o
 make IncrDecrOperator.o
 make iterOperator.o
+make binaryOperator.o
 
 make openmindinterpret.o
 make openmindlib.o
 
-gcc -o openmind openmind.c openmindlib.o openmindvarlist.o openmindEntityList.o  openmindPropertyList.o syntaxtree.o debugTools.o openmind.tab.o lex.yy.o arithmeticOperator.o logicalOperator.o comparaisonOperator.o assignationOperator.o IncrDecrOperator.o iterOperator.o openmindinterpret.o  -lm
+gcc -o openmind openmind.c openmindlib.o openmindvarlist.o openmindEntityList.o  openmindPropertyList.o syntaxtree.o debugTools.o openmind.tab.o lex.yy.o arithmeticOperator.o logicalOperator.o comparaisonOperator.o assignationOperator.o IncrDecrOperator.o iterOperator.o binaryOperator.o openmindinterpret.o  -lm
