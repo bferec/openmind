@@ -31,9 +31,7 @@ expression_Value expression_Operator_T_RIGHT_SHIFT( operator * oneOperatorNode  
 expression_Value result;
 expression_Value * operandResult ;
 
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
-
-
+	operandResult = (expression_Value *) calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	operandResult[0] = expression( oneOperatorNode -> operands[0] );
 	operandResult[1] = expression( oneOperatorNode -> operands[1] );
@@ -71,6 +69,7 @@ expression_Value * operandResult ;
 		break;
 
 		default:
+			yyerror( "Unable to apply logical & to these operands\n" );
 		break;
 	}
 	return result;
@@ -85,9 +84,7 @@ expression_Value expression_Operator_T_LEFT_SHIFT( operator * oneOperatorNode  )
 expression_Value result;
 expression_Value * operandResult ;
 
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
-
-
+	operandResult = (expression_Value *) calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	operandResult[0] = expression( oneOperatorNode -> operands[0] );
 	operandResult[1] = expression( oneOperatorNode -> operands[1] );
@@ -125,6 +122,7 @@ expression_Value * operandResult ;
 		break;
 
 		default:
+			yyerror( "Unable to apply logical & to these operands\n" );
 		break;
 	}
 	return result;
@@ -138,7 +136,7 @@ expression_Value expression_Operator_T_BINARY_COMPLEMENT( operator * oneOperator
 expression_Value result;
 expression_Value * operandResult ;
 
-	operandResult = (expression_Value * ) malloc( sizeof(expression_Value ) );
+	operandResult = (expression_Value *) malloc( sizeof(expression_Value ) );
 
 	operandResult[0] = expression( oneOperatorNode -> operands[0] );
 
@@ -164,6 +162,7 @@ expression_Value * operandResult ;
 		break;
 
 		default:
+			yyerror( "Unable to apply logical & to these operands\n" );
 		break;
 	}
 	return result;
@@ -177,7 +176,7 @@ expression_Value expression_Operator_T_BINARY_OR( operator * oneOperatorNode  )
 expression_Value result;
 expression_Value * operandResult ;
 
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
+	operandResult = (expression_Value *) calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 
 
@@ -217,6 +216,7 @@ expression_Value * operandResult ;
 		break;
 
 		default:
+			yyerror( "Unable to apply logical & to these operands\n" );
 		break;
 	}
 	return result;
@@ -230,7 +230,7 @@ expression_Value expression_Operator_T_BINARY_AND( operator * oneOperatorNode  )
 expression_Value result;
 expression_Value * operandResult ;
 
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
+	operandResult = (expression_Value *) calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	operandResult[0] = expression( oneOperatorNode -> operands[0] );
 	operandResult[1] = expression( oneOperatorNode -> operands[1] );
@@ -268,6 +268,7 @@ expression_Value * operandResult ;
 		break;
 
 		default:
+			yyerror( "Unable to apply logical & to these operands\n" );
 		break;
 	}
 	return result;

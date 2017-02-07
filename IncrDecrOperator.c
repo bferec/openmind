@@ -33,6 +33,7 @@ expression_Value result ;
 
 	currentVar = oneOperatorNode -> operands[0]-> var;
 	result = expression( oneOperatorNode -> operands[0] );
+
 	switch( result.type )
 	{
 		case INTEGER_EXPRESSION:
@@ -71,12 +72,11 @@ expression_Value result ;
 		break;
 
 		default:
+			yyerror( "-- operator can't be applied to this expression type\n" );
 		break;
 	}
 	return result;	
 }
-
-
 
 /* -------------------------------------*/
 /* ++ interpretation			*/
@@ -98,7 +98,7 @@ expression_Value result ;
 		break;
 
 		case FLOAT_EXPRESSION:
-			(currentVar -> val.float_value) +=1.0 ;
+			(currentVar -> val.float_value) += 1.0 ;
 			result.value.float_value = currentVar -> val.float_value;
 		break;
 
@@ -127,6 +127,7 @@ expression_Value result ;
 		break;
 
 		default:
+			yyerror( "++ operator can't be applied to this expression type\n" );
 		break;
 	}
 	return result;	

@@ -88,7 +88,7 @@ float actualValue;
 			}
 
 			if( currentVar -> val.string_value == NULL )
-				yyerror( "Memory allocation for variable string content impossible\n");
+				yyerror( "Memory allocation or reallocation  for variable string content impossible\n");
 
 			strcpy( currentVar -> val.string_value ,  strcat(currentVar -> val.string_value, operandResult.value.string_value ) );
 			currentVar -> type = STRING_IDENTIFIER_TYPE;
@@ -121,6 +121,7 @@ float actualValue;
 		break;
 
 		default:
+			yyerror( "+= operator can't be applied to thse expression\n" );
 		break;
 	}
 	return result;	
@@ -206,6 +207,7 @@ float actualValue;
 		break;
 
 		default:
+			yyerror( "-= operator can't be applied to thse expression\n" );
 		break;
 	}
 	return result;		
@@ -288,11 +290,12 @@ float actualValue;
 		break;
 
 		default:
+			yyerror( "*= operator can't be applied to thse expression\n" );
 		break;
 	}
 	return result;	
-
 }
+
 /* -------------------------------------*/
 /* /= interpretation			*/
 /* -------------------------------------*/
@@ -375,6 +378,7 @@ float actualValue;
 		break;
 
 		default:
+			yyerror( "*= operator can't be applied to these operands\n" );
 		break;
 	}
 	return result;	
@@ -421,15 +425,12 @@ expression_Value operandResult ;
 			}
 
 			if( currentVar -> val.string_value == NULL )
-				yyerror( "Memory allocation for variable string content impossible\n");
+				yyerror( "Memory allocation or reallocation for variable string content impossible\n");
 
-			// fprintf(stderr , "copy new string value\n" );
 			strcpy( currentVar -> val.string_value ,  operandResult.value.string_value );
 			currentVar -> type = STRING_IDENTIFIER_TYPE;
 			result.type = STRING_EXPRESSION;
-			// fprintf(stderr , "copy string value in expression result;\n" );
 			result.value.string_value =  currentVar -> val.string_value ;
-			// fprintf(stderr , "copied !\n" );
 		break;
 
 		case CHAR_EXPRESSION:
@@ -462,8 +463,8 @@ expression_Value operandResult ;
 		break;
 
 		default:
+			yyerror( "= operator can't be applied to thse operands\n" );
 		break;
 	}
-
 	return result;	
 }

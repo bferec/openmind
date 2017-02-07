@@ -34,7 +34,7 @@ expression_Value expression_Operator_T_XOR( operator * oneOperatorNode  )
 expression_Value result;
 expression_Value * operandResult ;
 
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
+	operandResult = (expression_Value *) calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	result.type = BOOLEAN_EXPRESSION;
 
@@ -47,7 +47,7 @@ expression_Value * operandResult ;
 		case FLOAT_EXPRESSION:
 		case BOOLEAN_EXPRESSION:
 		case CHAR_EXPRESSION:
-			result.value.boolean_value = operandResult[0].value.boolean_value ^  operandResult[1].value.boolean_value;
+			result.value.boolean_value = operandResult[0].value.boolean_value ^ operandResult[1].value.boolean_value;
 		break;
 
 		case STRING_EXPRESSION:
@@ -60,9 +60,7 @@ expression_Value * operandResult ;
 		default:
 		break;
 	}
-
 	return result;
-
 }
 
 /*--------------------------------------*/
@@ -73,7 +71,7 @@ expression_Value expression_Operator_T_OR( operator * oneOperatorNode  )
 expression_Value result;
 expression_Value * operandResult ;
 
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
+	operandResult = (expression_Value *) calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	result.type = BOOLEAN_EXPRESSION;
 
@@ -99,7 +97,6 @@ expression_Value * operandResult ;
 		default:
 		break;
 	}
-
 	return result;
 }
 /*--------------------------------------*/
@@ -110,7 +107,7 @@ expression_Value expression_Operator_T_AND( operator * oneOperatorNode  )
 expression_Value result;
 expression_Value * operandResult ;
 
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
+	operandResult = (expression_Value *) calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	result.type = BOOLEAN_EXPRESSION;
 
@@ -141,7 +138,7 @@ expression_Value * operandResult ;
 
 }
 /*--------------------------------------*/
-/* 	! operator (not)		*/
+/* 	! operator (unary not)		*/
 /*--------------------------------------*/
 expression_Value expression_Operator_T_NOT( operator * oneOperatorNode  )
 {
@@ -151,24 +148,24 @@ expression_Value operandResult ;
 	result.type = BOOLEAN_EXPRESSION;
 	operandResult = expression( oneOperatorNode -> operands[0] );
 	switch( operandResult.type )
-		{
-			case INTEGER_EXPRESSION:
-			case FLOAT_EXPRESSION:
-			case CHAR_EXPRESSION:
-			case BOOLEAN_EXPRESSION:
-				result.value.boolean_value = ! operandResult.value.boolean_value;
-			break;
+	{
+		case INTEGER_EXPRESSION:
+		case FLOAT_EXPRESSION:
+		case CHAR_EXPRESSION:
+		case BOOLEAN_EXPRESSION:
+			result.value.boolean_value = ! operandResult.value.boolean_value;
+		break;
 
-			case STRING_EXPRESSION:
-			case GUID_EXPRESSION:
-			case ENTITY_EXPRESSION:
-			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to apply logical OR to these operands\n" );
-			break;
+		case STRING_EXPRESSION:
+		case GUID_EXPRESSION:
+		case ENTITY_EXPRESSION:
+		case PROPERTY_EXPRESSION:
+			yyerror( "Unable to apply ! operator to these operands\n" );
+		break;
 
-			default:
-			break;
-		}
+		default:
+		break;
+	}
 	return result;
 }
 

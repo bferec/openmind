@@ -53,47 +53,37 @@ constant * oneConstante;
 			result.type = INTEGER_EXPRESSION;
 			result.value.integer_value =  oneConstante -> val.integer_value ;
 			result.value.boolean_value =  oneConstante -> val.integer_value != 0 ;
-			// fprintf( stderr, "retour expression constante ,  type integer , valeur : [%d]\n" , result.value.integer_value); 
-
 		break;
 
 		case FLOAT_CONSTANT_TYPE:
 			result.type = FLOAT_EXPRESSION;
 			result.value.float_value =  oneConstante -> val.float_value ;
 			result.value.boolean_value =  oneConstante -> val.float_value != 0 ;
-			// fprintf( stderr, "retour expression constante ,  type float , valeur : [%f]\n" ,  result.value.float_value ); 
 		break;
 
 		case BOOLEEAN_CONSTANT_TYPE:
 			result.type = BOOLEAN_EXPRESSION;
 			result.value.boolean_value =  oneConstante -> val.boolean_value ;
-			 // fprintf( stderr, "retour expression constante ,  type Boolean : [%s]\n",  result.value.boolean_value ? "True" : "False" ); 
 		break;
 
 		case GUID_CONSTANT_TYPE:
 			result.type = GUID_EXPRESSION;
 			strcpy( result.value.guid_value , oneConstante -> val.guid_value  );
-			// fprintf( stderr, "retour expression constante ,  type guid : [%s]\n" , result.value.guid_value ); 
 		break;
 
 		case STRING_CONSTANT_TYPE:
 			result.type = STRING_EXPRESSION;
 			result.value.string_value = oneConstante -> val.string_value  ;
-			// fprintf( stderr, "retour expression constante ,  type string : [%s]\n"  , result.value.string_value  ); 
 		break;
 
 		case CHAR_CONSTANT_TYPE:
 			result.type = CHAR_EXPRESSION;
 			result.value.char_value = oneConstante -> val.char_value  ;
 			result.value.boolean_value =  oneConstante -> val.char_value != 0 ;
-			// fprintf( stderr, "retour expression constante ,  type char : [%c]\n"  , result.value.char_value  ); 
 		break;
-
-
 	}
 
 	return result;
-
 }
 
 /* -------------------------------------*/
@@ -114,7 +104,6 @@ variable * oneVariable;
 			result.type = INTEGER_EXPRESSION;
 			result.value.integer_value =  oneVariable -> val.integer_value ;
 			result.value.boolean_value =  oneVariable -> val.integer_value != 0 ;
-			// fprintf( stderr, "retour expression Variable ,  type integer , valeur : [%d]\n" , result.value.integer_value); 
 		break;
 
 		case FLOAT_IDENTIFIER_TYPE:
@@ -147,10 +136,10 @@ variable * oneVariable;
 		case ENTITY_IDENTIFIER_TYPE:
 		case PROPERTY_IDENTIFIER_TYPE:
 		break;
+
+		default:
+		break;
 	}
-
-	//dumpExpressionValue( result );
-
 	return result;
 }
 
@@ -189,7 +178,7 @@ expression_Value operandResult ;
 		break;
 
 		case ENTITY_EXPRESSION:
-			//fprintf( stderr , "name :%s guid %s" , operandResult.value.entity_value-> name , operandResult.value.entity_value-> guid);
+			fprintf( stderr , "name :%s guid %s" , operandResult.value.entity_value-> name , operandResult.value.entity_value-> guid);
 		break;
 
 		case PROPERTY_EXPRESSION:
@@ -252,7 +241,6 @@ expression_Value nameResult ;
 syntaxTreeNode * operand;
 
 
-	// fprintf(stderr , "Operator T_CREATE\n");
 	operand = oneOperatorNode -> operands[0];
 
 	guidResult = expression( operand -> guidNode );
@@ -267,7 +255,6 @@ syntaxTreeNode * operand;
 			if( result.value.entity_value == NULL )
 				yyerror( "unable to create Entity, existing !\n" );
 			result.type = ENTITY_EXPRESSION;
-			//fprintf(stderr , "Entity created :\nGuid:%s\nName:%s\n",result.value.entity_value -> guid ,result.value.entity_value -> name );
 		break;
 
 		case PROPERTY_SYNTAXTREE_NODETYPE:
@@ -275,14 +262,11 @@ syntaxTreeNode * operand;
 			if( result.value.property_value == NULL )
 				yyerror( "unable to create Property, existing !\n" );
 			result.type = PROPERTY_EXPRESSION;
-			 //fprintf(stderr , "Property created  :\nGuid:%s\nName:%s\n",result.value.property_value -> guid ,result.value.property_value -> name );
 		break;
 
 		default:
 		break;
 	}
-
-
 	return result;
 }
 
@@ -431,11 +415,13 @@ expression_Value result;
 			result.type = VOID_EXPRESSION;
 			expression_Operator_T_FOR(currentOperator);
 		break;
-	}
 
+		default:
+			yyerror("unknown operator\n");
+		break;
+	}
 	return result;
 }
-
 
 /* -------------------------------------*/
 /* interpretation d'une expression	*/
@@ -464,17 +450,12 @@ expression_Value result;
 			result = expression_Operator( oneNode  );
 		break;
 
-
 		case ENTITY_SYNTAXTREE_NODETYPE:
 		case PROPERTY_SYNTAXTREE_NODETYPE:
 		break;
 
 		default:
 		break;
-
 	}
-
-	/* DumpVarList( ); */
-
 	return result;
 }

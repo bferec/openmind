@@ -1,7 +1,7 @@
 /* -------------------------------------*/
 /* -------------------------------------*/
 /* 					*/
-/* binaryOperator.c			*/
+/* arithmeticOperator.c			*/
 /* 					*/
 /* -------------------------------------*/
 /* -------------------------------------*/
@@ -37,7 +37,7 @@ float resultNumber;
 	if( oneOperatorNode -> OperandsCount < 2 )
 		yyerror( "operands count invalid for * operator\n" );
 
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
+	operandResult = (expression_Value *) calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	result.value.integer_value = result.value.float_value = resultNumber = 0;
 	result.type = INTEGER_EXPRESSION;
@@ -77,12 +77,14 @@ float resultNumber;
 		case INTEGER_EXPRESSION:
 			if( operandResult[1].value.integer_value == 0 )
 				yyerror( "Unable to divide by zero\n" );
+
 			resultNumber /= (float) operandResult[1].value.integer_value;
 		break;
 
 		case FLOAT_EXPRESSION:
 			if( operandResult[1].value.float_value == 0 )
 				yyerror( "Unable tdivide by zero\n" );
+
 			resultNumber /= operandResult[1].value.float_value;
 		break;
 
@@ -126,7 +128,7 @@ float resultNumber;
 	if( oneOperatorNode -> OperandsCount < 2 )
 		yyerror( "operands count invalid for * operator\n" );
 
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
+	operandResult = (expression_Value *) calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 
 	result.value.integer_value = result.value.float_value = resultNumber = 0;
@@ -147,7 +149,6 @@ float resultNumber;
 			result.type = FLOAT_EXPRESSION;
 			resultNumber = operandResult[0].value.float_value;
 		break;
-
 
 		case STRING_EXPRESSION:
 		case CHAR_EXPRESSION:
@@ -207,7 +208,7 @@ expression_Value result;
 expression_Value * operandResult ;
 float resultNumber;
 
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
+	operandResult = (expression_Value *) calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	result.value.integer_value = result.value.float_value = resultNumber = 0;
 	result.type = INTEGER_EXPRESSION;
@@ -267,7 +268,7 @@ float resultNumber;
 			case BOOLEAN_EXPRESSION:
 			case ENTITY_EXPRESSION:
 			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to apply substract operator to these operands\n" );
+				yyerror( "Unable to apply + operator to these operands\n" );
 			break;
 
 			default:
@@ -297,7 +298,7 @@ expression_Value result;
 expression_Value * operandResult ;
 float resultNumber;
 
-	operandResult = calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
+	operandResult = (expression_Value *) calloc( oneOperatorNode -> OperandsCount , sizeof(expression_Value ) );
 
 	result.value.integer_value = result.value.float_value = resultNumber = 0;
 	result.type = INTEGER_EXPRESSION;
@@ -326,7 +327,7 @@ float resultNumber;
 		case BOOLEAN_EXPRESSION:
 		case ENTITY_EXPRESSION:
 		case PROPERTY_EXPRESSION:
-			yyerror( "Unable to apply substract operator to thse operands\n" );
+			yyerror( "Unable to apply - operator to thse operands\n" );
 		break;
 
 		default:
@@ -349,7 +350,7 @@ float resultNumber;
 			case BOOLEAN_EXPRESSION:
 			case ENTITY_EXPRESSION:
 			case PROPERTY_EXPRESSION:
-				yyerror( "Unable to apply substract operator to these operands\n" );
+				yyerror( "Unable to apply - operator to these operands\n" );
 			break;
 
 			default:

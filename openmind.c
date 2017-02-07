@@ -47,6 +47,11 @@ int main( int argc , char * * argv )
 	{ 
 		fprintf( stderr , "ouverture de %s...\n" , argv[1] );
 		yyin=fopen(argv[1],"r");
+		if( yyin == NULL )
+		{
+			fprintf( stderr , "File not found\n" );
+			exit(1);
+		}
 	}
 	else
 	{
@@ -56,10 +61,8 @@ int main( int argc , char * * argv )
 	lineNumber=1;
 	charNumber=0;
 
-
 	do 
 	{ 
-
 		yyparse();
 
 	} while( ! feof(yyin) );

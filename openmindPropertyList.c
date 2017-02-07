@@ -163,7 +163,6 @@ property_node * previous;
 	}
 }
 
-
 /*------------------------------------------------------*/
 /* Delete all property					*/
 /*------------------------------------------------------*/
@@ -191,6 +190,4 @@ property_node * previous;
 		prop = prop -> previous;
 	}
 }
-
-
 

@@ -18,10 +18,13 @@ char msgerror[ MAXLENGTH_STRING + 1 ];
 /* -------------------------------------------------------------*/
 /* mots cles ne pouvant être utilises en tant que variable	*/
 /* -------------------------------------------------------------*/
-char keywords[KEYWORDS_COUNT] [256] = {"true","false","create","entity", "property","name","identity","auto","name","unique","exit","quit" };
-
-
-
+char keywords[KEYWORDS_COUNT] [256] = 
+{
+	"true","false","create","entity", 
+	"property","name","identity","auto",
+	"name","unique","exit","quit","while",
+	"do","for" 
+};
 
 /* -----------------------------------------------------*/
 /* generation d'un nombre aletoire entre deux bornes	*/
@@ -33,9 +36,10 @@ int randomize(int min, int max)
 	result = rand()%(max-min) +min;
 
     return result;
-
 }
+
 /* -----------------------------------------------------*/
+/* Yacc standard error					*/
 /* -----------------------------------------------------*/
 void yyerror(const char* msg) 
 {
@@ -122,7 +126,6 @@ int i;
 		}
 	}
 	return result;
-	fprintf( stderr , "TROUVE MOT CLE : [%d]\n" , onekeyword == NULL );
 }
 
 

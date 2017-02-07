@@ -22,8 +22,9 @@
 
 #include "openmind.tab.h"
 
-/* -----------------------------*/
-/* -----------------------------*/
+/* ---------------------------------------------*/
+/* test if true for continue loop in for( ; ; )	*/
+/* ---------------------------------------------*/
 BOOL for_continue_loop(syntaxTreeNode * oneNode )
 {
 BOOL result = TRUE;	/* if true continue loop	*/
@@ -46,7 +47,6 @@ expression_Value booleanResult;
 		booleanResult = expression( oneNode );
 		result = booleanResult.value.boolean_value;
 	}
-
 	return result;
 }
 
@@ -119,7 +119,7 @@ expression_Value result;
 void expression_Operator_T_FOR(operator * oneOperatorNode )
 {
 
-expression_Value result ;
+/* expression_Value result ;	*/
 syntaxTreeNode * assign_list_Node;
 syntaxTreeNode * boolean_expr_list_Node;
 syntaxTreeNode * assign_list_stmt_Node;
@@ -146,12 +146,9 @@ BOOL continueLoop = TRUE;
 		/* test conditionnal loop continue	*/
 		continueLoop = for_continue_loop(boolean_expr_list_Node );
 	}
-
 }
 
-
-/* -----------------------------------
--*/
+/* -------------------------------------*/
 /* DO WHILE interpretation		*/
 /* -------------------------------------*/
 void  expression_Operator_T_DO(operator * oneOperatorNode)
@@ -162,13 +159,9 @@ syntaxTreeNode * conditionNode;
 syntaxTreeNode * statementNode;
 
 	conditionNode = oneOperatorNode -> operands[1];
-	 //fprintf( stderr , "type noeud condition : %d\n\r" , conditionNode -> type );
-
 	statementNode = oneOperatorNode -> operands[0];
-	 //fprintf( stderr , "type noeud instructions : %d\n\r" , statementNode -> type );
 
 	do{
-		//fprintf(stderr , "iteration %d\n" , iter ++ );
 		if( statementNode -> type == LIST_SYNTAXTREE_NODETYPE )
 		{
 			for( int x = 0 ;x < statementNode -> nodeListCount ; x ++ )
@@ -182,7 +175,6 @@ syntaxTreeNode * statementNode;
 			statementResult = expression( statementNode  );
 			conditionalResult = expression( conditionNode );
 		}
-		//fprintf(stderr , "conditionalResult (fin boucle) %d\n" , conditionalResult.value.boolean_value );
 	}while( conditionalResult.value.boolean_value );
 }
 
@@ -191,23 +183,17 @@ syntaxTreeNode * statementNode;
 /* -------------------------------------*/
 void  expression_Operator_T_WHILE(operator * oneOperatorNode)
 {
-expression_Value conditionalResult ;
-expression_Value statementResult ;
+expression_Value conditionalResult;
+expression_Value statementResult;
 syntaxTreeNode * conditionNode;
 syntaxTreeNode * statementNode;
 
 	conditionNode = oneOperatorNode -> operands[0];
-	 //fprintf( stderr , "type noeud condition : %d\n\r" , conditionNode -> type );
-
 	statementNode = oneOperatorNode -> operands[1];
-	 //fprintf( stderr , "type noeud instructions : %d\n\r" , statementNode -> type );
-
 	conditionalResult = expression( conditionNode );
-	//fprintf(stderr , "conditionalResult %d\n" , conditionalResult.value.boolean_value );
 
 	while( conditionalResult.value.boolean_value )
 	{
-		//fprintf(stderr , "iteration %d\n" , iter ++ );
 		if( statementNode -> type == LIST_SYNTAXTREE_NODETYPE )
 		{
 			for( int x = 0 ;x < statementNode -> nodeListCount ; x ++ )
@@ -221,7 +207,6 @@ syntaxTreeNode * statementNode;
 			statementResult = expression( statementNode  );
 			conditionalResult = expression( conditionNode );
 		}
-		//fprintf(stderr , "conditionalResult (fin boucle) %d\n" , conditionalResult.value.boolean_value );
 	}
 }
 

@@ -31,7 +31,6 @@
 /* -----------------------------------------------------*/
 entity_node * entity_list;
 
-
 /* -----------------------------------------------------*/
 /* Memry allocation for entity				*/
 /* -----------------------------------------------------*/
@@ -66,6 +65,7 @@ void addEntityNodeToList( entity_node * oneEntityNode )
 }
 
 /*------------------------------------------------------*/
+/* find a node that contain an entity			*/
 /*------------------------------------------------------*/
 entity_node * find_Entity_Node(char * oneguid , char * oneName , BOOL oneUniqueFlag )
 {
@@ -81,7 +81,6 @@ entity_node * currentNode;
 		{
 			break;
 		}
-
 		if( oneUniqueFlag )
 		{
 			compare = strcmp( strupr(oneName) , strupr(currentNode-> e -> name) );
@@ -94,10 +93,10 @@ entity_node * currentNode;
 		currentNode = currentNode -> next;
 	}
 	return currentNode;
-
 }
 
 /*------------------------------------------------------*/
+/* create an entity in the list				*/
 /*------------------------------------------------------*/
 entity * createEntity( char * oneguid , char * oneName , BOOL oneUniqueFlag )
 {
@@ -135,15 +134,14 @@ entity_node * previous;
 
 	previous = (entity_node *) NULL;
 	ent = rootEntity;
-	
+	/* goto end	*/
 	while( ent )
 	{
 		previous = ent;
 		ent = ent -> next;
 	}
-
+	/* come back and free	*/
 	ent = previous;
-	
 	while( ent )
 	{
 		free(ent);
@@ -154,7 +152,7 @@ entity_node * previous;
 /*------------------------------------------------------*/
 /* free memory of a given entity			*/
 /*------------------------------------------------------*/
-void FreeMemEntity( entity  * oneEntity )
+void FreeMemEntity( entity * oneEntity )
 {
 
 	/* free content list	*/
@@ -165,8 +163,6 @@ void FreeMemEntity( entity  * oneEntity )
 
 	free( oneEntity );
 }
-
-
 
 /*------------------------------------------------------*/
 /* Delete all entity					*/
@@ -180,14 +176,14 @@ entity_node * previous;
 
 	previous = (entity_node *) NULL;
 	ent = entity_list;
-	
+	/* goto end	*/
 	while( ent )
 	{
 		FreeMemEntity( ent -> e );
 		previous = ent;
 		ent = ent -> next;
 	}
-
+	/* come back and free	*/
 	ent = previous;
 	
 	while( ent )
