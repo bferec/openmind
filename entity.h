@@ -11,7 +11,7 @@
 /* -----------------------------------------------------*/
 typedef enum
 {
-	UNKNOWN, OK, ERROR
+	UNKNOWN, OK , ERROR , PAUSED
 } entityState; 
 
 

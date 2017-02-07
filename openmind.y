@@ -136,7 +136,7 @@ extern int yychar;
 
 %type<node> stmtList stmt create_stmt echo_stmt assign_stmt create_entity_stmt create_property_stmt incr_stmt iteration_stmt 
 %type<node> compound_stmt compound_stmt_element for_assign_stmt boolean_expr_list for_initial_assign
-%type<node> exprlist expr char_expr string_expr numeric_expr boolean_expr binary_expr guid_expr lvalue 
+%type<node> exprlist expr char_expr string_expr numeric_expr boolean_expr binary_expr guid_expr  entity_expr lvalue 
 %type<node> name_defs guid_defs property_defs entity_defs
   
 
@@ -317,6 +317,7 @@ expr:
 	| boolean_expr
 	| binary_expr
 	| guid_expr
+	| entity_expr
 	| T_LEFT_BRACKET expr T_RIGHT_BRACKET	{ $$ = $2; }
 	| T_IDENTIFIER	{ $$ = Var( $1 -> type , $1 ); }
 ;
@@ -384,6 +385,11 @@ char_expr:
 string_expr:
 	T_CSTE_STRING				{ $$ = Const( STRING_CONSTANT_TYPE , $1 ); }
 	| T_IDENTIFIER				{ $$ = Var( $1 -> type , $1 ); }
+;
+
+entity_expr:
+	T_ENTITY T_LEFT_BRACE guid_expr T_RIGHT_BRACE 	{ $$ = Const( ENTITY_CONSTANT_TYPE , & $3 ); }
+	| T_IDENTIFIER					{ $$ = Var( $1 -> type , $1 ); }
 ;
 
 %%

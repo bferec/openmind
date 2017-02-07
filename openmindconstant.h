@@ -13,7 +13,9 @@ typedef enum constant_type
 	BOOLEEAN_CONSTANT_TYPE,
 	GUID_CONSTANT_TYPE,
 	CHAR_CONSTANT_TYPE,
-	STRING_CONSTANT_TYPE
+	STRING_CONSTANT_TYPE,
+	ENTITY_CONSTANT_TYPE,
+	PROPERTY_CONSTANT_TYPE
 } ConstantType;
 
 /* -----------------------------------------------------*/

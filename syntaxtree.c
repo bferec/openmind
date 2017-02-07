@@ -17,6 +17,7 @@
 #include "entity.h"
 #include "openmindvalue.h"
 #include "openmindvarlist.h"
+#include "openmindEntityList.h"
 
 #include "openmindconstant.h"
 #include "operator.h"
@@ -161,6 +162,15 @@ syntaxTreeNode * resultNode;
 				yyerror("string value of constant allocation : Out of Memory" );
 			strcpy( resultNode -> cste.val.string_value , (char *) oneconstantPtr );
 			// fprintf( stderr , "Const() type string : [%s]\n" , resultNode -> cste.val.string_value); 
+		break;
+
+		case	ENTITY_CONSTANT_TYPE:
+			resultNode -> cste.val.entity_value = allocMemEntity();
+			if( resultNode -> cste.val.entity_value == NULL )
+				yyerror("Entity value of constant allocation : Out of Memory" );
+			syntaxTreeNode * guidNode;
+			guidNode = (syntaxTreeNode *) oneconstantPtr;		
+			strcpy( resultNode -> cste.val.entity_value -> guid , guidNode -> cste.val.guid_value);
 		break;
 	}
 
