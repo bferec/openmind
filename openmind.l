@@ -50,7 +50,7 @@ guid			{hexanumber}\-{hexanumber}\-{hexanumber}\-{hexanumber}\-{hexanumber}
 integer			{digit}+
 float			{digit}+\.{digit}+|\.{digit}+
 ident			[a-zA-Z_][0-9a-zA-Z_]*	
-escape			\n|\r|\f|\b\|\t
+escape			\n|\r|\f|\b\|\t|\a
 spacetab		[ \t]+
 
 entity			(?i:"entity")
