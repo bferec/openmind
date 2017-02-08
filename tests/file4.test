@@ -1,4 +1,6 @@
-/* test commentaire	*/
+/* -----------------------------*/
+/* test constantes texte	*/
+/* -----------------------------*/
 
 echo "test affichage constante texte:\t\t";
 echo  "\\Hello World\\ !\n";

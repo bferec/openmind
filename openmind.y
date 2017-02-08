@@ -389,7 +389,6 @@ string_expr:
 
 entity_expr:
 	T_ENTITY T_LEFT_BRACE guid_expr T_RIGHT_BRACE 	{ $$ = Const( ENTITY_CONSTANT_TYPE , & $3 ); }
-	| T_IDENTIFIER					{ $$ = Var( $1 -> type , $1 ); }
 ;
 
 %%

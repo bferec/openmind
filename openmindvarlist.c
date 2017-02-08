@@ -108,13 +108,11 @@ variable * result;
 	if( result == NULL )
 		yyerror( "Memory allocation for variable impossible\n");
 
-	result -> ident = malloc( MAXLENGTH_STRING + 1 );
+	result -> ident = (char *) malloc( MAXLENGTH_STRING + 1 );
 	if( result -> ident == NULL )
 		yyerror( "Memory allocation for variable identifier impossible\n");
 	return result;
 }
-
-
 
 /* -----------------------------------------------------*/
 /* ajout Variable Node dans la liste des variables	*/

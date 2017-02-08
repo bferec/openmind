@@ -1,4 +1,6 @@
-/* test assignation de variable *= /= += -= */
+/* ---------------------------------------------*/
+/* test assignation de variable *= /= += -= 	*/
+/* ---------------------------------------------*/
 
 echo "test += heterogene\n";echo "\n";
 echo "test x = 5 => "; x = 5; echo x; echo "\n";

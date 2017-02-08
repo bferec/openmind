@@ -11,6 +11,8 @@ echo "test  & binary and => ";
 b = 62 & 32;
 echo b, "\n";
 
+echo "test  1 << 5 => ";
+echo (1 << 5), "\n";
 
 echo "test  ~ complement a 1 => ";
 c = ~ (1 << 5);

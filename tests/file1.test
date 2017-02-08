@@ -22,6 +22,5 @@ Create Property
 	Name {"Type"} Unique ;
 };
 
-
 quit;
 
