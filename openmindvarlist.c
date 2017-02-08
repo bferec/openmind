@@ -163,6 +163,31 @@ void FreeMemVar(variable * oneVariable)
 }
 
 /* -----------------------------------------------------*/
+/* Delete all elements of a array var.			*/
+/* -----------------------------------------------------*/
+void ClearVarElements( variable * v )
+{
+variable_node * n;
+variable_node * previous;
+	previous = (variable_node *) NULL;
+	n = v -> elements;
+	while( n )
+	{
+		FreeMemVar( n -> v );
+		previous = n;
+		n = n -> next;
+	}
+
+	n = previous;
+	
+	while( n )
+	{
+		free(n);
+		n = n -> previous;
+	}
+}
+
+/* -----------------------------------------------------*/
 /* Delete all vars.					*/
 /* -----------------------------------------------------*/
 void ClearVarList( )
@@ -177,6 +202,11 @@ variable_node * previous;
 	
 	while( n )
 	{
+		if( n -> v->type == ARRAY_IDENTIFIER_TYPE )
+		{
+			ClearVarElements( n -> v );
+		}
+
 		FreeMemVar( n -> v );
 		previous = n;
 		n = n -> next;
@@ -223,6 +253,8 @@ variable_node * new_VarNode;
 		new_VarNode -> v -> type =  UNKNOWN_IDENTIFIER_TYPE;
 
 		new_VarNode -> v -> val.string_value = (char * ) NULL;
+
+		new_VarNode -> v -> elements = (variable_node *) NULL;
 
 		/* fprintf( stderr , "ajout du noeud dans la liste...\n"); */
 		addVarNodeToList( new_VarNode );

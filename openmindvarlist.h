@@ -7,7 +7,7 @@
 /* -------------------------------------*/
 
 /* -------------------------------------*/
-/* type de variable possible dans fdl	*/
+/* possible type of variable  fdl	*/
 /* -------------------------------------*/
 typedef enum  
 {
@@ -21,19 +21,22 @@ typedef enum
 	STRING_IDENTIFIER_TYPE, 
 	CHAR_IDENTIFIER_TYPE, 
 	ENTITY_IDENTIFIER_TYPE , 
-	PROPERTY_IDENTIFIER_TYPE 
+	PROPERTY_IDENTIFIER_TYPE ,
+	ARRAY_IDENTIFIER_TYPE		/* array var.	*/
 } VarType;
 
 
 
 /* -----------------------------------------------------*/
-/* une variable du programme				*/
+/* fdl variable.					*/
 /* -----------------------------------------------------*/
 typedef struct variable
 {
 	VarType type;
 	char * ident;
 	value val;
+	struct variable_node * elements;	/* elements of array	*/
+	int elementsCount;			/* array elements count	*/
 }variable;
 
 

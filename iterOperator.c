@@ -124,6 +124,7 @@ syntaxTreeNode * assign_list_Node;
 syntaxTreeNode * boolean_expr_list_Node;
 syntaxTreeNode * assign_list_stmt_Node;
 syntaxTreeNode * compound_stmt_Node;
+expression_Value result;
 
 BOOL continueLoop = TRUE;
 

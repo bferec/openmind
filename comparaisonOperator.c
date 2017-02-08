@@ -19,6 +19,7 @@
 #include "operator.h"
 #include "syntaxtree.h"
 #include "expressions.h"
+
 #include "openmind.tab.h"
 
 /*----------------------------------------------*/
@@ -200,7 +201,7 @@ expression_Value * operandResult ;
 		break;
 
 		default:
-			yerror( "Unable to apply logical <= to these operands\n" );
+			yyerror( "Unable to apply logical <= to these operands\n" );
 		break;
 	}
 	return result;
