@@ -77,6 +77,7 @@ extern int yychar;
 %left T_PLUS_EGAL_SIGN T_MINUS_EGAL_SIGN T_ASTERISK_EGAL T_SLASH_EGAL
 
 %token T_WHILE T_DO T_FOR
+%token T_IF T_ELSE
 
 %token T_LEFT_BRACE T_RIGHT_BRACE
 %token T_LEFT_BRACKET T_RIGHT_BRACKET
@@ -134,7 +135,7 @@ extern int yychar;
 
 %token T_UNKNOWN
 
-%type<node> stmtList stmt create_stmt echo_stmt assign_stmt create_entity_stmt create_property_stmt incr_stmt iteration_stmt 
+%type<node> stmtList stmt create_stmt echo_stmt assign_stmt create_entity_stmt create_property_stmt incr_stmt iteration_stmt alternative_stmt
 %type<node> compound_stmt compound_stmt_element for_assign_stmt boolean_expr_list for_initial_assign
 %type<node> exprlist expr char_expr string_expr numeric_expr boolean_expr binary_expr guid_expr  entity_expr lvalue 
 %type<node> name_defs guid_defs property_defs entity_defs
@@ -169,6 +170,15 @@ stmt:
 	| incr_stmt	T_SEMICOLON	{ $$ = $1; }
 	| iteration_stmt		{ $$ = $1; }
 	| T_QUIT	T_SEMICOLON	{ exit (0); }
+;
+
+
+/* -------------------- */
+/* alternative		*/
+/* -------------------- */
+alternative_stmt:
+	T_IF T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET stmt 			{ $$  = oper( T_IF , 2 , $3, $5 ); }	
+	| T_IF T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET compound_stmt 	{ $$  = oper( T_IF , 2 , $3, $5 ); }
 ;
 /* -------------------- */
 /* iteration		*/

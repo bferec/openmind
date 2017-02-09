@@ -185,6 +185,9 @@ property		(?i:"property")
 (?i:"do")		{charCount() ; return T_DO;}
 (?i:"for")		{charCount() ; return T_FOR;}
 
+(?i:"if")		{charCount() ; return T_IF;}
+(?i:"else")		{charCount() ; return T_ELSE;}
+
 (?i:"create")		{charCount() ; return T_CREATE;}
 
 (?i:"identity")		{charCount() ; return T_IDENTITY;}
