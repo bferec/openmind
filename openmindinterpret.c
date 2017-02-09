@@ -145,11 +145,11 @@ variable * oneVariable;
 
 /* -------------------------------------*/
 /* -------------------------------------*/
-void DoEcho( syntaxTreeNode * oneListNode )
+void DoEcho( syntaxTreeNode * oneNode )
 {
 expression_Value operandResult ;
 
-	operandResult = expression( oneListNode );
+	operandResult = expression( oneNode );
 
 	switch( operandResult.type )
 	{

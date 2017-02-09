@@ -22,6 +22,7 @@
 
 #include "openmind.tab.h"
 
+extern void DoEcho( syntaxTreeNode * oneNode );
 
 /* -------------------------------------*/
 /* ? :  interpretation			*/
@@ -37,13 +38,13 @@ expression_Value result;
 	{
 		result = expression( oneOperatorNode -> operands[1] );
 		fprintf( stderr , "True case type : %d\n" , result.type );
-		fprintf( stderr , "True case operand 1 type : %d\n" , oneOperatorNode -> operands[1] -> type );				
+		fprintf( stderr , "True case operand 1 type : %d\n" , oneOperatorNode -> operands[1] -> type );		
 	}
 	else
 	{
 		result = expression( oneOperatorNode -> operands[2] );
 		fprintf( stderr , "False case type : %d\n" , result.type );	
-		fprintf( stderr , "False case operand 2 type : %d\n" , oneOperatorNode -> operands[2] -> type );			
+		fprintf( stderr , "False case operand 2 type : %d\n" , oneOperatorNode -> operands[2] -> type );		
 	}
 
 	return result;

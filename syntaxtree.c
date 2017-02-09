@@ -122,8 +122,6 @@ syntaxTreeNode * Const( ConstantType oneType, void * oneconstantPtr )
 {
 syntaxTreeNode * resultNode;
 
-	//fprintf( stderr , "Const()\n" );
-
 	resultNode = syntaxTreeNodeAlloc();
 	resultNode -> type = CONSTANT_SYNTAXTREE_NODETYPE;
 	resultNode -> cste.type = oneType;
