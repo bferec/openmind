@@ -31,6 +31,7 @@
 #include "IncrDecrOperator.h"
 #include "iterOperator.h"
 #include "binaryOperator.h"
+#include "alternatOperator.h"
 
 #include "openmind.tab.h"
 
@@ -414,6 +415,11 @@ expression_Value result;
 		case T_FOR:
 			result.type = VOID_EXPRESSION;
 			expression_Operator_T_FOR(currentOperator);
+		break;
+
+		case T_IF:
+			result.type = VOID_EXPRESSION;
+			expression_Operator_T_IF(currentOperator);
 		break;
 
 		default:

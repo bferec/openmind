@@ -1,0 +1,29 @@
+/* -----------------------------*/
+/* file-07.test  if ... else...	*/
+/* -----------------------------*/
+
+
+echo "test if\n";
+
+a = 5;
+b = 7;
+
+echo "a=5, b= 7 , test b > a => ";
+if( b > a ) 
+	echo "True\n";
+else
+	echo "False\n";
+
+
+
+echo "test 10 < 5 => ";
+if( 10 < 5 )
+{
+	echo "True\n";
+}
+else
+{
+	echo "False\n";
+}
+
+
