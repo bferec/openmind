@@ -389,7 +389,7 @@ boolean_expr:
 /* conditional expression 	*/
 /* ------------------------ */
 conditional_expr:
-	expr T_QUESTION expr T_COLON expr	{ $$ = oper( T_QUESTION , 3, $1 , $3 , $5 ); }
+	boolean_expr T_QUESTION expr T_COLON expr	{ $$ = oper( T_QUESTION , 3, $1 , $3 , $5 ); }
 ;
 
 /* -------------------- */
