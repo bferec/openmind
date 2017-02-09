@@ -88,8 +88,11 @@ extern int yychar;
 
 %token T_DOT 
 %token T_COMMA
-%token T_COLON
 %token T_SEMICOLON
+
+%token T_QUESTION
+%token T_COLON
+
 
 %token T_OR
 %left T_OR
@@ -140,7 +143,7 @@ extern int yychar;
 %type<node> compound_stmt compound_stmt_element 
 %type<node> iteration_stmt for_assign_stmt  for_initial_assign
 %type<node> alternative_stmt
-%type<node> exprlist expr char_expr string_expr numeric_expr boolean_expr boolean_expr_list binary_expr guid_expr entity_expr lvalue 
+%type<node> exprlist expr char_expr string_expr numeric_expr boolean_expr conditional_expr boolean_expr_list binary_expr guid_expr entity_expr lvalue 
 %type<node> name_defs guid_defs property_defs entity_defs
   
 
@@ -334,6 +337,7 @@ expr:
 	| string_expr
 	| char_expr				
 	| boolean_expr
+	| conditional_expr
 	| binary_expr
 	| guid_expr
 	| entity_expr
@@ -357,7 +361,7 @@ numeric_expr:
 	T_INT 						{ $$ = Const( INT_CONSTANT_TYPE   , (void *) & $1.integer_value ); }
 	| T_FLOAT					{ $$ = Const( FLOAT_CONSTANT_TYPE , (void *) & $1.float_value); }
 	| T_MINUS_SIGN expr 		{ $$ = oper( T_MINUS_SIGN , 1 , $2 ) ; }
-| T_PLUS_SIGN expr 				{ $$ = oper( T_PLUS_SIGN , 1 , $2 ) ; }
+	| T_PLUS_SIGN expr 			{ $$ = oper( T_PLUS_SIGN , 1 , $2 ) ; }
 	| expr T_PLUS_SIGN expr		{ $$ = oper( T_PLUS_SIGN  , 2 , $1 , $3 ) ; }	
 	| expr T_MINUS_SIGN expr 	{ $$ = oper( T_MINUS_SIGN , 2 , $1 , $3 ) ; }	
 	| expr T_ASTERISK expr 		{ $$ = oper( T_ASTERISK   , 2 , $1 , $3 ) ; }		
@@ -369,18 +373,23 @@ numeric_expr:
 boolean_expr:	
 	T_TRUE								{ $$ = Const( BOOLEEAN_CONSTANT_TYPE ,  & $1); }
 	|T_FALSE							{ $$ = Const( BOOLEEAN_CONSTANT_TYPE ,  & $1); }
-
 	| T_NOT expr						{ $$ = oper( T_NOT , 1, $2 ); }
 	| expr T_OR expr					{ $$ = oper( T_OR  , 2, $1 , $3 ); }
 	| expr T_AND expr					{ $$ = oper( T_AND , 2, $1 , $3 ); }
 	| expr T_XOR expr					{ $$ = oper( T_XOR , 2, $1 , $3 ); }
-
 	| expr T_DIFFERENT  expr			{ $$ = oper( T_DIFFERENT , 2, $1 , $3 ); }
 	| expr T_EQUAL      expr			{ $$ = oper( T_EQUAL 	 , 2, $1 , $3 ); }	
 	| expr T_LESS_THAN  expr			{ $$ = oper( T_LESS_THAN , 2, $1 , $3 ); }	
 	| expr T_MORE_THAN  expr			{ $$ = oper( T_MORE_THAN , 2, $1 , $3 ); }	
 	| expr T_LESS_OR_EQUAL_THAN  expr	{ $$ = oper( T_LESS_OR_EQUAL_THAN , 2, $1 , $3 ); }	
 	| expr T_MORE_OR_EQUAL_THAN  expr	{ $$ = oper( T_MORE_OR_EQUAL_THAN , 2, $1 , $3 ); }		
+;
+
+/* ------------------------ */
+/* conditional expression 	*/
+/* ------------------------ */
+conditional_expr:
+	expr T_QUESTION expr T_COLON expr	{ $$ = oper( T_QUESTION , 3, $1 , $3 , $5 ); }
 ;
 
 /* -------------------- */

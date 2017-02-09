@@ -45,7 +45,6 @@ expression_Value expression_Constante( syntaxTreeNode * oneNode )
 expression_Value result;
 constant * oneConstante;
 
-	/* dumpSyntaxTreeNode(oneNode ); */
 	oneConstante = & oneNode -> cste ;
 
 	switch( oneConstante -> type )
@@ -205,7 +204,6 @@ syntaxTreeNode * operand;
 
 	if( operand -> type ==  LIST_SYNTAXTREE_NODETYPE )
 	{
-		// fprintf(stderr , "elements dans liste : %d\n" , operand -> nodeListCount );
 		for( int x = 0 ; x < operand -> nodeListCount ; x ++ )
 		{
 			DoEcho( operand -> nodeList[ x ]   );
@@ -229,7 +227,6 @@ expression_Value result;
 
 	return result;
 }
-
 
 /*--------------------------------------*/
 /* CREATE operator			*/
@@ -420,6 +417,10 @@ expression_Value result;
 		case T_IF:
 			result.type = VOID_EXPRESSION;
 			expression_Operator_T_IF(currentOperator);
+		break;
+
+		case T_QUESTION:
+			result = expression_Operator_T_QUESTION( currentOperator ) ; 
 		break;
 
 		default:

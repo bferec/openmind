@@ -136,7 +136,9 @@ property		(?i:"property")
 "["			{charCount() ; return T_LEFT_SQUARE_BRACKET;}
 "]"			{charCount() ; return T_RIGHT_SQUARE_BRACKET;}
 
+"?"			{charCount() ; return T_QUESTION;}
 ":"			{charCount() ; return T_COLON;}
+
 ";"			{charCount() ; return T_SEMICOLON;}
 ","			{charCount() ; return T_COMMA;}
 
