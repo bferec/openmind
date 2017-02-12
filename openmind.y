@@ -166,6 +166,7 @@ stmtList:
 	stmt  				{ expression( $1 ) ; Free_SyntaxTreeNode( $1 ); }	
 	| stmtList stmt  	{ expression( $2 ) ; Free_SyntaxTreeNode( $2 ); }
 ;
+
 /* -------------------- */
 /* instruction			*/
 /* -------------------- */
@@ -205,7 +206,7 @@ alternative_stmt:
 ;
 
 /* -------------------- */
-/* iteration		*/
+/* iteration			*/
 /* -------------------- */
 iteration_stmt:
 	T_WHILE T_LEFT_BRACKET boolean_expr T_RIGHT_BRACKET stmt 								{ $$  = oper( T_WHILE , 2 , $3 , $5 ); }
@@ -222,14 +223,15 @@ for_initial_assign:
 ;
 
 /* ---------------------------- */
-/* boolean expressions list	*/
+/* boolean expressions list		*/
 /* ---------------------------- */
 boolean_expr_list:
 	boolean_expr								{ $$ = NodeList( $1 ); }
 	| boolean_expr_list T_COMMA boolean_expr	{ $$ = NodeAdd( $1, $3 ); }
 ;
+
 /* ---------------------------- */
-/* simple assignation list	*/
+/* simple assignation list		*/
 /* ---------------------------- */
 for_assign_stmt:
 	assign_stmt								{ $$ = NodeList( $1 ); }
@@ -238,15 +240,15 @@ for_assign_stmt:
 	| for_assign_stmt T_COMMA incr_stmt		{ $$ = NodeAdd( $1, $3 ); }
 ;
 
-;
 /* -------------------- */
-/* affichage		*/
+/* affichage			*/
 /* -------------------- */
 echo_stmt:
 	 T_ECHO exprlist	{ $$  = oper( T_ECHO , 1 , $2 );  }
 ;
+
 /* -------------------- */
-/* affectation		*/
+/* affectation			*/
 /* -------------------- */
 assign_stmt:
 	  lvalue T_ASSIGN expr			{ $$ = oper( T_ASSIGN , 2 , $1, $3 ); }
@@ -255,6 +257,7 @@ assign_stmt:
 	| lvalue T_ASTERISK_EGAL expr 	{ $$ = oper( T_ASTERISK_EGAL   , 2 , $1 , $3 ) ; }		
 | lvalue T_SLASH_EGAL expr			{ $$ = oper( T_SLASH_EGAL  , 2 , $1 , $3 ) ; }	
 ;
+
 /* ------------------------------------ */
 /* incrementation/decrementation		*/
 /* ------------------------------------ */
@@ -309,7 +312,7 @@ property_defs:
 ;
 ;
 /* -------------------- */
-/* identity			*/
+/* identity				*/
 /* -------------------- */
 guid_defs:
 	T_IDENTITY T_LEFT_BRACE guid_expr T_RIGHT_BRACE	{ $$ = $3; } 
@@ -322,7 +325,7 @@ name_defs:
 ;
 
 /* -------------------- */
-/* Expression list	*/
+/* Expression list		*/
 /* -------------------- */
 exprlist:
 	 expr  					{ $$ = NodeList( $1 ); }
@@ -330,7 +333,7 @@ exprlist:
 ;
 
 /* -------------------- */
-/* Expression		*/
+/* Expression			*/
 /* -------------------- */
 expr:
 	numeric_expr
@@ -347,13 +350,14 @@ expr:
 
 
 /* -------------------- */
-/* Guid Expression	*/
+/* Guid Expression		*/
 /* -------------------- */
 guid_expr:
 	T_AUTO			{ $$ = oper( T_AUTO , 0 );  }
 	| T_GUID		{ $$ = Const( GUID_CONSTANT_TYPE , $1 ); }
 	| T_IDENTIFIER	{ $$ = Var( $1 -> type , $1 ); }
 ;
+
 /* -------------------- */
 /* numeric expression 	*/
 /* -------------------- */
@@ -367,6 +371,7 @@ numeric_expr:
 	| expr T_ASTERISK expr 		{ $$ = oper( T_ASTERISK   , 2 , $1 , $3 ) ; }		
 	| expr T_SLASH expr			{ $$ = oper( T_SLASH 	  , 2 , $1 , $3 ) ; }	
 ;
+
 /* -------------------- */
 /* boolean expression 	*/
 /* -------------------- */
@@ -402,6 +407,7 @@ binary_expr:
 	| expr T_LEFT_SHIFT expr		{ $$ = oper( T_LEFT_SHIFT , 2, $1 , $3 ); }
 	| expr T_RIGHT_SHIFT expr		{ $$ = oper( T_RIGHT_SHIFT , 2, $1 , $3 ); }
 ;
+
 /* -------------------- */
 /* char expression 		*/
 /* -------------------- */
