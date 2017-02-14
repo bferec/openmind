@@ -35,8 +35,8 @@ typedef struct variable
 	VarType type;
 	char * ident;
 	value val;
-	struct variable_node * elements;	/* elements of array	*/
-	int elementsCount;			/* array elements count	*/
+	struct variable_node  * * elements;	/* elements of n dimension array	*/
+	int nbDimensions;			/* array dimensions count		*/
 }variable;
 
 

@@ -111,6 +111,7 @@ variable * result;
 	result -> ident = (char *) malloc( MAXLENGTH_STRING + 1 );
 	if( result -> ident == NULL )
 		yyerror( "Memory allocation for variable identifier impossible\n");
+
 	return result;
 }
 
@@ -133,29 +134,21 @@ void addVarNodeToList( variable_node * oneVariableNode )
 }
 
 /* -----------------------------------------------------*/
-/* librration memoire pour une variable			*/
+/* liberation memoire pour une variable			*/
 /* -----------------------------------------------------*/
 void FreeMemVar(variable * oneVariable)
 {
 	if( oneVariable != NULL )
 	{
-		// fprintf( stderr , "Free ident of Var [%s]\n" , oneVariable -> ident );
+
 		if( oneVariable -> ident != NULL )
 			free( oneVariable -> ident  );
 
-		//if( oneVariable -> type == GUID_IDENTIFIER_TYPE )
-		//{
-			// fprintf( stderr , "Free guid var space\n" );
-			//if( oneVariable -> val.guid_value != NULL )
-				//free( oneVariable -> val.guid_value  );
-		//}
 		if( oneVariable -> type == STRING_IDENTIFIER_TYPE )
 		{
-			// fprintf( stderr , "Free string var space\n" );
 			if( oneVariable -> val.string_value != NULL )
 				free( oneVariable -> val.string_value  );
 		}
-		// fprintf( stderr , "liberation Var\n" );
 		free( oneVariable );
 	}
 }
@@ -163,25 +156,28 @@ void FreeMemVar(variable * oneVariable)
 /* -----------------------------------------------------*/
 /* Delete all elements of a array var.			*/
 /* -----------------------------------------------------*/
-void ClearVarElements( variable * v )
+void ClearVarDimensions( variable * v )
 {
-variable_node * n;
+variable_node * varNode;
 variable_node * previous;
-	previous = (variable_node *) NULL;
-	n = v -> elements;
-	while( n )
+	for( int dim = 0 ; dim < v -> nbDimensions ; dim ++ )
 	{
-		FreeMemVar( n -> v );
-		previous = n;
-		n = n -> next;
-	}
+		previous = (variable_node *) NULL;
+		varNode = v -> elements[dim];
+		while( varNode )
+		{
+			FreeMemVar( varNode -> v );
+			previous = varNode;
+			varNode = varNode -> next;
+		}
 
-	n = previous;
+		varNode = previous;
 	
-	while( n )
-	{
-		free(n);
-		n = n -> previous;
+		while( varNode )
+		{
+			free(varNode);
+			varNode = varNode -> previous;
+		}
 	}
 }
 
@@ -191,31 +187,31 @@ variable_node * previous;
 void ClearVarList( )
 {
 
-variable_node * n;
+variable_node * varNode;
 variable_node * previous;
 
 
 	previous = (variable_node *) NULL;
-	n = var_list;
+	varNode = var_list;
 	
-	while( n )
+	while( varNode )
 	{
-		if( n -> v->type == ARRAY_IDENTIFIER_TYPE )
+		if( varNode -> v->type == ARRAY_IDENTIFIER_TYPE )
 		{
-			ClearVarElements( n -> v );
+			ClearVarDimensions( varNode -> v );
 		}
 
-		FreeMemVar( n -> v );
-		previous = n;
-		n = n -> next;
+		FreeMemVar( varNode -> v );
+		previous = varNode;
+		varNode = varNode -> next;
 	}
 
-	n = previous;
+	varNode = previous;
 	
-	while( n )
+	while( varNode )
 	{
-		free(n);
-		n = n -> previous;
+		free(varNode);
+		varNode = varNode -> previous;
 	}
 }
 
@@ -233,32 +229,25 @@ variable_node * new_VarNode;
 
 	if( new_VarNode == (variable_node *) NULL )
 	{
-		/* fprintf( stderr , "non trouvee => creation ...\n"); */
 		new_VarNode  = (variable_node *) malloc( sizeof( variable_node ) );
 
 		if( new_VarNode == (variable_node *) NULL )
 			yyerror( "Memory allocation for variable_node impossible\n");
 
 		new_VarNode -> next = new_VarNode -> previous = NULL;
-
-		/* fprintf( stderr , "Allocation memoire de la variable dans le noeud ...\n"); */
 		new_VarNode -> v = allocMemVar();
 
-		/* fprintf( stderr , "mise en place identificateur [%s] de la variable dans le noeud ...\n" , oneIdent ); */
 		strcpy( new_VarNode -> v -> ident  , oneIdent );	
 
-		/* fprintf( stderr , "mise en place du type de la variable dans le noeud ...\n"); */
 		new_VarNode -> v -> type =  UNKNOWN_IDENTIFIER_TYPE;
-
 		new_VarNode -> v -> val.string_value = (char * ) NULL;
+		new_VarNode -> v -> elements = (variable_node * *) NULL;
+		new_VarNode -> v -> nbDimensions = 0;
 
-		new_VarNode -> v -> elements = (variable_node *) NULL;
-
-		/* fprintf( stderr , "ajout du noeud dans la liste...\n"); */
 		addVarNodeToList( new_VarNode );
 	}
 
-return new_VarNode -> v;		
+	return new_VarNode -> v;		
 }
 
 
