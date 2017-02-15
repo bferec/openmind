@@ -8,8 +8,12 @@ LDFLAGS = -lm
 
 all: $(APPNAME)
 
-$(APPNAME): $(APPNAME).c $(APPNAME)lib.o $(APPNAME)interpret.o iterOperator.o IncrDecrOperator.o assignationOperator.o arithmeticOperator.o comparaisonOperator.o logicalOperator.o syntaxtree.o $(APPNAME)varlist.o $(APPNAME)EntityList.o $(APPNAME)PropertyList.o lex.yy.o $(APPNAME).tab.o 
-	$(CC) -o $(APPNAME) $(APPNAME).c $(APPNAME)lib.o $(APPNAME)varlist.o $(APPNAME)EntityList.o  $(APPNAME)PropertyList.o syntaxtree.o debugTools.o $(APPNAME).tab.o lex.yy.o arithmeticOperator.o logicalOperator.o comparaisonOperator.o assignationOperator.o IncrDecrOperator.o iterOperator.o  alternatOperator.o binaryOperator.o $(APPNAME)interpret.o  -lm
+$(APPNAME): $(APPNAME).c $(APPNAME)Config.o $(APPNAME)lib.o $(APPNAME)interpret.o iterOperator.o IncrDecrOperator.o assignationOperator.o arithmeticOperator.o comparaisonOperator.o logicalOperator.o syntaxtree.o $(APPNAME)varlist.o $(APPNAME)EntityList.o $(APPNAME)PropertyList.o lex.yy.o $(APPNAME).tab.o 
+	$(CC) -o $(APPNAME) $(APPNAME).c $(APPNAME)Config.o $(APPNAME)lib.o $(APPNAME)varlist.o $(APPNAME)EntityList.o  $(APPNAME)PropertyList.o syntaxtree.o debugTools.o $(APPNAME).tab.o lex.yy.o arithmeticOperator.o logicalOperator.o comparaisonOperator.o assignationOperator.o IncrDecrOperator.o iterOperator.o  alternatOperator.o binaryOperator.o $(APPNAME)interpret.o  -lm
+
+
+$(APPNAME)Config.o: $(APPNAME)Config.c $(APPNAME)Config.h
+	$(CC) -c $(APPNAME)Config.c
 
 $(APPNAME)lib.o: $(APPNAME)lib.c $(APPNAME)lib.h
 	$(CC) -c $(APPNAME)lib.c
@@ -91,6 +95,7 @@ clean:
 		[ -f "$(APPNAME)varlist.o" ]		&& rm $(APPNAME)varlist.o; \
 		[ -f "$(APPNAME)EntityList.o" ]		&& rm $(APPNAME)EntityList.o; \
 		[ -f "$(APPNAME)PropertyList.o" ]	&& rm $(APPNAME)PropertyList.o; \
+		[ -f "$(APPNAME)config.o" ]		&& rm $(APPNAME)config.o; \
 		[ -f "$(APPNAME).output" ] 		&& rm $(APPNAME).output; \
 		[ -f "$(APPNAME).err.txt" ] 		&& rm $(APPNAME).err.txt; \
 		rm $(APPNAME).zip; \

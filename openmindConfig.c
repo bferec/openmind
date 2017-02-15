@@ -8,12 +8,11 @@
 
 #include "openmindConfig.h"
 
-
-
 Configuration config;
 char configFileName[ MAXLINELENGTH ];
 
 /* -----------------------------*/
+/* reading config file		*/
 /* -----------------------------*/
 Configuration * loadConfig(char * filename) 
 {
@@ -82,8 +81,9 @@ char * s, * d;
 
 }
 
-/* -----------------------------*/
-/* -----------------------------*/
+/* -------------------------------------*/
+/* read one value of a key config	*/
+/* -------------------------------------*/
 char * getConfigValue(Configuration * c,  char * key )
 {
 char * result = NULL;
