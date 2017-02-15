@@ -1,30 +1,13 @@
 /* -----------------------------*/
 /* -----------------------------*/
-/* 	readConfig.c		*/
+/* 	openmindConfig.c	*/
 /* -----------------------------*/
 /* -----------------------------*/
 #include <stdio.h>
 #include <string.h>
 
+#include "openmindConfig.h"
 
-#define DEFAULT_CONFIG_NAME	"fdl.conf"
-#define DELIMITER 		'='
-
-#define MAXLINELENGTH 		256 
-#define MAXKEY 			256 
-
-
-typedef struct _configItem
-{
-   char key[MAXLINELENGTH];
-   char value[MAXLINELENGTH];
-}ConfigItem;
-
-typedef struct _config
-{
-	ConfigItem items[MAXKEY];
-	int nbKeys;
-}Configuration;
 
 
 Configuration config;
@@ -32,7 +15,7 @@ char configFileName[ MAXLINELENGTH ];
 
 /* -----------------------------*/
 /* -----------------------------*/
-Configuration * getConfig(char * filename) 
+Configuration * loadConfig(char * filename) 
 {
 
 FILE * file;
@@ -99,16 +82,21 @@ char * s, * d;
 
 }
 
-void main(int argc , char * * argv )
+/* -----------------------------*/
+/* -----------------------------*/
+char * getConfigValue(Configuration * c,  char * key )
 {
-Configuration *c;
-	c = getConfig("");
-
-	printf( "Nombre de cles : %d\n" , c -> nbKeys );
+char * result = NULL;
 
 	for( int x = 0 ; x < c -> nbKeys ; x ++ )
 	{
-		printf( "key: [%s] value: [%s]\n" , c-> items[x].key , c-> items[x].value );
+		if( ! strcmp( key , c-> items[x].key ) )
+		{
+			result = strdup( c-> items[x].value );
+			break;
+		}
 	}
+	return result;
 }
+
 
